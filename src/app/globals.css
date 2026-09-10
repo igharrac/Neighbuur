@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * ══════════════════════════════════════════
+ * Neighbuur — Global Styles
+ * Warm, aards, menselijk
+ * ══════════════════════════════════════════
+ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Voorkomt dat de browser zelf pull-to-refresh/overscroll afhandelt,
+       zodat onze eigen PullToRefresh-component het gebaar kan overnemen. */
+    overscroll-behavior-y: contain;
+  }
+
+  body {
+    @apply bg-cream text-warmzwart font-body;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button, a {
+    touch-action: manipulation;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(232, 87, 42, 0.15);
+    color: inherit;
+  }
+
+  /* Focus ring — terracotta glow */
+  :focus-visible {
+    @apply outline-none ring-2 ring-terracotta-300 ring-offset-2 ring-offset-cream;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.lijn.DEFAULT');
+    border-radius: 100px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: theme('colors.warmgrijs.light'); }
+}
+
+@layer components {
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           font-body font-semibold
+           rounded-sm cursor-pointer
+           transition-all duration-200 ease-out
+           active:scale-[0.98];
+  }
+
+  .btn-primary {
+    @apply btn bg-terracotta text-white px-7 py-3.5 text-body
+           hover:bg-terracotta-600 hover:shadow-medium hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply btn bg-transparent text-warmzwart px-7 py-3.5 text-body
+           border-[1.5px] border-lijn
+           hover:border-warmzwart hover:bg-warmzwart/[0.03] hover:-translate-y-0.5;
+  }
+
+  .btn-dark {
+    @apply btn bg-warmzwart text-white px-5 py-2.5 text-body-sm
+           hover:shadow-medium hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-warmgrijs px-4 py-2.5 text-body-sm
+           hover:text-warmzwart hover:bg-sand;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-white rounded shadow-soft
+           transition-all duration-200
+           hover:-translate-y-0.5 hover:shadow-medium;
+  }
+
+  .card-flat {
+    @apply bg-white border-[1.5px] border-lijn rounded
+           transition-all duration-200
+           hover:border-terracotta hover:-translate-y-0.5;
+  }
+
+  /* ── Badges ── */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full
+           text-body-xs font-semibold;
+  }
+  .badge-terracotta { @apply bg-terracotta-100 text-terracotta; }
+  .badge-groen      { @apply bg-groen-light text-groen; }
+  .badge-blauw      { @apply bg-blauw-light text-blauw; }
+  .badge-lavendel   { @apply bg-lavendel-light text-lavendel; }
+
+  /* ── Form inputs ── */
+  .input {
+    @apply w-full border-2 border-lijn rounded-sm
+           px-4 py-3.5 font-body text-body
+           bg-white outline-none
+           transition-all duration-200
+           placeholder:text-warmgrijs
+           focus:border-terracotta focus:shadow-glow;
+  }
+
+  /* ── Illustration containers ── */
+  .illus-container {
+    @apply flex items-center justify-center rounded-xl overflow-hidden;
+  }
+  .illus-cream  { @apply bg-cream-dark; }
+  .illus-warm   { @apply bg-terracotta-50; }
+  .illus-groen  { @apply bg-groen-light; }
+  .illus-blauw  { @apply bg-blauw-light; }
+
+  /* ── Service category card (matches uploaded design) ── */
+  .service-card {
+    @apply flex flex-col items-center text-center
+           bg-white border-[1.5px] border-lijn rounded-xl
+           p-6 cursor-pointer
+           transition-all duration-200
+           hover:border-terracotta hover:bg-terracotta-50 hover:-translate-y-1;
+  }
+  .service-card-illus {
+    @apply w-full aspect-square rounded-lg mb-4
+           bg-terracotta-50 flex items-center justify-center
+           overflow-hidden;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
