@@ -12,8 +12,8 @@ const config: Config = {
        */
       colors: {
         /* Achtergronden */
-        cream:       { DEFAULT: "#FAF7F2", dark: "#F3EDE4" },
-        sand:        { DEFAULT: "#F0EAE0", dark: "#E5DDD0" },
+        cream:       { DEFAULT: "#FAF7F2", dark: "#F3EDE4", warm: "#FFF8F5" },
+        sand:        { DEFAULT: "#F0EAE0", dark: "#E5DDD0", light: "#FAF2EE" },
 
         /* Merk */
         terracotta:  {
