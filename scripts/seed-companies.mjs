@@ -14,6 +14,7 @@
  * process.env.DEMO_USER_PASSWORD (zie .env.local) — dit zijn geen accounts
  * die je normaal handmatig inlogt, ze vormen de "levende" achtergronddata.
  *
+ * Draai hierna optioneel scripts/generate-vakman-logos.mjs voor logo's.
  * Verwijderen: scripts/remove-demo-data.mjs
  * Gebruik: node scripts/seed-companies.mjs
  */

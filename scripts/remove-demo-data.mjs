@@ -50,6 +50,17 @@ if (alleDemoUserIds.length === 0) {
   process.exit(0);
 }
 
+console.log("── Gegenereerde logo's uit storage verwijderen ──");
+let logosVerwijderd = 0;
+for (const vId of vIds) {
+  const { data: files } = await admin.storage.from("vakman-logos").list(vId);
+  if (files?.length) {
+    await admin.storage.from("vakman-logos").remove(files.map((f) => `${vId}/${f.name}`));
+    logosVerwijderd += files.length;
+  }
+}
+console.log(`Verwijderd: ${logosVerwijderd} bestand(en)`);
+
 console.log("\n── Review-stemmen en -reacties opruimen ──");
 if (alleDemoUserIds.length) await admin.from("review_votes").delete().in("user_id", alleDemoUserIds);
 if (vIds.length) await admin.from("review_reacties").delete().in("vakman_id", vIds);

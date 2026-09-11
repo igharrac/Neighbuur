@@ -18,6 +18,7 @@
  * geannuleerde boeking met een uitleg-tekst, niet als een boeking zonder
  * vakman — zie de toelichting onderaan het script.
  *
+ * Draai hierna optioneel scripts/generate-vakman-logos.mjs voor logo's.
  * Verwijderen: scripts/remove-demo-data.mjs
  * Gebruik: node scripts/seed-demo-accounts.mjs
  */
