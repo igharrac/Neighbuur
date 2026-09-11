@@ -123,9 +123,9 @@ export default function LoginPage() {
               <h1 className="font-display text-display-sm text-center mb-1.5">{dict.login.welcome}</h1>
               <p className="text-center text-body text-warmgrijs mb-6">{dict.login.subtitle}</p>
 
-              <div className="flex gap-1.5 mb-6 bg-cream rounded-sm p-1">
+              <div className="flex gap-1.5 mb-2 bg-cream rounded-sm p-1">
                 <span className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-sm text-body-sm font-semibold bg-white shadow-soft text-warmzwart">
-                  🏠 {dict.login.asResident}
+                  🔑 {dict.login.asResident}
                 </span>
                 <Link
                   href="/registreer/vakman"
@@ -134,6 +134,7 @@ export default function LoginPage() {
                   🔧 {dict.login.asProfessional}
                 </Link>
               </div>
+              <p className="text-center text-body-xs text-warmgrijs mb-6">{dict.login.existingAccountHint}</p>
 
               <div className="flex gap-1.5 mb-5 bg-cream rounded-sm p-1">
                 <button

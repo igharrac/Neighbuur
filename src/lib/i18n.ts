@@ -109,8 +109,9 @@ export const dictionaries = {
     login: {
       welcome: "Welkom",
       subtitle: "Log in of maak een account aan",
-      asResident: "Bewoner",
-      asProfessional: "Vakman",
+      asResident: "Inloggen",
+      asProfessional: "Nieuw als vakman?",
+      existingAccountHint: "Al een vakman-account? Log hierboven gewoon in — je rol wordt automatisch herkend.",
       phone: "Telefoonnummer",
       sendCode: "Stuur code via SMS",
       sendCodeEmail: "Stuur code via e-mail",
@@ -284,8 +285,9 @@ export const dictionaries = {
     login: {
       welcome: "Welcome",
       subtitle: "Log in or create an account",
-      asResident: "Resident",
-      asProfessional: "Professional",
+      asResident: "Log in",
+      asProfessional: "New professional?",
+      existingAccountHint: "Already have a professional account? Just log in above — your role is recognized automatically.",
       phone: "Phone number",
       sendCode: "Send code via SMS",
       sendCodeEmail: "Send code via email",
