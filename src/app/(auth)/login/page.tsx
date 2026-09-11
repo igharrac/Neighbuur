@@ -27,6 +27,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  // E-mail-codes zijn in dit Supabase-project 8 cijfers, sms-codes 6 —
+  // de invoervakjes worden bij het versturen op de juiste lengte gezet.
+  const otpLength = method === "email" ? 8 : 6;
+
   const fullPhone = "+31" + phone.replace(/\s/g, "").replace(/^0/, "");
   const maskedPhone = "+31 6 ****" + phone.slice(-2);
 
@@ -52,6 +56,7 @@ export default function LoginPage() {
       showToast(error.message, "error");
       return;
     }
+    setOtp(Array(otpLength).fill(""));
     setStep("otp");
     setTimeout(() => otpRefs.current[0]?.focus(), 100);
   }
@@ -224,7 +229,7 @@ export default function LoginPage() {
                 </span>
               </p>
 
-              <div className="flex gap-2.5 justify-center mb-6">
+              <div className="flex gap-1.5 justify-center mb-6">
                 {otp.map((digit, i) => (
                   <input
                     key={i}
@@ -235,7 +240,7 @@ export default function LoginPage() {
                     value={digit}
                     onChange={(e) => handleOtpInput(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    className="w-[46px] h-[58px] text-center font-display text-[22px] font-bold border-2 border-lijn rounded-sm outline-none transition-all focus:border-terracotta focus:shadow-glow"
+                    className="flex-1 min-w-0 h-[52px] text-center font-display text-[18px] font-bold border-2 border-lijn rounded-sm outline-none transition-all focus:border-terracotta focus:shadow-glow"
                   />
                 ))}
               </div>
