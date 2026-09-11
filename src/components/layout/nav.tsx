@@ -10,6 +10,7 @@ import {
   MagnifyingGlass,
   ChatCircle,
   UserCircle,
+  SignIn,
 } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -44,13 +45,15 @@ export function Nav() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/plan" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
-            {dict.nav.myPlan}
-          </Link>
+          {user && (
+            <Link href="/plan" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
+              {dict.nav.myPlan}
+            </Link>
+          )}
           <Link href="/wijk" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
             {dict.nav.myNeighbourhood}
           </Link>
-          <Link href="#diensten" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
+          <Link href="/diensten" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
             {dict.nav.services}
           </Link>
           <LanguageToggle />
@@ -89,13 +92,15 @@ export function Nav() {
       {menuOpen && (
         <div className="md:hidden bg-cream border-b border-lijn px-6 py-4 animate-fade-in">
           <div className="flex flex-col gap-3">
-            <Link href="/plan" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
-              {dict.nav.myPlan}
-            </Link>
+            {user && (
+              <Link href="/plan" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
+                {dict.nav.myPlan}
+              </Link>
+            )}
             <Link href="/wijk" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
               {dict.nav.myNeighbourhood}
             </Link>
-            <Link href="#diensten" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
+            <Link href="/diensten" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
               {dict.nav.services}
             </Link>
             {user ? (
@@ -138,15 +143,23 @@ export function Nav() {
 export function MobileBar() {
   const { dict } = useLang();
   const pathname = usePathname();
+  const { user } = useAuth();
   const ongelezenBerichten = useOngelezenBerichten();
 
-  const items = [
-    { href: "/plan", icon: House, label: dict.nav.myPlan },
-    { href: "/wijk", icon: UserCircle, label: dict.nav.myNeighbourhood },
-    { href: "/zoeken", icon: MagnifyingGlass, label: "Zoeken" },
-    { href: "/berichten", icon: ChatCircle, label: "Berichten", badge: ongelezenBerichten },
-    { href: "/profiel", icon: UserCircle, label: "Profiel" },
-  ];
+  const items = user
+    ? [
+        { href: "/plan", icon: House, label: dict.nav.myPlan },
+        { href: "/wijk", icon: UserCircle, label: dict.nav.myNeighbourhood },
+        { href: "/zoeken", icon: MagnifyingGlass, label: "Zoeken" },
+        { href: "/berichten", icon: ChatCircle, label: "Berichten", badge: ongelezenBerichten },
+        { href: "/profiel", icon: UserCircle, label: "Profiel" },
+      ]
+    : [
+        { href: "/wijk", icon: UserCircle, label: dict.nav.myNeighbourhood },
+        { href: "/diensten", icon: House, label: dict.nav.services },
+        { href: "/zoeken", icon: MagnifyingGlass, label: "Zoeken" },
+        { href: "/login", icon: SignIn, label: dict.nav.login },
+      ];
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-lijn z-50 px-4 py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">

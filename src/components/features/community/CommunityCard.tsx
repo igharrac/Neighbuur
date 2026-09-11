@@ -11,11 +11,11 @@ interface CommunityCardProps {
 
 export function CommunityCard({ naam, type, slug, aantalLeden, aantalReviews }: CommunityCardProps) {
   return (
-    <div className="bg-white rounded-md shadow-soft p-5 flex flex-col">
-      <p className="text-body-xs font-semibold uppercase tracking-wider text-terracotta mb-1 capitalize">{type}</p>
-      <h3 className="font-display text-display-sm text-warmzwart mb-4">{naam}</h3>
+    <div className="bg-white rounded-2xl shadow-[0px_4px_10px_rgba(92,64,40,0.04)] p-6 flex flex-col">
+      <p className="font-body text-[12px] font-semibold uppercase tracking-[0.6px] text-terracotta mb-1 capitalize">{type}</p>
+      <h3 className="font-display font-bold text-[19px] text-warmzwart mb-4">{naam}</h3>
 
-      <div className="flex items-center gap-4 text-body-sm text-warmgrijs mb-5">
+      <div className="flex items-center gap-4 font-body text-[13px] text-warmgrijs mb-5">
         <span className="flex items-center gap-1.5">
           <UsersThree size={16} />
           {aantalLeden} bewoners
@@ -26,7 +26,7 @@ export function CommunityCard({ naam, type, slug, aantalLeden, aantalReviews }: 
         </span>
       </div>
 
-      <Link href={`/community/${slug}`} className="btn-secondary !text-body-sm mt-auto self-start">
+      <Link href={`/community/${slug}`} className="btn-secondary !rounded-full !text-body-sm mt-auto self-start">
         Bekijk
         <ArrowRight size={15} weight="bold" />
       </Link>

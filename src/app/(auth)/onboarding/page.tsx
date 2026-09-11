@@ -18,6 +18,7 @@ export default function OnboardingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invite = searchParams.get("invite");
+  const next = searchParams.get("next");
   const { dict, lang } = useLang();
   const { showToast } = useToast();
 
@@ -57,7 +58,7 @@ export default function OnboardingPage() {
         if (invite) {
           router.replace(`/uitnodiging/${invite}`);
         } else {
-          router.replace(profiel.rol === "vakman" ? "/dashboard" : "/plan");
+          router.replace(next || (profiel.rol === "vakman" ? "/dashboard" : "/plan"));
         }
         return;
       }

@@ -10,8 +10,7 @@ export function CategoryTile({ categorie }: { categorie: Categorie }) {
   const { lang } = useLang();
   const naam = lang === "nl" ? categorie.naam_nl : categorie.naam_en;
   const beschrijving = lang === "nl" ? categorie.beschrijving_nl : categorie.beschrijving_en;
-  const href =
-    categorie.type === "vergelijk" ? `/vergelijk/${categorie.slug}` : `/zoeken?categorie=${categorie.slug}`;
+  const href = `/zoeken?categorie=${categorie.slug}`;
 
   return (
     <Link

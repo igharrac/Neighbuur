@@ -15,6 +15,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invite = searchParams.get("invite");
+  const next = searchParams.get("next");
   const { dict } = useLang();
   const { showToast } = useToast();
 
@@ -28,6 +29,14 @@ export default function LoginPage() {
 
   const fullPhone = "+31" + phone.replace(/\s/g, "").replace(/^0/, "");
   const maskedPhone = "+31 6 ****" + phone.slice(-2);
+
+  function onboardingUrl() {
+    const params = new URLSearchParams();
+    if (invite) params.set("invite", invite);
+    if (next) params.set("next", next);
+    const qs = params.toString();
+    return qs ? `/onboarding?${qs}` : "/onboarding";
+  }
 
   async function handleSendCode() {
     setLoading(true);
@@ -75,15 +84,14 @@ export default function LoginPage() {
       showToast(error.message, "error");
       return;
     }
-    router.push(invite ? `/onboarding?invite=${encodeURIComponent(invite)}` : "/onboarding");
+    router.push(onboardingUrl());
   }
 
   async function handleGoogleLogin() {
     const supabase = createClient();
-    const next = invite ? `/onboarding?invite=${encodeURIComponent(invite)}` : "/onboarding";
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(onboardingUrl())}` },
     });
   }
 

@@ -1,4 +1,4 @@
-import { Clock, CheckCircle, SealCheck, XCircle } from "@phosphor-icons/react";
+import { Clock, CheckCircle, SealCheck, XCircle } from "@phosphor-icons/react/dist/ssr";
 import type { BoekingStatus } from "@/types";
 
 const CONFIG: Record<BoekingStatus, { label: string; klasse: string; icon: typeof Clock }> = {
