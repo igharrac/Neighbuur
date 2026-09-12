@@ -16,7 +16,7 @@ export async function GET(request: Request, { params }: { params: { code: string
     .eq("uitnodigingscode", code)
     .maybeSingle();
 
-  if (!uitnodigerProfiel) {
+  if (!uitnodigerProfiel || !uitnodigerProfiel.community_id) {
     return NextResponse.redirect(`${origin}/`);
   }
 

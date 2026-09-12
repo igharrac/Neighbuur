@@ -38,7 +38,12 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   query = query.order("is_premium", { ascending: false }).order("gem_score", { ascending: false });
 
   const { data } = await query;
-  let vakmen = (data ?? []) as VakmanOverzicht[];
+  let vakmen = (data ?? []).map((v) => ({
+    ...v,
+    review_count: Number(v.review_count ?? 0),
+    score_kwaliteit: Number(v.score_kwaliteit ?? 0),
+    afgeronde_klussen: Number(v.afgeronde_klussen ?? 0),
+  })) as unknown as VakmanOverzicht[];
 
   if (searchParams.beschikbaar === "1" && vakmen.length > 0) {
     const vandaag = new Date();

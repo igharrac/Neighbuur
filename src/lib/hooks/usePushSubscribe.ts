@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useAuth } from "@/lib/hooks/useAuth";
+import type { Json } from "@/types/database.types";
 
 function urlBase64ToUint8Array(base64String: string): BufferSource {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -45,7 +46,7 @@ export function usePushSubscribe() {
 
       const supabase = createClient();
       await supabase.from("push_subscriptions").upsert(
-        { user_id: user.id, subscription: subscription.toJSON() },
+        { user_id: user.id, subscription: subscription.toJSON() as Json },
         { onConflict: "user_id" }
       );
       return true;

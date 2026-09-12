@@ -27,7 +27,14 @@ export default async function WijkPage({ params }: { params: { slug: string } })
     .eq("wijk_id", w.id)
     .order("naam");
 
-  const rows = (communities ?? []) as CommunityOverzichtRow[];
+  const rows: CommunityOverzichtRow[] = (communities ?? []).map((c) => ({
+    id: c.id!,
+    naam: c.naam!,
+    slug: c.slug!,
+    type: c.type!,
+    aantal_leden: Number(c.aantal_leden ?? 0),
+    aantal_reviews: Number(c.aantal_reviews ?? 0),
+  }));
 
   return (
     <div className="bg-cream-warm min-h-screen">

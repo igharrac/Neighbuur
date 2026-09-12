@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   // Net over de limiet heen: eenmalig de vakman waarschuwen dat de gratis
   // aanvragen op zijn, i.p.v. bij elke volgende geblokkeerde poging.
-  if (!vakman.is_premium && vakman.aanvragen_deze_maand + 1 === vakman.aanvragen_limiet) {
+  if (!vakman.is_premium && (vakman.aanvragen_deze_maand ?? 0) + 1 === vakman.aanvragen_limiet) {
     await notifyUser(admin, {
       userId: vakman.user_id,
       type: "premium",

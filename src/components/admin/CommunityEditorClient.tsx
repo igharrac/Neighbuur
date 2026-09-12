@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { ContentBlockEditor } from "@/components/admin/ContentBlockEditor";
 import type { CommunityContentBlok, ContentBlokType } from "@/types";
+import type { Json } from "@/types/database.types";
 
 const TYPE_LABELS: Record<ContentBlokType, string> = {
   hero_banner: "Hero banner",
@@ -51,7 +52,7 @@ export function CommunityEditorClient({
     const positie = blocks.length > 0 ? Math.max(...blocks.map((b) => b.positie)) + 1 : 0;
     const { data: inserted, error } = await supabase
       .from("community_content_blokken")
-      .insert({ community_id: communityId, type, positie, data, actief: true })
+      .insert({ community_id: communityId, type, positie, data: data as Json, actief: true })
       .select()
       .single();
 
@@ -68,7 +69,7 @@ export function CommunityEditorClient({
   async function handleSaveEdit(blockId: string, data: Record<string, unknown>) {
     setSaving(true);
     const supabase = createClient();
-    const { error } = await supabase.from("community_content_blokken").update({ data }).eq("id", blockId);
+    const { error } = await supabase.from("community_content_blokken").update({ data: data as Json }).eq("id", blockId);
 
     setSaving(false);
     if (error) {

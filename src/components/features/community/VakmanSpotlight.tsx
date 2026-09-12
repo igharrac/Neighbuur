@@ -29,7 +29,16 @@ export async function VakmanSpotlight({ data }: { data: VakmanSpotlightData }) {
     .maybeSingle();
 
   if (!vakman) return null;
-  const v = vakman as VakmanRow;
+  const v: VakmanRow = {
+    id: vakman.id!,
+    bedrijfsnaam: vakman.bedrijfsnaam!,
+    slug: vakman.slug!,
+    logo_url: vakman.logo_url,
+    bio: vakman.bio,
+    geverifieerd: vakman.geverifieerd ?? false,
+    gem_score: Number(vakman.gem_score ?? 0),
+    review_count: Number(vakman.review_count ?? 0),
+  };
 
   return (
     <div>

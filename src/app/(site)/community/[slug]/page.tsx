@@ -31,7 +31,17 @@ export default async function CommunityPage({ params }: { params: { slug: string
     .maybeSingle();
 
   if (!community) notFound();
-  const c = community as CommunityOverzichtRow;
+  const c: CommunityOverzichtRow = {
+    id: community.id!,
+    wijk_id: community.wijk_id!,
+    naam: community.naam!,
+    slug: community.slug!,
+    type: community.type!,
+    wijk_naam: community.wijk_naam!,
+    aantal_leden: Number(community.aantal_leden ?? 0),
+    aantal_reviews: Number(community.aantal_reviews ?? 0),
+    lopende_acties: Number(community.lopende_acties ?? 0),
+  };
 
   const { data: blokken } = await supabase
     .from("community_content_blokken")

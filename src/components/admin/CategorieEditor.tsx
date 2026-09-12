@@ -95,7 +95,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       }
       setCategorieen((prev) => [...prev, data as Categorie]);
       showToast("Categorie toegevoegd", "success");
-    } else {
+    } else if (editingId) {
       const { error } = await supabase.from("categorieen").update(payload).eq("id", editingId);
 
       setSaving(false);

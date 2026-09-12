@@ -56,7 +56,7 @@ export default async function PlanPage() {
       .select("naam, slug, aantal_leden, wijk_naam")
       .eq("id", bewonerProfiel.community_id)
       .maybeSingle();
-    if (c) community = c;
+    if (c) community = { naam: c.naam!, slug: c.slug!, aantal_leden: Number(c.aantal_leden ?? 0), wijk_naam: c.wijk_naam };
   }
 
   // Geen community? Dan proberen we buren te detecteren (organische
@@ -174,7 +174,12 @@ export default async function PlanPage() {
       .eq("community_id", bewonerProfiel.community_id)
       .order("created_at", { ascending: false })
       .limit(3);
-    buurtreviews = r ?? [];
+    buurtreviews = (r ?? []).map((row) => ({
+      id: row.id!,
+      tekst: row.tekst!,
+      auteur_naam: row.auteur_naam!,
+      reactie_bedrijf: row.reactie_bedrijf,
+    }));
   }
 
   const admin = createAdminSupabase();

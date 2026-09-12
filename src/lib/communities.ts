@@ -20,7 +20,13 @@ export async function getActiveCommunities(limit = 5): Promise<CommunityOverzich
       .limit(limit);
 
     if (error || !data || data.length === 0) return fallbackCommunities;
-    return data as CommunityOverzicht[];
+    return data.map((c) => ({
+      id: c.id!,
+      naam: c.naam!,
+      slug: c.slug!,
+      wijk_naam: c.wijk_naam!,
+      aantal_leden: Number(c.aantal_leden ?? 0),
+    }));
   } catch {
     return fallbackCommunities;
   }
