@@ -45,7 +45,7 @@ export default async function PlanPage() {
 
   const { data: bewonerProfiel } = await supabase
     .from("bewoner_profielen")
-    .select("community_id, wijk_id, postcode")
+    .select("community_id, wijk_id, postcode, toon_community_suggesties")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -63,12 +63,13 @@ export default async function PlanPage() {
   // communityvorming) — alleen mogelijk als er een postcode bekend is
   // (oudere/demo-accounts zonder adres slaan dit gewoon over).
   let detectie: DetectieResultaat | null = null;
-  if (!community && bewonerProfiel?.wijk_id && bewonerProfiel?.postcode) {
+  if (!community && bewonerProfiel?.wijk_id && bewonerProfiel?.postcode && bewonerProfiel.toon_community_suggesties !== false) {
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, naam, slug")
       .eq("wijk_id", bewonerProfiel.wijk_id)
       .eq("postcode_cluster", bewonerProfiel.postcode)
+      .neq("status", "slapend")
       .maybeSingle();
 
     if (bestaande) {

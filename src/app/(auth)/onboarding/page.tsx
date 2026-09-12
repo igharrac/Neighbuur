@@ -200,6 +200,7 @@ export default function OnboardingPage() {
       .select("id, naam, slug")
       .eq("wijk_id", gekozenWijk.id)
       .eq("postcode_cluster", postcodeNorm)
+      .neq("status", "slapend")
       .maybeSingle();
 
     if (bestaande) {
@@ -210,7 +211,20 @@ export default function OnboardingPage() {
         p_postcode: postcodeNorm,
         p_gebouw_label: gebouwNorm,
       });
-      setClusterTelling(typeof telling === "number" ? telling : 1);
+      const aantal = typeof telling === "number" ? telling : 1;
+      setClusterTelling(aantal);
+
+      const drempel = gekozenWijk.community_threshold ?? STANDAARD_THRESHOLD;
+      if (aantal === drempel) {
+        // Deze inschrijving heeft de drempel net bereikt — eenmalige melding
+        // aan het hele cluster. Bewust fire-and-forget: mag de onboarding-
+        // flow nooit blokkeren of laten falen.
+        fetch("/api/community/meld-drempel", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ wijkId: gekozenWijk.id, postcode: postcodeNorm }),
+        }).catch(() => {});
+      }
     }
     setThreshold(gekozenWijk.community_threshold ?? STANDAARD_THRESHOLD);
     setSaving(false);
@@ -250,6 +264,13 @@ export default function OnboardingPage() {
     if (error || !resultaat) {
       showToast(error?.message ?? "Kon community niet starten", "error");
       return;
+    }
+    if (resultaat.aangemaakt) {
+      fetch("/api/community/meld-gestart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ communityId: resultaat.id }),
+      }).catch(() => {});
     }
     router.push(`/community/${resultaat.slug}`);
   }
