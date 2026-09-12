@@ -14,21 +14,21 @@ import type { Notificatie } from "@/types";
 
 const ICONS: Record<Notificatie["type"], React.ComponentType<IconProps>> = {
   review: Star,
-  boeking: Briefcase,
-  bericht: ChatCircle,
-  uitnodiging: UserPlus,
-  groepskorting: Tag,
-  systeem: Info,
+  booking: Briefcase,
+  message: ChatCircle,
+  invitation: UserPlus,
+  group_discount: Tag,
+  system: Info,
   premium: Crown,
 };
 
 const KLEUREN: Record<Notificatie["type"], string> = {
   review: "bg-oker-light text-oker",
-  boeking: "bg-blauw-light text-blauw",
-  bericht: "bg-groen-light text-groen",
-  uitnodiging: "bg-lavendel-light text-lavendel",
-  groepskorting: "bg-terracotta-100 text-terracotta",
-  systeem: "bg-sand text-warmgrijs-dark",
+  booking: "bg-blauw-light text-blauw",
+  message: "bg-groen-light text-groen",
+  invitation: "bg-lavendel-light text-lavendel",
+  group_discount: "bg-terracotta-100 text-terracotta",
+  system: "bg-sand text-warmgrijs-dark",
   premium: "bg-gradient-to-br from-amber-400 to-amber-600 text-white",
 };
 

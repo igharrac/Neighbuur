@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
   await notifyUser(admin, {
     userId: vakman.user_id,
-    type: "boeking",
+    type: "booking",
     titelNl: "Nieuwe boekingsaanvraag",
     titelEn: "New booking request",
     inhoudNl: `${klantNaam} wil een klus bij je boeken.`,

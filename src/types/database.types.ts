@@ -278,7 +278,7 @@ export interface Database {
         Row: {
           id: string;
           user_id: string;
-          type: Database["public"]["Enums"]["notificatie_type"];
+          type: Database["public"]["Enums"]["notification_type"];
           titel_nl: string;
           titel_en: string;
           inhoud_nl: string | null;
@@ -290,7 +290,7 @@ export interface Database {
         Insert: {
           id?: string;
           user_id: string;
-          type: Database["public"]["Enums"]["notificatie_type"];
+          type: Database["public"]["Enums"]["notification_type"];
           titel_nl: string;
           titel_en: string;
           inhoud_nl?: string | null;
@@ -302,7 +302,7 @@ export interface Database {
         Update: {
           id?: string;
           user_id?: string;
-          type?: Database["public"]["Enums"]["notificatie_type"];
+          type?: Database["public"]["Enums"]["notification_type"];
           titel_nl?: string;
           titel_en?: string;
           inhoud_nl?: string | null;
@@ -1010,7 +1010,7 @@ export interface Database {
       content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
       contact_preference: "phone" | "whatsapp" | "app";
       user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
-      notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
+      notification_type: "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
       availability_status: "available" | "booked";
       category_type: "professional" | "compare";

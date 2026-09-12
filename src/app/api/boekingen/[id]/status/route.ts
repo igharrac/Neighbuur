@@ -90,7 +90,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     await notifyUser(admin, {
       userId: ontvangerId,
-      type: "boeking",
+      type: "booking",
       titelNl: tekst.titel_nl,
       titelEn: tekst.titel_en,
       inhoudNl: tekst.inhoud_nl,

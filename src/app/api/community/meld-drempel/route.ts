@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     if (!lid.show_community_suggestions) continue;
     await notifyUser(admin, {
       userId: lid.user_id,
-      type: "systeem",
+      type: "system",
       titelNl: "Genoeg buren voor een community!",
       titelEn: "Enough neighbours for a community!",
       inhoudNl: `Er zijn nu ${aantal} bewoners uit ${postcode} actief. Start samen een community.`,

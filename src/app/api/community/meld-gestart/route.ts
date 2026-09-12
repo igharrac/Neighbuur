@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   for (const uid of teMelden) {
     await notifyUser(admin, {
       userId: uid,
-      type: "systeem",
+      type: "system",
       titelNl: "Je buren zijn gestart!",
       titelEn: "Your neighbours have started!",
       inhoudNl: `Er is een community gestart voor jouw adres: ${community.naam}. Doe mee!`,

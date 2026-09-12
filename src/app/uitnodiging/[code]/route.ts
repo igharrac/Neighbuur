@@ -99,7 +99,7 @@ export async function GET(request: Request, { params }: { params: { code: string
 
     await notifyUser(admin, {
       userId: uitnodigerProfiel.user_id,
-      type: "uitnodiging",
+      type: "invitation",
       titelNl: "Nieuwe buur via jouw link!",
       titelEn: "New neighbour via your link!",
       inhoudNl: `${naam} heeft zich aangemeld via jouw uitnodigingslink!`,

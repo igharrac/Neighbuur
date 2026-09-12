@@ -137,7 +137,7 @@ export interface Bericht {
   created_at: string;
 }
 
-export type NotificatieType = "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
+export type NotificatieType = "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
 
 export interface Notificatie {
   id: string;
