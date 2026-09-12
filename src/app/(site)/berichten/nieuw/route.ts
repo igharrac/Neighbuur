@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   const admin = createAdminSupabase();
 
   const { data: vakman } = await admin
-    .from("vakman_profielen")
+    .from("professional_profiles")
     .select("id, user_id, slug")
     .eq("id", vakmanId)
     .maybeSingle();

@@ -18,8 +18,8 @@ export async function POST(request: Request) {
   const admin = createAdminSupabase();
 
   const { data: vakman } = await admin
-    .from("vakman_profielen")
-    .select("id, user_id, bedrijfsnaam, aanvragen_deze_maand, aanvragen_limiet, is_premium")
+    .from("professional_profiles")
+    .select("id, user_id, company_name, requests_this_month, requests_limit, is_premium")
     .eq("id", vakmanId)
     .maybeSingle();
   if (!vakman) return NextResponse.json({ error: "Vakman niet gevonden" }, { status: 404 });
@@ -40,17 +40,17 @@ export async function POST(request: Request) {
 
   // Net over de limiet heen: eenmalig de vakman waarschuwen dat de gratis
   // aanvragen op zijn, i.p.v. bij elke volgende geblokkeerde poging.
-  if (!vakman.is_premium && (vakman.aanvragen_deze_maand ?? 0) + 1 === vakman.aanvragen_limiet) {
+  if (!vakman.is_premium && (vakman.requests_this_month ?? 0) + 1 === vakman.requests_limit) {
     await notifyUser(admin, {
       userId: vakman.user_id,
       type: "premium",
       titelNl: "Gratis limiet bereikt",
       titelEn: "Free limit reached",
-      inhoudNl: `Je hebt ${vakman.aanvragen_limiet}/${vakman.aanvragen_limiet} aanvragen gebruikt deze maand. Upgrade naar Pro voor onbeperkte aanvragen.`,
-      inhoudEn: `You've used ${vakman.aanvragen_limiet}/${vakman.aanvragen_limiet} requests this month. Upgrade to Pro for unlimited requests.`,
+      inhoudNl: `Je hebt ${vakman.requests_limit}/${vakman.requests_limit} aanvragen gebruikt deze maand. Upgrade naar Pro voor onbeperkte aanvragen.`,
+      inhoudEn: `You've used ${vakman.requests_limit}/${vakman.requests_limit} requests this month. Upgrade to Pro for unlimited requests.`,
       link: "/dashboard",
       push: false,
-      email: { type: "premium-limiet", data: { limiet: vakman.aanvragen_limiet, link: "/dashboard" } },
+      email: { type: "premium-limiet", data: { limiet: vakman.requests_limit, link: "/dashboard" } },
     });
   }
 

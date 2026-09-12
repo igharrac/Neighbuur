@@ -16,12 +16,12 @@ export async function resolveGesprekPartner(
 ): Promise<GesprekPartner> {
   if (deelnemer.profiles?.role === "vakman") {
     const { data: vakman } = await admin
-      .from("vakman_profielen")
-      .select("bedrijfsnaam, logo_url")
+      .from("professional_profiles")
+      .select("company_name, logo_url")
       .eq("user_id", deelnemer.user_id)
       .maybeSingle();
     if (vakman) {
-      return { user_id: deelnemer.user_id, naam: vakman.bedrijfsnaam, avatar_url: vakman.logo_url };
+      return { user_id: deelnemer.user_id, naam: vakman.company_name, avatar_url: vakman.logo_url };
     }
   }
 

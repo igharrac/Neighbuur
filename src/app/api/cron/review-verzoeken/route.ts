@@ -13,7 +13,7 @@ export async function GET() {
 
   const { data: boekingen, error } = await admin
     .from("bookings")
-    .select("id, customer_id, updated_at, vakman_profielen(bedrijfsnaam, slug)")
+    .select("id, customer_id, updated_at, professional_profiles(company_name, slug)")
     .eq("status", "afgerond")
     .is("review_request_sent_at", null)
     .lte("updated_at", grens);
@@ -22,7 +22,7 @@ export async function GET() {
 
   let verstuurd = 0;
   for (const boeking of boekingen ?? []) {
-    const vakman = boeking.vakman_profielen as unknown as { bedrijfsnaam: string; slug: string } | null;
+    const vakman = boeking.professional_profiles as unknown as { company_name: string; slug: string } | null;
     if (!vakman) continue;
 
     const link = `/vakman/${vakman.slug}?review=${boeking.id}`;
@@ -31,10 +31,10 @@ export async function GET() {
       type: "review",
       titelNl: "Hoe was je ervaring?",
       titelEn: "How was your experience?",
-      inhoudNl: `Laat een review achter voor ${vakman.bedrijfsnaam} en help je buren.`,
-      inhoudEn: `Leave a review for ${vakman.bedrijfsnaam} and help your neighbours.`,
+      inhoudNl: `Laat een review achter voor ${vakman.company_name} en help je buren.`,
+      inhoudEn: `Leave a review for ${vakman.company_name} and help your neighbours.`,
       link,
-      email: { type: "review-verzoek", data: { vakmanNaam: vakman.bedrijfsnaam, link } },
+      email: { type: "review-verzoek", data: { vakmanNaam: vakman.company_name, link } },
     });
 
     await admin

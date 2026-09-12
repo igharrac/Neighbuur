@@ -30,7 +30,7 @@ const KLEUR_CLASS: Record<(typeof KLEUR_OPTIONS)[number], string> = {
 
 interface VakmanResult {
   id: string;
-  bedrijfsnaam: string;
+  company_name: string;
 }
 
 export function ContentBlockEditor({
@@ -59,9 +59,9 @@ export function ContentBlockEditor({
     const timeout = setTimeout(async () => {
       const supabase = createClient();
       const { data: results } = await supabase
-        .from("vakman_profielen")
-        .select("id, bedrijfsnaam")
-        .ilike("bedrijfsnaam", `%${vakmanQuery}%`)
+        .from("professional_profiles")
+        .select("id, company_name")
+        .ilike("company_name", `%${vakmanQuery}%`)
         .limit(6);
       setVakmanResults((results ?? []) as VakmanResult[]);
     }, 300);
@@ -207,11 +207,11 @@ export function ContentBlockEditor({
                         className="w-full text-left px-4 py-2.5 text-body-sm hover:bg-cream transition-colors"
                         onClick={() => {
                           set("vakman_id", v.id);
-                          setVakmanNaam(v.bedrijfsnaam);
+                          setVakmanNaam(v.company_name);
                           setVakmanResults([]);
                         }}
                       >
-                        {v.bedrijfsnaam}
+                        {v.company_name}
                       </button>
                     ))}
                   </div>

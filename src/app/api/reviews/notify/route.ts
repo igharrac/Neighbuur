@@ -20,14 +20,14 @@ export async function POST(request: Request) {
 
   const { data: review } = await admin
     .from("reviews")
-    .select("id, author_id, professional_id, scores, vakman_profielen(user_id, bedrijfsnaam, slug)")
+    .select("id, author_id, professional_id, scores, professional_profiles(user_id, company_name, slug)")
     .eq("id", reviewId)
     .maybeSingle();
   if (!review || review.author_id !== user.id) {
     return NextResponse.json({ error: "Review niet gevonden" }, { status: 404 });
   }
 
-  const vakman = review.vakman_profielen as unknown as { user_id: string; bedrijfsnaam: string; slug: string } | null;
+  const vakman = review.professional_profiles as unknown as { user_id: string; company_name: string; slug: string } | null;
   if (!vakman) return NextResponse.json({ ok: true });
 
   const { data: auteurProfiel } = await admin.from("profiles").select("name").eq("id", user.id).maybeSingle();

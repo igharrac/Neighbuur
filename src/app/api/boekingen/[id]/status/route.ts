@@ -23,14 +23,14 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
   const { data: boeking } = await admin
     .from("bookings")
-    .select("id, customer_id, professional_id, status, date, vakman_profielen(user_id, bedrijfsnaam)")
+    .select("id, customer_id, professional_id, status, date, professional_profiles(user_id, company_name)")
     .eq("id", params.id)
     .maybeSingle();
   if (!boeking) return NextResponse.json({ error: "Boeking niet gevonden" }, { status: 404 });
 
-  const vakmanProfiel = boeking.vakman_profielen as unknown as { user_id: string; bedrijfsnaam: string } | null;
+  const vakmanProfiel = boeking.professional_profiles as unknown as { user_id: string; company_name: string } | null;
   const vakmanUserId = vakmanProfiel?.user_id;
-  const bedrijfsnaam = vakmanProfiel?.bedrijfsnaam ?? "De vakman";
+  const bedrijfsnaam = vakmanProfiel?.company_name ?? "De vakman";
 
   const isKlant = boeking.customer_id === user.id;
   const isVakman = vakmanUserId === user.id;

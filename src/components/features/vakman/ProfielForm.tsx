@@ -33,11 +33,11 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
   const [savingBasis, setSavingBasis] = useState(false);
   const [savingVerrijking, setSavingVerrijking] = useState(false);
 
-  const [bedrijfsnaam, setBedrijfsnaam] = useState(vakman.bedrijfsnaam);
-  const [hoofdcategorieId, setHoofdcategorieId] = useState(vakman.specialismes[0] ?? "");
-  const [postcode, setPostcode] = useState(vakman.werkgebied_postcode ?? "");
-  const [straal, setStraal] = useState(vakman.werkgebied_km);
-  const [contactVoorkeur, setContactVoorkeur] = useState(vakman.contact_voorkeur);
+  const [bedrijfsnaam, setBedrijfsnaam] = useState(vakman.company_name);
+  const [hoofdcategorieId, setHoofdcategorieId] = useState(vakman.specialties[0] ?? "");
+  const [postcode, setPostcode] = useState(vakman.service_area_postcode ?? "");
+  const [straal, setStraal] = useState(vakman.service_area_km);
+  const [contactVoorkeur, setContactVoorkeur] = useState(vakman.contact_preference);
 
   const [website, setWebsite] = useState(vakman.website ?? "");
   const [bio, setBio] = useState(vakman.bio ?? "");
@@ -62,8 +62,8 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     const supabase = createClient();
     const { data: sterkte } = await supabase.rpc("bereken_profiel_sterkte", { v_id: vakman.id });
     if (sterkte != null) {
-      await supabase.from("vakman_profielen").update({ profiel_sterkte: sterkte }).eq("id", vakman.id);
-      setVakman((v) => ({ ...v, profiel_sterkte: sterkte }));
+      await supabase.from("professional_profiles").update({ profile_strength: sterkte }).eq("id", vakman.id);
+      setVakman((v) => ({ ...v, profile_strength: sterkte }));
     }
   }
 
@@ -71,13 +71,13 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     setSavingBasis(true);
     const supabase = createClient();
     const { error } = await supabase
-      .from("vakman_profielen")
+      .from("professional_profiles")
       .update({
-        bedrijfsnaam,
-        specialismes: hoofdcategorieId ? [hoofdcategorieId] : [],
-        werkgebied_postcode: postcode || null,
-        werkgebied_km: straal,
-        contact_voorkeur: contactVoorkeur,
+        company_name: bedrijfsnaam,
+        specialties: hoofdcategorieId ? [hoofdcategorieId] : [],
+        service_area_postcode: postcode || null,
+        service_area_km: straal,
+        contact_preference: contactVoorkeur,
       })
       .eq("id", vakman.id);
 
@@ -86,13 +86,13 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
       showToast(error.message, "error");
       return;
     }
-    setVakman((v) => ({ ...v, bedrijfsnaam, werkgebied_postcode: postcode, werkgebied_km: straal, contact_voorkeur: contactVoorkeur }));
+    setVakman((v) => ({ ...v, company_name: bedrijfsnaam, service_area_postcode: postcode, service_area_km: straal, contact_preference: contactVoorkeur }));
     showToast("Basisgegevens opgeslagen", "success");
   }
 
   async function handleLogoUploaded(url: string) {
     const supabase = createClient();
-    await supabase.from("vakman_profielen").update({ logo_url: url }).eq("id", vakman.id);
+    await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", vakman.id);
     setVakman((v) => ({ ...v, logo_url: url }));
     await recalcSterkte();
     showToast("Logo geüpload", "success");
@@ -102,7 +102,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     setSavingVerrijking(true);
     const supabase = createClient();
     const { error } = await supabase
-      .from("vakman_profielen")
+      .from("professional_profiles")
       .update({ website: website || null, bio: bio || null })
       .eq("id", vakman.id);
 
@@ -122,8 +122,8 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     if (!path) return;
 
     const supabase = createClient();
-    await supabase.from("vakman_profielen").update({ verzekering_url: path, verzekerd: true }).eq("id", vakman.id);
-    setVakman((v) => ({ ...v, verzekering_url: path, verzekerd: true }));
+    await supabase.from("professional_profiles").update({ insurance_url: path, insured: true }).eq("id", vakman.id);
+    setVakman((v) => ({ ...v, insurance_url: path, insured: true }));
     await recalcSterkte();
     showToast("Verzekeringsbewijs geüpload", "success");
   }
@@ -132,7 +132,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     <div className="max-w-[680px] mx-auto px-6 py-8 flex flex-col gap-6">
       <div>
         <h1 className="font-display text-display-md text-warmzwart">Profiel bewerken</h1>
-        <p className="text-body text-warmgrijs mt-1">Profielsterkte: {vakman.profiel_sterkte}%</p>
+        <p className="text-body text-warmgrijs mt-1">Profielsterkte: {vakman.profile_strength}%</p>
       </div>
 
       {/* ── Basis ── */}
@@ -144,8 +144,8 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
           <div>
             <label className="text-body-sm font-semibold block mb-1.5">KvK-nummer</label>
             <div className="flex items-center gap-2">
-              <input className="input flex-1" value={vakman.kvk_nummer ?? ""} disabled />
-              {vakman.kvk_geverifieerd && (
+              <input className="input flex-1" value={vakman.kvk_number ?? ""} disabled />
+              {vakman.kvk_verified && (
                 <span className="flex items-center gap-1 text-body-xs font-semibold text-groen shrink-0">
                   <Check size={14} weight="bold" /> Geverifieerd
                 </span>
@@ -249,7 +249,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
       {/* ── Verzekeringsbewijs ── */}
       <section id="verzekering" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Verzekeringsbewijs</h2>
-        {vakman.verzekering_url ? (
+        {vakman.insurance_url ? (
           <p className="flex items-center gap-2 text-body-sm text-groen font-medium">
             <Check size={16} weight="bold" /> Bewijs geüpload
           </p>

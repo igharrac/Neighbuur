@@ -19,17 +19,17 @@ interface ChecklistItem {
 
 export function ProfielSterkte({ vakman, werkFotoCount, heeftBeschikbaarheid }: ProfielSterkteProps) {
   const items: ChecklistItem[] = [
-    { label: "Bedrijfsnaam", done: !!vakman.bedrijfsnaam, punten: 10, href: "/dashboard/profiel" },
-    { label: "KvK-nummer", done: !!vakman.kvk_nummer, punten: 10, href: "/dashboard/profiel" },
+    { label: "Bedrijfsnaam", done: !!vakman.company_name, punten: 10, href: "/dashboard/profiel" },
+    { label: "KvK-nummer", done: !!vakman.kvk_number, punten: 10, href: "/dashboard/profiel" },
     { label: "Logo uploaden", done: !!vakman.logo_url, punten: 20, href: "/dashboard/profiel#logo" },
     { label: "Bio schrijven", done: !!vakman.bio, punten: 10, href: "/dashboard/profiel#bio" },
     { label: "Website toevoegen", done: !!vakman.website, punten: 5, href: "/dashboard/profiel#website" },
     { label: "3+ werkfoto's", done: werkFotoCount >= 3, punten: 15, href: "/dashboard/profiel#fotos" },
     { label: "Beschikbaarheid instellen", done: heeftBeschikbaarheid, punten: 10, href: "/dashboard/profiel#beschikbaarheid" },
-    { label: "Verzekeringsbewijs", done: !!vakman.verzekering_url, punten: 15, href: "/dashboard/profiel#verzekering" },
+    { label: "Verzekeringsbewijs", done: !!vakman.insurance_url, punten: 15, href: "/dashboard/profiel#verzekering" },
   ];
 
-  const pct = Math.min(100, Math.max(0, vakman.profiel_sterkte));
+  const pct = Math.min(100, Math.max(0, vakman.profile_strength));
 
   return (
     <div className="bg-white rounded-md shadow-soft p-6">

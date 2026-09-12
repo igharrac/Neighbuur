@@ -103,28 +103,28 @@ export interface ReviewCompleet {
 export interface VakmanProfiel {
   id: string;
   user_id: string;
-  bedrijfsnaam: string;
+  company_name: string;
   slug: string;
-  kvk_nummer: string | null;
-  kvk_geverifieerd: boolean;
+  kvk_number: string | null;
+  kvk_verified: boolean;
   bio: string | null;
   website: string | null;
   logo_url: string | null;
-  specialismes: string[];
-  contact_voorkeur: "telefoon" | "whatsapp" | "app";
-  werkgebied_postcode: string | null;
-  werkgebied_km: number;
-  verzekerd: boolean;
-  verzekering_url: string | null;
-  registratie_bron: string | null;
-  geverifieerd: boolean;
-  profiel_sterkte: number;
-  gem_score: number;
-  aantal_reviews: number;
+  specialties: string[];
+  contact_preference: "telefoon" | "whatsapp" | "app";
+  service_area_postcode: string | null;
+  service_area_km: number;
+  insured: boolean;
+  insurance_url: string | null;
+  registration_source: string | null;
+  verified: boolean;
+  profile_strength: number;
+  avg_score: number;
+  review_count: number;
   is_premium: boolean;
-  premium_tot: string | null;
-  aanvragen_deze_maand: number;
-  aanvragen_limiet: number;
+  premium_until: string | null;
+  requests_this_month: number;
+  requests_limit: number;
 }
 
 export interface Bericht {
@@ -185,8 +185,36 @@ export interface BoekingMetKlant extends Boeking {
   categorie_naam: string | null;
 }
 
-/** Rij uit de `vakman_overzicht` view: vakman_profielen + afgeleide zoek-/statistiekvelden. */
-export interface VakmanOverzicht extends VakmanProfiel {
+// vakman_overzicht gebruikt vp.* (wildcard) en bevriest daardoor haar eigen
+// kolomnamen bij aanmaak — die volgen een onderliggende kolomrename niet
+// automatisch (zelfde mechanisme als ReviewCompleet, zie migratie 0019/0022).
+// Daarom hier een losstaande, bewust-Nederlandse vorm i.p.v. een extend van
+// het (inmiddels Engelse) VakmanProfiel. Wordt in Fase 4 herzien.
+export interface VakmanOverzicht {
+  id: string;
+  user_id: string;
+  bedrijfsnaam: string;
+  slug: string;
+  kvk_nummer: string | null;
+  kvk_geverifieerd: boolean;
+  bio: string | null;
+  website: string | null;
+  logo_url: string | null;
+  specialismes: string[];
+  contact_voorkeur: "telefoon" | "whatsapp" | "app";
+  werkgebied_postcode: string | null;
+  werkgebied_km: number;
+  verzekerd: boolean;
+  verzekering_url: string | null;
+  registratie_bron: string | null;
+  geverifieerd: boolean;
+  profiel_sterkte: number;
+  gem_score: number;
+  aantal_reviews: number;
+  is_premium: boolean;
+  premium_tot: string | null;
+  aanvragen_deze_maand: number;
+  aanvragen_limiet: number;
   eigenaar_naam: string;
   eigenaar_avatar: string | null;
   review_count: number;

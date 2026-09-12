@@ -8,7 +8,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   const supabase = createServerSupabase();
 
   const { data: vakman } = await supabase
-    .from("vakman_profielen")
+    .from("professional_profiles")
     .select("*")
     .eq("slug", params.slug)
     .maybeSingle();

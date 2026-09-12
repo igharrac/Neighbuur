@@ -12,7 +12,7 @@ export default async function DashboardProfielPage() {
   if (!user) redirect("/login");
 
   const { data: vakman } = await supabase
-    .from("vakman_profielen")
+    .from("professional_profiles")
     .select("*")
     .eq("user_id", user.id)
     .maybeSingle();

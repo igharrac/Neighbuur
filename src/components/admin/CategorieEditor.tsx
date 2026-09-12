@@ -115,9 +115,9 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
   async function handleDelete(cat: Categorie) {
     const supabase = createClient();
     const { data: gekoppeld } = await supabase
-      .from("vakman_profielen")
+      .from("professional_profiles")
       .select("id")
-      .contains("specialismes", [cat.id])
+      .contains("specialties", [cat.id])
       .limit(1);
 
     if (gekoppeld && gekoppeld.length > 0) {

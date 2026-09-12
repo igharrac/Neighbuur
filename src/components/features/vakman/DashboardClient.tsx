@@ -50,31 +50,31 @@ export function DashboardClient({
     setBoekingen((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
   }
 
-  const limietBereikt = !vakman.is_premium && vakman.aanvragen_deze_maand >= vakman.aanvragen_limiet;
+  const limietBereikt = !vakman.is_premium && vakman.requests_this_month >= vakman.requests_limit;
   const nieuweAanvragen = boekingen.filter((b) => b.status === "aangevraagd");
   const lopendeKlussen = boekingen.filter((b) => b.status === "bevestigd");
   const afgeslotenKlussen = boekingen.filter((b) => b.status === "afgerond" || b.status === "geannuleerd");
 
   async function handleLogoUploaded(url: string) {
     const supabase = createClient();
-    await supabase.from("vakman_profielen").update({ logo_url: url }).eq("id", vakman.id);
+    await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", vakman.id);
 
     const { data: sterkte } = await supabase.rpc("bereken_profiel_sterkte", { v_id: vakman.id });
-    const nieuweSterkte = sterkte ?? vakman.profiel_sterkte;
-    await supabase.from("vakman_profielen").update({ profiel_sterkte: nieuweSterkte }).eq("id", vakman.id);
+    const nieuweSterkte = sterkte ?? vakman.profile_strength;
+    await supabase.from("professional_profiles").update({ profile_strength: nieuweSterkte }).eq("id", vakman.id);
 
-    setVakman((v) => ({ ...v, logo_url: url, profiel_sterkte: nieuweSterkte }));
+    setVakman((v) => ({ ...v, logo_url: url, profile_strength: nieuweSterkte }));
   }
 
   return (
     <div className="max-w-[720px] mx-auto px-6 py-8 flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-display-md text-warmzwart">Welkom, {vakman.bedrijfsnaam}</h1>
-        <p className="text-body text-warmgrijs mt-1">Je profiel is {vakman.profiel_sterkte}% compleet</p>
+        <h1 className="font-display text-display-md text-warmzwart">Welkom, {vakman.company_name}</h1>
+        <p className="text-body text-warmgrijs mt-1">Je profiel is {vakman.profile_strength}% compleet</p>
       </div>
 
       {!vakman.logo_url && (
-        <LogoPrompt vakmanId={vakman.id} bedrijfsnaam={vakman.bedrijfsnaam} onUploaded={handleLogoUploaded} />
+        <LogoPrompt vakmanId={vakman.id} bedrijfsnaam={vakman.company_name} onUploaded={handleLogoUploaded} />
       )}
 
       <ProfielSterkte vakman={vakman} werkFotoCount={werkFotoCount} heeftBeschikbaarheid={heeftBeschikbaarheid} />

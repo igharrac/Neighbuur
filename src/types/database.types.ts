@@ -68,6 +68,104 @@ export interface Database {
           { foreignKeyName: "push_subscriptions_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
+      professional_profiles: {
+        Row: {
+          id: string;
+          user_id: string;
+          company_name: string;
+          slug: string;
+          kvk_number: string | null;
+          kvk_verified: boolean | null;
+          bio: string | null;
+          website: string | null;
+          logo_url: string | null;
+          specialties: string[] | null;
+          contact_preference: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          service_area_postcode: string | null;
+          service_area_km: number | null;
+          insured: boolean | null;
+          insurance_url: string | null;
+          verified: boolean | null;
+          registration_source: string | null;
+          profile_strength: number | null;
+          avg_score: number | null;
+          review_count: number | null;
+          response_time_min: number | null;
+          mollie_account_id: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+          is_premium: boolean | null;
+          premium_until: string | null;
+          stripe_customer_id: string | null;
+          requests_this_month: number | null;
+          requests_limit: number | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          company_name: string;
+          slug: string;
+          kvk_number?: string | null;
+          kvk_verified?: boolean | null;
+          bio?: string | null;
+          website?: string | null;
+          logo_url?: string | null;
+          specialties?: string[] | null;
+          contact_preference?: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          service_area_postcode?: string | null;
+          service_area_km?: number | null;
+          insured?: boolean | null;
+          insurance_url?: string | null;
+          verified?: boolean | null;
+          registration_source?: string | null;
+          profile_strength?: number | null;
+          avg_score?: number | null;
+          review_count?: number | null;
+          response_time_min?: number | null;
+          mollie_account_id?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+          is_premium?: boolean | null;
+          premium_until?: string | null;
+          stripe_customer_id?: string | null;
+          requests_this_month?: number | null;
+          requests_limit?: number | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          company_name?: string;
+          slug?: string;
+          kvk_number?: string | null;
+          kvk_verified?: boolean | null;
+          bio?: string | null;
+          website?: string | null;
+          logo_url?: string | null;
+          specialties?: string[] | null;
+          contact_preference?: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          service_area_postcode?: string | null;
+          service_area_km?: number | null;
+          insured?: boolean | null;
+          insurance_url?: string | null;
+          verified?: boolean | null;
+          registration_source?: string | null;
+          profile_strength?: number | null;
+          avg_score?: number | null;
+          review_count?: number | null;
+          response_time_min?: number | null;
+          mollie_account_id?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+          is_premium?: boolean | null;
+          premium_until?: string | null;
+          stripe_customer_id?: string | null;
+          requests_this_month?: number | null;
+          requests_limit?: number | null;
+        };
+        Relationships: [
+          { foreignKeyName: "professional_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+        ];
+      };
       review_replies: {
         Row: {
           id: string;
@@ -95,7 +193,7 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "review_replies_review_id_fkey"; columns: ["review_id"]; isOneToOne: false; referencedRelation: "reviews"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_replies_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_replies_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
         ];
       };
       conversation_participants: {
@@ -253,7 +351,7 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "transactions_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
-          { foreignKeyName: "transactions_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "transactions_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "transactions_customer_id_fkey"; columns: ["customer_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
@@ -314,7 +412,7 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "bookings_customer_id_fkey"; columns: ["customer_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "bookings_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "bookings_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "bookings_category_id_fkey"; columns: ["category_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
           { foreignKeyName: "bookings_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
@@ -464,7 +562,7 @@ export interface Database {
           status?: Database["public"]["Enums"]["beschikbaarheid_type"];
         };
         Relationships: [
-          { foreignKeyName: "availability_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "availability_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
         ];
       };
       communities: {
@@ -535,104 +633,6 @@ export interface Database {
           { foreignKeyName: "review_votes_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
-      vakman_profielen: {
-        Row: {
-          id: string;
-          user_id: string;
-          bedrijfsnaam: string;
-          slug: string;
-          kvk_nummer: string | null;
-          kvk_geverifieerd: boolean | null;
-          bio: string | null;
-          website: string | null;
-          logo_url: string | null;
-          specialismes: string[] | null;
-          contact_voorkeur: Database["public"]["Enums"]["contact_voorkeur"] | null;
-          werkgebied_postcode: string | null;
-          werkgebied_km: number | null;
-          verzekerd: boolean | null;
-          verzekering_url: string | null;
-          geverifieerd: boolean | null;
-          registratie_bron: string | null;
-          profiel_sterkte: number | null;
-          gem_score: number | null;
-          aantal_reviews: number | null;
-          reactietijd_min: number | null;
-          mollie_account_id: string | null;
-          created_at: string | null;
-          updated_at: string | null;
-          is_premium: boolean | null;
-          premium_tot: string | null;
-          stripe_customer_id: string | null;
-          aanvragen_deze_maand: number | null;
-          aanvragen_limiet: number | null;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          bedrijfsnaam: string;
-          slug: string;
-          kvk_nummer?: string | null;
-          kvk_geverifieerd?: boolean | null;
-          bio?: string | null;
-          website?: string | null;
-          logo_url?: string | null;
-          specialismes?: string[] | null;
-          contact_voorkeur?: Database["public"]["Enums"]["contact_voorkeur"] | null;
-          werkgebied_postcode?: string | null;
-          werkgebied_km?: number | null;
-          verzekerd?: boolean | null;
-          verzekering_url?: string | null;
-          geverifieerd?: boolean | null;
-          registratie_bron?: string | null;
-          profiel_sterkte?: number | null;
-          gem_score?: number | null;
-          aantal_reviews?: number | null;
-          reactietijd_min?: number | null;
-          mollie_account_id?: string | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-          is_premium?: boolean | null;
-          premium_tot?: string | null;
-          stripe_customer_id?: string | null;
-          aanvragen_deze_maand?: number | null;
-          aanvragen_limiet?: number | null;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          bedrijfsnaam?: string;
-          slug?: string;
-          kvk_nummer?: string | null;
-          kvk_geverifieerd?: boolean | null;
-          bio?: string | null;
-          website?: string | null;
-          logo_url?: string | null;
-          specialismes?: string[] | null;
-          contact_voorkeur?: Database["public"]["Enums"]["contact_voorkeur"] | null;
-          werkgebied_postcode?: string | null;
-          werkgebied_km?: number | null;
-          verzekerd?: boolean | null;
-          verzekering_url?: string | null;
-          geverifieerd?: boolean | null;
-          registratie_bron?: string | null;
-          profiel_sterkte?: number | null;
-          gem_score?: number | null;
-          aantal_reviews?: number | null;
-          reactietijd_min?: number | null;
-          mollie_account_id?: string | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-          is_premium?: boolean | null;
-          premium_tot?: string | null;
-          stripe_customer_id?: string | null;
-          aanvragen_deze_maand?: number | null;
-          aanvragen_limiet?: number | null;
-        };
-        Relationships: [
-          { foreignKeyName: "vakman_profielen_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-        ];
-      };
       work_photos: {
         Row: {
           id: string;
@@ -659,7 +659,7 @@ export interface Database {
           created_at?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "work_photos_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "work_photos_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "work_photos_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
@@ -861,7 +861,7 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "reviews_author_id_fkey"; columns: ["author_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "reviews_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "reviews_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
@@ -911,7 +911,7 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "review_compleet_auteur_id_fkey"; columns: ["auteur_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_compleet_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "review_compleet_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "review_compleet_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
@@ -1008,11 +1008,11 @@ export interface Database {
     };
     Enums: {
       content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
+      contact_voorkeur: "telefoon" | "whatsapp" | "app";
       user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
       notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
       beschikbaarheid_type: "beschikbaar" | "bezet";
-      contact_voorkeur: "telefoon" | "whatsapp" | "app";
       categorie_type: "vakman" | "vergelijk";
     };
   };

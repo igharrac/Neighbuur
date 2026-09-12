@@ -193,22 +193,22 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     const baseSlug = slugify(bedrijfsnaam);
     let slug = baseSlug;
     for (let i = 0; i < 5; i++) {
-      const { data: existing } = await supabase.from("vakman_profielen").select("id").eq("slug", slug).maybeSingle();
+      const { data: existing } = await supabase.from("professional_profiles").select("id").eq("slug", slug).maybeSingle();
       if (!existing) break;
       slug = `${baseSlug}-${Math.floor(Math.random() * 1000)}`;
     }
 
-    const { error: vakmanError } = await supabase.from("vakman_profielen").insert({
+    const { error: vakmanError } = await supabase.from("professional_profiles").insert({
       user_id: user.id,
-      bedrijfsnaam,
+      company_name: bedrijfsnaam,
       slug,
-      kvk_nummer: kvkNummer.replace(/\s/g, ""),
-      specialismes: [hoofdcategorieId],
-      contact_voorkeur: contactVoorkeur,
-      werkgebied_postcode: postcode || null,
-      werkgebied_km: straal,
-      registratie_bron: refBron ?? null,
-      profiel_sterkte: 20,
+      kvk_number: kvkNummer.replace(/\s/g, ""),
+      specialties: [hoofdcategorieId],
+      contact_preference: contactVoorkeur,
+      service_area_postcode: postcode || null,
+      service_area_km: straal,
+      registration_source: refBron ?? null,
+      profile_strength: 20,
     });
 
     setSaving(false);

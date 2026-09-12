@@ -96,7 +96,7 @@ export default async function PlanPage() {
 
   const { data: boekingenData } = await supabase
     .from("bookings")
-    .select("id, status, description, date, created_at, vakman_profielen(bedrijfsnaam, slug), categories(name_nl)")
+    .select("id, status, description, date, created_at, professional_profiles(company_name, slug), categories(name_nl)")
     .eq("customer_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -106,7 +106,7 @@ export default async function PlanPage() {
     description: string | null;
     date: string | null;
     created_at: string;
-    vakman_profielen: { bedrijfsnaam: string; slug: string } | null;
+    professional_profiles: { company_name: string; slug: string } | null;
     categories: { name_nl: string } | null;
   }[]).map((b) => ({
     id: b.id,
@@ -114,7 +114,7 @@ export default async function PlanPage() {
     omschrijving: b.description,
     datum: b.date,
     created_at: b.created_at,
-    vakman: b.vakman_profielen,
+    vakman: b.professional_profiles ? { bedrijfsnaam: b.professional_profiles.company_name, slug: b.professional_profiles.slug } : null,
     categorieNaam: b.categories?.name_nl ?? null,
   }));
 
