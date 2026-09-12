@@ -24,6 +24,12 @@ import type { Categorie, ReviewCompleet, VakmanProfiel } from "@/types";
 
 type Tab = "beschikbaarheid" | "werk" | "reviews" | "over";
 
+const CONTACT_VOORKEUR_LABELS: Record<VakmanProfiel["contact_preference"], string> = {
+  phone: "Telefoon",
+  whatsapp: "WhatsApp",
+  app: "Via de app",
+};
+
 /* Demo data — werkfoto's worden pas in een latere fase live gekoppeld */
 const WERKFOTOS = [
   { titel: "Spackspuiten woonkamer", loc: "Blok C #42" },
@@ -297,7 +303,7 @@ export function VakmanProfielClient({
                 label: "Werkgebied",
                 value: vakman.service_area_postcode ? `${vakman.service_area_postcode} (${vakman.service_area_km} km)` : "Onbekend",
               },
-              { icon: Clock, label: "Contactvoorkeur", value: vakman.contact_preference },
+              { icon: Clock, label: "Contactvoorkeur", value: CONTACT_VOORKEUR_LABELS[vakman.contact_preference] },
               {
                 icon: Briefcase,
                 label: "KvK",

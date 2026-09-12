@@ -111,7 +111,7 @@ export interface VakmanProfiel {
   website: string | null;
   logo_url: string | null;
   specialties: string[];
-  contact_preference: "telefoon" | "whatsapp" | "app";
+  contact_preference: "phone" | "whatsapp" | "app";
   service_area_postcode: string | null;
   service_area_km: number;
   insured: boolean;
@@ -201,7 +201,7 @@ export interface VakmanOverzicht {
   website: string | null;
   logo_url: string | null;
   specialismes: string[];
-  contact_voorkeur: "telefoon" | "whatsapp" | "app";
+  contact_voorkeur: "phone" | "whatsapp" | "app";
   werkgebied_postcode: string | null;
   werkgebied_km: number;
   verzekerd: boolean;

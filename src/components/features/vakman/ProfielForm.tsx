@@ -14,6 +14,12 @@ import type { Categorie, VakmanProfiel } from "@/types";
 
 const STRAAL_OPTIES = [5, 10, 15, 25];
 
+const CONTACT_VOORKEUR_LABELS: Record<VakmanProfiel["contact_preference"], string> = {
+  phone: "Telefoon",
+  whatsapp: "WhatsApp",
+  app: "Via de app",
+};
+
 interface WerkFoto {
   id: string;
   photo_url: string;
@@ -182,15 +188,15 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
           <div>
             <label className="text-body-sm font-semibold block mb-2">Contactvoorkeur</label>
             <div className="flex gap-2 flex-wrap">
-              {(["telefoon", "whatsapp", "app"] as const).map((opt) => (
+              {(["phone", "whatsapp", "app"] as const).map((opt) => (
                 <button
                   key={opt}
                   onClick={() => setContactVoorkeur(opt)}
-                  className={`px-4 py-2 rounded-sm text-body-sm font-semibold capitalize border-2 transition-colors ${
+                  className={`px-4 py-2 rounded-sm text-body-sm font-semibold border-2 transition-colors ${
                     contactVoorkeur === opt ? "border-terracotta bg-terracotta-50 text-terracotta" : "border-lijn text-warmgrijs"
                   }`}
                 >
-                  {opt}
+                  {CONTACT_VOORKEUR_LABELS[opt]}
                 </button>
               ))}
             </div>

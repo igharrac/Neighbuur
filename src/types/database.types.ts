@@ -80,7 +80,7 @@ export interface Database {
           website: string | null;
           logo_url: string | null;
           specialties: string[] | null;
-          contact_preference: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          contact_preference: Database["public"]["Enums"]["contact_preference"] | null;
           service_area_postcode: string | null;
           service_area_km: number | null;
           insured: boolean | null;
@@ -111,7 +111,7 @@ export interface Database {
           website?: string | null;
           logo_url?: string | null;
           specialties?: string[] | null;
-          contact_preference?: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          contact_preference?: Database["public"]["Enums"]["contact_preference"] | null;
           service_area_postcode?: string | null;
           service_area_km?: number | null;
           insured?: boolean | null;
@@ -142,7 +142,7 @@ export interface Database {
           website?: string | null;
           logo_url?: string | null;
           specialties?: string[] | null;
-          contact_preference?: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          contact_preference?: Database["public"]["Enums"]["contact_preference"] | null;
           service_area_postcode?: string | null;
           service_area_km?: number | null;
           insured?: boolean | null;
@@ -928,7 +928,7 @@ export interface Database {
           website: string | null;
           logo_url: string | null;
           specialismes: string[] | null;
-          contact_voorkeur: Database["public"]["Enums"]["contact_voorkeur"] | null;
+          contact_voorkeur: Database["public"]["Enums"]["contact_preference"] | null;
           werkgebied_postcode: string | null;
           werkgebied_km: number | null;
           verzekerd: boolean | null;
@@ -1008,7 +1008,7 @@ export interface Database {
     };
     Enums: {
       content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
-      contact_voorkeur: "telefoon" | "whatsapp" | "app";
+      contact_preference: "phone" | "whatsapp" | "app";
       user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
       notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";

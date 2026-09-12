@@ -43,7 +43,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   const [straal, setStraal] = useState(15);
 
   // Step 3 — contact
-  const [contactVoorkeur, setContactVoorkeur] = useState<"telefoon" | "whatsapp" | "app">("app");
+  const [contactVoorkeur, setContactVoorkeur] = useState<"phone" | "whatsapp" | "app">("app");
   const [akkoord, setAkkoord] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -480,7 +480,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                 <div className="flex flex-col gap-2.5 mb-6">
                   {(
                     [
-                      { value: "telefoon" as const, label: "Telefoon" },
+                      { value: "phone" as const, label: "Telefoon" },
                       { value: "whatsapp" as const, label: "WhatsApp" },
                       { value: "app" as const, label: "Via de app" },
                     ]
