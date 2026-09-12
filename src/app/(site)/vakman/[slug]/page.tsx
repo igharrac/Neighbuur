@@ -54,13 +54,13 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   const heeftAlGereviewed = !!user && alleReviews.some((r) => r.auteur_id === user.id);
 
   const { data: beschikbaarheidRows } = await supabase
-    .from("beschikbaarheid")
-    .select("datum, status")
-    .eq("vakman_id", vakman.id);
+    .from("availability")
+    .select("date, status")
+    .eq("professional_id", vakman.id);
 
   const beschikbaarheid: Record<string, "beschikbaar" | "bezet"> = {};
   (beschikbaarheidRows ?? []).forEach((r) => {
-    beschikbaarheid[r.datum] = r.status;
+    beschikbaarheid[r.date] = r.status;
   });
 
   const alleCategorieen = await getCategorieen();

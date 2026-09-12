@@ -240,7 +240,7 @@ export default function OnboardingPage() {
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    await supabase.from("community_leden").insert({ community_id: bestaandeCommunity.id, user_id: user.id, rol: "lid" });
+    await supabase.from("community_members").insert({ community_id: bestaandeCommunity.id, user_id: user.id, role: "lid" });
     await supabase.from("bewoner_profielen").update({ community_id: bestaandeCommunity.id }).eq("user_id", user.id);
 
     setSaving(false);

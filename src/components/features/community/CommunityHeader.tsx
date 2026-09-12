@@ -47,8 +47,8 @@ export function CommunityHeader({
     const supabase = createClient();
 
     const { error: ledenError } = await supabase
-      .from("community_leden")
-      .insert({ community_id: communityId, user_id: user.id, rol: "lid" });
+      .from("community_members")
+      .insert({ community_id: communityId, user_id: user.id, role: "lid" });
 
     if (ledenError) {
       setJoining(false);

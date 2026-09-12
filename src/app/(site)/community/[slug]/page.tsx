@@ -61,7 +61,7 @@ export default async function CommunityPage({ params }: { params: { slug: string
   let isMember = false;
   if (user) {
     const { data: lid } = await supabase
-      .from("community_leden")
+      .from("community_members")
       .select("id")
       .eq("community_id", c.id)
       .eq("user_id", user.id)

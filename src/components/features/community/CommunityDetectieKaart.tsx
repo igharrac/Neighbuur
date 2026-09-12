@@ -37,7 +37,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    await supabase.from("community_leden").insert({ community_id: props.communityId, user_id: user.id, rol: "lid" });
+    await supabase.from("community_members").insert({ community_id: props.communityId, user_id: user.id, role: "lid" });
     await supabase.from("bewoner_profielen").update({ community_id: props.communityId }).eq("user_id", user.id);
     router.push(`/community/${props.slug}`);
   }

@@ -21,7 +21,7 @@ export async function GET() {
   let bijgewerkt = 0;
   for (const c of communities) {
     const { count } = await admin
-      .from("community_leden")
+      .from("community_members")
       .select("user_id", { count: "exact", head: true })
       .eq("community_id", c.id);
 

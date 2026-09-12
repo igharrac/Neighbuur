@@ -46,11 +46,11 @@ export function BeschikbaarheidEditor({
 
     const supabase = createClient();
     if (next === undefined) {
-      await supabase.from("beschikbaarheid").delete().eq("vakman_id", vakmanId).eq("datum", key);
+      await supabase.from("availability").delete().eq("professional_id", vakmanId).eq("date", key);
     } else {
       await supabase
-        .from("beschikbaarheid")
-        .upsert({ vakman_id: vakmanId, datum: key, status: next }, { onConflict: "vakman_id,datum" });
+        .from("availability")
+        .upsert({ professional_id: vakmanId, date: key, status: next }, { onConflict: "professional_id,date" });
     }
   }
 

@@ -15,7 +15,7 @@ const MAX_SHOWN = 24;
 export async function BewonersBlok({ data, community_id }: { data: BewonersBlokData; community_id: string }) {
   const supabase = createServerSupabase();
   const { data: leden } = await supabase
-    .from("community_leden")
+    .from("community_members")
     .select("user_id, profielen(naam, avatar_url)")
     .eq("community_id", community_id);
 

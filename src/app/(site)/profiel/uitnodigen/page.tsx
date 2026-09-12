@@ -3,7 +3,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { InviteCard } from "@/components/features/invite/InviteCard";
 
 interface UitnodigingRow {
-  gebruikt_op: string;
+  used_at: string;
   profielen: { naam: string } | null;
 }
 
@@ -32,15 +32,15 @@ export default async function UitnodigenPage() {
   }
 
   const { data: uitnodigingen } = await supabase
-    .from("uitnodigingen")
-    .select("gebruikt_op, profielen:gebruikt_door(naam)")
-    .eq("uitnodiger_id", user.id)
-    .not("gebruikt_door", "is", null)
-    .order("gebruikt_op", { ascending: false });
+    .from("invitations")
+    .select("used_at, profielen:used_by(naam)")
+    .eq("inviter_id", user.id)
+    .not("used_by", "is", null)
+    .order("used_at", { ascending: false });
 
   const genodigden = ((uitnodigingen ?? []) as unknown as UitnodigingRow[]).map((u) => ({
     naam: u.profielen?.naam ?? "Iemand",
-    datum: u.gebruikt_op,
+    datum: u.used_at,
   }));
 
   return (

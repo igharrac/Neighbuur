@@ -47,9 +47,9 @@ export default async function DashboardPage() {
     .eq("professional_id", vakman.id);
 
   const { count: beschikbaarheidCount } = await supabase
-    .from("beschikbaarheid")
+    .from("availability")
     .select("id", { count: "exact", head: true })
-    .eq("vakman_id", vakman.id);
+    .eq("professional_id", vakman.id);
 
   const { data: boekingenData } = await supabase
     .from("boekingen")

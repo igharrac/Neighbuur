@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   const { data: community } = await admin.from("communities").select("naam, slug").eq("id", communityId).maybeSingle();
   if (!community) return NextResponse.json({ error: "community niet gevonden" }, { status: 404 });
 
-  const { data: leden } = await admin.from("community_leden").select("user_id").eq("community_id", communityId);
+  const { data: leden } = await admin.from("community_members").select("user_id").eq("community_id", communityId);
   const userIds = (leden ?? []).map((l) => l.user_id).filter((id) => id !== user.id);
   if (userIds.length === 0) return NextResponse.json({ verstuurd: 0 });
 

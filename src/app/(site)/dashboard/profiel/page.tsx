@@ -26,13 +26,13 @@ export default async function DashboardProfielPage() {
     .order("created_at", { ascending: true });
 
   const { data: beschikbaarheidRows } = await supabase
-    .from("beschikbaarheid")
-    .select("datum, status")
-    .eq("vakman_id", vakman.id);
+    .from("availability")
+    .select("date, status")
+    .eq("professional_id", vakman.id);
 
   const beschikbaarheid: Record<string, "beschikbaar" | "bezet"> = {};
   (beschikbaarheidRows ?? []).forEach((r) => {
-    beschikbaarheid[r.datum] = r.status;
+    beschikbaarheid[r.date] = r.status;
   });
 
   return (

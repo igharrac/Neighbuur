@@ -10,33 +10,6 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
   public: {
     Tables: {
-      community_leden: {
-        Row: {
-          id: string;
-          community_id: string;
-          user_id: string;
-          rol: string;
-          joined_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          community_id: string;
-          user_id: string;
-          rol?: string;
-          joined_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          community_id?: string;
-          user_id?: string;
-          rol?: string;
-          joined_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "community_leden_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "community_leden_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
-        ];
-      };
       community_content_blokken: {
         Row: {
           id: string;
@@ -126,29 +99,6 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "berichten_gesprek_id_fkey"; columns: ["gesprek_id"]; isOneToOne: false; referencedRelation: "gesprekken"; referencedColumns: ["id"] },
           { foreignKeyName: "berichten_van_id_fkey"; columns: ["van_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
-        ];
-      };
-      beschikbaarheid: {
-        Row: {
-          id: string;
-          vakman_id: string;
-          datum: string;
-          status: Database["public"]["Enums"]["beschikbaarheid_type"];
-        };
-        Insert: {
-          id?: string;
-          vakman_id: string;
-          datum: string;
-          status?: Database["public"]["Enums"]["beschikbaarheid_type"];
-        };
-        Update: {
-          id?: string;
-          vakman_id?: string;
-          datum?: string;
-          status?: Database["public"]["Enums"]["beschikbaarheid_type"];
-        };
-        Relationships: [
-          { foreignKeyName: "beschikbaarheid_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
         ];
       };
       review_replies: {
@@ -461,6 +411,40 @@ export interface Database {
         };
         Relationships: [];
       };
+      invitations: {
+        Row: {
+          id: string;
+          inviter_id: string;
+          code: string;
+          community_id: string | null;
+          used_by: string | null;
+          used_at: string | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          inviter_id: string;
+          code: string;
+          community_id?: string | null;
+          used_by?: string | null;
+          used_at?: string | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          inviter_id?: string;
+          code?: string;
+          community_id?: string | null;
+          used_by?: string | null;
+          used_at?: string | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "invitations_inviter_id_fkey"; columns: ["inviter_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "invitations_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+          { foreignKeyName: "invitations_used_by_fkey"; columns: ["used_by"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+        ];
+      };
       boekingen: {
         Row: {
           id: string;
@@ -559,6 +543,29 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "gesprek_deelnemers_gesprek_id_fkey"; columns: ["gesprek_id"]; isOneToOne: false; referencedRelation: "gesprekken"; referencedColumns: ["id"] },
           { foreignKeyName: "gesprek_deelnemers_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+        ];
+      };
+      availability: {
+        Row: {
+          id: string;
+          professional_id: string;
+          date: string;
+          status: Database["public"]["Enums"]["beschikbaarheid_type"];
+        };
+        Insert: {
+          id?: string;
+          professional_id: string;
+          date: string;
+          status?: Database["public"]["Enums"]["beschikbaarheid_type"];
+        };
+        Update: {
+          id?: string;
+          professional_id?: string;
+          date?: string;
+          status?: Database["public"]["Enums"]["beschikbaarheid_type"];
+        };
+        Relationships: [
+          { foreignKeyName: "availability_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
         ];
       };
       communities: {
@@ -757,6 +764,33 @@ export interface Database {
           { foreignKeyName: "work_photos_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
+      community_members: {
+        Row: {
+          id: string;
+          community_id: string;
+          user_id: string;
+          role: string;
+          joined_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          community_id: string;
+          user_id: string;
+          role?: string;
+          joined_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          community_id?: string;
+          user_id?: string;
+          role?: string;
+          joined_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "community_members_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_members_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+        ];
+      };
       groepskortingen: {
         Row: {
           id: string;
@@ -803,40 +837,6 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "groepskortingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
           { foreignKeyName: "groepskortingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categorieen"; referencedColumns: ["id"] },
-        ];
-      };
-      uitnodigingen: {
-        Row: {
-          id: string;
-          uitnodiger_id: string;
-          code: string;
-          community_id: string | null;
-          gebruikt_door: string | null;
-          gebruikt_op: string | null;
-          created_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          uitnodiger_id: string;
-          code: string;
-          community_id?: string | null;
-          gebruikt_door?: string | null;
-          gebruikt_op?: string | null;
-          created_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          uitnodiger_id?: string;
-          code?: string;
-          community_id?: string | null;
-          gebruikt_door?: string | null;
-          gebruikt_op?: string | null;
-          created_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "uitnodigingen_uitnodiger_id_fkey"; columns: ["uitnodiger_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "uitnodigingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "uitnodigingen_gebruikt_door_fkey"; columns: ["gebruikt_door"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
         ];
       };
       reviews: {
@@ -1008,11 +1008,11 @@ export interface Database {
     };
     Enums: {
       content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
-      beschikbaarheid_type: "beschikbaar" | "bezet";
       categorie_type: "vakman" | "vergelijk";
       notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
       user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
+      beschikbaarheid_type: "beschikbaar" | "bezet";
       contact_voorkeur: "telefoon" | "whatsapp" | "app";
     };
   };

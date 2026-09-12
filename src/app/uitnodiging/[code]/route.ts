@@ -44,9 +44,9 @@ export async function GET(request: Request, { params }: { params: { code: string
 
   // Voeg toe aan de community (idempotent)
   await admin
-    .from("community_leden")
+    .from("community_members")
     .upsert(
-      { community_id: uitnodigerProfiel.community_id, user_id: user.id, rol: "lid" },
+      { community_id: uitnodigerProfiel.community_id, user_id: user.id, role: "lid" },
       { onConflict: "community_id,user_id", ignoreDuplicates: true }
     );
 
@@ -79,19 +79,19 @@ export async function GET(request: Request, { params }: { params: { code: string
 
   // Log deze acceptatie + notificeer de uitnodiger (eenmalig per persoon)
   const { data: bestaandeLog } = await admin
-    .from("uitnodigingen")
+    .from("invitations")
     .select("id")
-    .eq("uitnodiger_id", uitnodigerProfiel.user_id)
-    .eq("gebruikt_door", user.id)
+    .eq("inviter_id", uitnodigerProfiel.user_id)
+    .eq("used_by", user.id)
     .maybeSingle();
 
   if (!bestaandeLog) {
-    await admin.from("uitnodigingen").insert({
-      uitnodiger_id: uitnodigerProfiel.user_id,
+    await admin.from("invitations").insert({
+      inviter_id: uitnodigerProfiel.user_id,
       code,
       community_id: uitnodigerProfiel.community_id,
-      gebruikt_door: user.id,
-      gebruikt_op: new Date().toISOString(),
+      used_by: user.id,
+      used_at: new Date().toISOString(),
     });
 
     const { data: nieuweGebruiker } = await admin.from("profielen").select("naam").eq("id", user.id).maybeSingle();

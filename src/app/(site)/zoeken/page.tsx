@@ -52,14 +52,14 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
     const toDateStr = (d: Date) => d.toISOString().slice(0, 10);
 
     const { data: beschikbaarheid } = await supabase
-      .from("beschikbaarheid")
-      .select("vakman_id")
+      .from("availability")
+      .select("professional_id")
       .eq("status", "beschikbaar")
-      .gte("datum", toDateStr(vandaag))
-      .lte("datum", toDateStr(over7Dagen))
-      .in("vakman_id", vakmen.map((v) => v.id));
+      .gte("date", toDateStr(vandaag))
+      .lte("date", toDateStr(over7Dagen))
+      .in("professional_id", vakmen.map((v) => v.id));
 
-    const beschikbareIds = new Set((beschikbaarheid ?? []).map((b) => b.vakman_id as string));
+    const beschikbareIds = new Set((beschikbaarheid ?? []).map((b) => b.professional_id as string));
     vakmen = vakmen.filter((v) => beschikbareIds.has(v.id));
   }
 

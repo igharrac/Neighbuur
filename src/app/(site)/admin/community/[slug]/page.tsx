@@ -23,12 +23,12 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
   let geautoriseerd = profiel?.rol === "admin";
   if (!geautoriseerd) {
     const { data: lid } = await supabase
-      .from("community_leden")
-      .select("rol")
+      .from("community_members")
+      .select("role")
       .eq("community_id", community.id)
       .eq("user_id", user.id)
       .maybeSingle();
-    geautoriseerd = lid?.rol === "beheerder";
+    geautoriseerd = lid?.role === "beheerder";
   }
 
   if (!geautoriseerd) redirect("/");
