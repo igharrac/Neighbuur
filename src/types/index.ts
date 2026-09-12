@@ -55,6 +55,7 @@ export interface Wijk {
   aantal_woningen: number | null;
   slug: string;
   actief: boolean;
+  community_threshold: number | null;
 }
 
 export interface Community {

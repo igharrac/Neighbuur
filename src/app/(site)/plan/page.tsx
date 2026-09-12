@@ -15,6 +15,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { resolveGesprekPartner } from "@/lib/chat";
 import { BookingStatusBadge } from "@/components/features/booking/BookingStatusBadge";
+import { CommunityDetectieKaart, type DetectieResultaat } from "@/components/features/community/CommunityDetectieKaart";
 import type { BoekingStatus } from "@/types";
 
 interface BoekingRij {
@@ -44,7 +45,7 @@ export default async function PlanPage() {
 
   const { data: bewonerProfiel } = await supabase
     .from("bewoner_profielen")
-    .select("community_id, wijk_id")
+    .select("community_id, wijk_id, postcode")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -56,6 +57,40 @@ export default async function PlanPage() {
       .eq("id", bewonerProfiel.community_id)
       .maybeSingle();
     if (c) community = c;
+  }
+
+  // Geen community? Dan proberen we buren te detecteren (organische
+  // communityvorming) — alleen mogelijk als er een postcode bekend is
+  // (oudere/demo-accounts zonder adres slaan dit gewoon over).
+  let detectie: DetectieResultaat | null = null;
+  if (!community && bewonerProfiel?.wijk_id && bewonerProfiel?.postcode) {
+    const { data: bestaande } = await supabase
+      .from("communities")
+      .select("id, naam, slug")
+      .eq("wijk_id", bewonerProfiel.wijk_id)
+      .eq("postcode_cluster", bewonerProfiel.postcode)
+      .maybeSingle();
+
+    if (bestaande) {
+      detectie = { type: "bestaande", naam: bestaande.naam, slug: bestaande.slug, communityId: bestaande.id };
+    } else {
+      const { data: wijkRow } = await supabase
+        .from("wijken")
+        .select("community_threshold")
+        .eq("id", bewonerProfiel.wijk_id)
+        .maybeSingle();
+      const { data: telling } = await supabase.rpc("bewoners_cluster_telling", {
+        p_wijk_id: bewonerProfiel.wijk_id,
+        p_postcode: bewonerProfiel.postcode,
+        p_gebouw_label: null,
+      });
+      const threshold = wijkRow?.community_threshold ?? 3;
+      const count = typeof telling === "number" ? telling : 1;
+      detectie =
+        count >= threshold
+          ? { type: "drempel", postcode: bewonerProfiel.postcode, telling: count, threshold, wijkId: bewonerProfiel.wijk_id }
+          : { type: "vroeg", threshold };
+    }
   }
 
   const { data: boekingenData } = await supabase
@@ -211,6 +246,13 @@ export default async function PlanPage() {
             </div>
           )}
         </div>
+
+        {/* ── Buren-detectie (alleen als er nog geen community is) ── */}
+        {detectie && (
+          <div className="mb-8">
+            <CommunityDetectieKaart {...detectie} />
+          </div>
+        )}
 
         {/* ── Lege staat ── */}
         {leeg && (

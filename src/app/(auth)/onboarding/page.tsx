@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { House, ArrowLeft, MagnifyingGlass, Check } from "@phosphor-icons/react";
+import { House, ArrowLeft, MagnifyingGlass, Users, Sparkle } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useLang } from "@/lib/hooks/useLang";
 import { useToast } from "@/components/ui/Toast";
-import { generateUitnodigingscode, slugify } from "@/lib/utils";
-import type { UserRole, Wijk, Community } from "@/types";
+import { generateUitnodigingscode } from "@/lib/utils";
+import type { UserRole, Wijk } from "@/types";
 
-type Step = "naam-rol" | "wijk" | "community";
+type Step = "naam-rol" | "wijk" | "adres" | "detectie";
 
-const COMMUNITY_TYPES = ["blok", "flat", "verdieping", "portiek"] as const;
+const STANDAARD_THRESHOLD = 3;
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -33,10 +33,18 @@ export default function OnboardingPage() {
   const [wijken, setWijken] = useState<Wijk[]>([]);
   const [gekozenWijk, setGekozenWijk] = useState<Wijk | null>(null);
 
-  const [communities, setCommunities] = useState<Community[]>([]);
-  const [voorstellen, setVoorstellen] = useState(false);
-  const [nieuweNaam, setNieuweNaam] = useState("");
-  const [nieuwType, setNieuwType] = useState<(typeof COMMUNITY_TYPES)[number]>("blok");
+  // Adres — gebruikt voor de buren-detectie, nooit zichtbaar voor anderen
+  // zonder dat ze zelf lid worden van dezelfde community.
+  const [postcode, setPostcode] = useState("");
+  const [huisnummer, setHuisnummer] = useState("");
+  const [huisnummerToevoeging, setHuisnummerToevoeging] = useState("");
+  const [gebouwLabel, setGebouwLabel] = useState("");
+
+  // Detectie-resultaat
+  const [bestaandeCommunity, setBestaandeCommunity] = useState<{ id: string; naam: string; slug: string } | null>(null);
+  const [clusterTelling, setClusterTelling] = useState(1);
+  const [threshold, setThreshold] = useState(STANDAARD_THRESHOLD);
+  const [nieuweTitel, setNieuweTitel] = useState("");
 
   const [saving, setSaving] = useState(false);
 
@@ -85,22 +93,6 @@ export default function OnboardingPage() {
     `${w.naam} ${w.stad}`.toLowerCase().includes(wijkQuery.toLowerCase())
   );
 
-  // ── Communities laden voor gekozen wijk ──
-  useEffect(() => {
-    if (!gekozenWijk) return;
-    async function load() {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("communities")
-        .select("*")
-        .eq("wijk_id", gekozenWijk!.id)
-        .eq("actief", true)
-        .order("naam");
-      setCommunities((data ?? []) as Community[]);
-    }
-    load();
-  }, [gekozenWijk]);
-
   async function handleNaamRolNext() {
     if (!naam || !rol) return;
 
@@ -146,17 +138,26 @@ export default function OnboardingPage() {
 
   function handleKiesWijk(wijk: Wijk) {
     setGekozenWijk(wijk);
-    setStep("community");
+    setStep("adres");
   }
 
-  async function joinCommunity(community: { id: string; wijk_id: string; slug: string }, beheerder: boolean) {
+  async function handleAdresNext() {
+    if (!postcode.trim() || !huisnummer.trim() || !gekozenWijk) return;
     setSaving(true);
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {
+      setSaving(false);
+      return;
+    }
 
+    const postcodeNorm = postcode.trim().toUpperCase().replace(/\s+/g, "");
+    const gebouwNorm = gebouwLabel.trim() || null;
+
+    // Account bestaat vanaf hier — met of zonder community. Community-
+    // koppeling gebeurt pas na een expliciete keuze op de volgende stap.
     const { error: profielError } = await supabase.from("profielen").insert({
       id: user.id,
       naam,
@@ -171,63 +172,86 @@ export default function OnboardingPage() {
       return;
     }
 
-    await supabase
-      .from("community_leden")
-      .insert({ community_id: community.id, user_id: user.id, rol: beheerder ? "beheerder" : "lid" });
-
     let code = generateUitnodigingscode();
     for (let i = 0; i < 5; i++) {
-      const { data: existing } = await supabase
-        .from("bewoner_profielen")
-        .select("id")
-        .eq("uitnodigingscode", code)
-        .maybeSingle();
+      const { data: existing } = await supabase.from("bewoner_profielen").select("id").eq("uitnodigingscode", code).maybeSingle();
       if (!existing) break;
       code = generateUitnodigingscode();
     }
 
     const { error: bewonerError } = await supabase.from("bewoner_profielen").insert({
       user_id: user.id,
-      community_id: community.id,
-      wijk_id: community.wijk_id,
+      wijk_id: gekozenWijk.id,
+      postcode: postcodeNorm,
+      huisnummer: huisnummer.trim(),
+      huisnummer_toevoeging: huisnummerToevoeging.trim() || null,
+      gebouw_label: gebouwNorm,
       uitnodigingscode: code,
     });
-
-    setSaving(false);
     if (bewonerError) {
+      setSaving(false);
       showToast(bewonerError.message, "error");
       return;
     }
 
-    router.push(`/community/${community.slug}`);
+    // Detectie: bestaat er al een community voor dit adres-cluster?
+    const { data: bestaande } = await supabase
+      .from("communities")
+      .select("id, naam, slug")
+      .eq("wijk_id", gekozenWijk.id)
+      .eq("postcode_cluster", postcodeNorm)
+      .maybeSingle();
+
+    if (bestaande) {
+      setBestaandeCommunity(bestaande);
+    } else {
+      const { data: telling } = await supabase.rpc("bewoners_cluster_telling", {
+        p_wijk_id: gekozenWijk.id,
+        p_postcode: postcodeNorm,
+        p_gebouw_label: gebouwNorm,
+      });
+      setClusterTelling(typeof telling === "number" ? telling : 1);
+    }
+    setThreshold(gekozenWijk.community_threshold ?? STANDAARD_THRESHOLD);
+    setSaving(false);
+    setStep("detectie");
   }
 
-  async function handleVoorstellen() {
-    if (!nieuweNaam.trim() || !gekozenWijk) return;
+  async function handleWordLid() {
+    if (!bestaandeCommunity) return;
     setSaving(true);
     const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
 
-    const baseSlug = slugify(`${gekozenWijk.naam}-${nieuweNaam}`);
-    let slug = baseSlug;
-    for (let i = 0; i < 5; i++) {
-      const { data: existing } = await supabase.from("communities").select("id").eq("slug", slug).maybeSingle();
-      if (!existing) break;
-      slug = `${baseSlug}-${Math.floor(Math.random() * 1000)}`;
-    }
+    await supabase.from("community_leden").insert({ community_id: bestaandeCommunity.id, user_id: user.id, rol: "lid" });
+    await supabase.from("bewoner_profielen").update({ community_id: bestaandeCommunity.id }).eq("user_id", user.id);
 
-    const { data: nieuweCommunity, error } = await supabase
-      .from("communities")
-      .insert({ wijk_id: gekozenWijk.id, naam: nieuweNaam, slug, type: nieuwType, actief: true })
-      .select()
-      .single();
+    setSaving(false);
+    router.push(`/community/${bestaandeCommunity.slug}`);
+  }
 
-    if (error || !nieuweCommunity) {
-      setSaving(false);
-      showToast(error?.message ?? "Kon community niet aanmaken", "error");
+  async function handleStartCommunity() {
+    if (!gekozenWijk) return;
+    setSaving(true);
+    const supabase = createClient();
+    const postcodeNorm = postcode.trim().toUpperCase().replace(/\s+/g, "");
+
+    const { data, error } = await supabase.rpc("start_community", {
+      p_wijk_id: gekozenWijk.id,
+      p_postcode: postcodeNorm,
+      p_titel_nl: nieuweTitel.trim() || null,
+    });
+
+    setSaving(false);
+    const resultaat = data?.[0] as { id: string; slug: string; aangemaakt: boolean } | undefined;
+    if (error || !resultaat) {
+      showToast(error?.message ?? "Kon community niet starten", "error");
       return;
     }
-
-    await joinCommunity(nieuweCommunity, true);
+    router.push(`/community/${resultaat.slug}`);
   }
 
   if (checking) return <div className="min-h-screen" />;
@@ -361,86 +385,124 @@ export default function OnboardingPage() {
             </>
           )}
 
-          {/* ── Stap: community kiezen ── */}
-          {step === "community" && gekozenWijk && (
+          {/* ── Stap: adres invullen ── */}
+          {step === "adres" && gekozenWijk && (
             <>
-              <h1 className="font-display text-display-sm text-center mb-1.5">Welk blok is van jou?</h1>
+              <h1 className="font-display text-display-sm text-center mb-1.5">Wat is je adres?</h1>
               <p className="text-center text-body text-warmgrijs mb-6">
-                Communities in <span className="font-semibold text-warmzwart">{gekozenWijk.naam}</span>
+                In <span className="font-semibold text-warmzwart">{gekozenWijk.naam}</span> — dit gebruiken we alleen
+                om te zien welke buren al actief zijn. Niet zichtbaar voor anderen, tenzij je samen lid wordt van
+                dezelfde community.
               </p>
 
-              {!voorstellen ? (
-                <>
-                  <div className="flex flex-col gap-2 max-h-[280px] overflow-y-auto mb-4">
-                    {communities.length === 0 && (
-                      <p className="text-body-sm text-warmgrijs text-center py-4">Nog geen communities in deze wijk.</p>
-                    )}
-                    {communities.map((c) => (
-                      <button
-                        key={c.id}
-                        onClick={() => joinCommunity(c, false)}
-                        disabled={saving}
-                        className="flex items-center justify-between gap-2 p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 transition-all text-left"
-                      >
-                        <div>
-                          <div className="font-semibold text-body-sm">{c.naam}</div>
-                          <div className="text-body-xs text-warmgrijs capitalize">{c.type}</div>
-                        </div>
-                        <ArrowLeft size={15} weight="bold" className="rotate-180 text-warmgrijs" />
-                      </button>
-                    ))}
-                  </div>
+              <label className="text-body-sm font-semibold block mb-1.5">Postcode</label>
+              <input
+                className="input mb-4"
+                placeholder="1234 AB"
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                autoFocus
+              />
 
-                  <button
-                    onClick={() => setVoorstellen(true)}
-                    className="text-body-sm text-terracotta font-semibold hover:underline"
-                  >
-                    Mijn blok staat er niet bij → Stel voor
+              <label className="text-body-sm font-semibold block mb-1.5">Huisnummer</label>
+              <div className="flex gap-2 mb-4">
+                <input
+                  className="input flex-1"
+                  placeholder="12"
+                  value={huisnummer}
+                  onChange={(e) => setHuisnummer(e.target.value)}
+                />
+                <input
+                  className="input !w-[110px]"
+                  placeholder="Toev. (optioneel)"
+                  value={huisnummerToevoeging}
+                  onChange={(e) => setHuisnummerToevoeging(e.target.value)}
+                />
+              </div>
+
+              <label className="text-body-sm font-semibold block mb-1.5">Gebouw of toren (optioneel)</label>
+              <input
+                className="input mb-6"
+                placeholder="Bijv. Toren A"
+                value={gebouwLabel}
+                onChange={(e) => setGebouwLabel(e.target.value)}
+              />
+
+              <button
+                className="btn-primary w-full mb-3"
+                onClick={handleAdresNext}
+                disabled={saving || !postcode.trim() || !huisnummer.trim()}
+              >
+                {saving ? "Bezig..." : "Volgende"}
+                <ArrowLeft size={16} weight="bold" className="rotate-180" />
+              </button>
+              <button onClick={() => setStep("wijk")} className="text-body-sm text-warmgrijs hover:text-warmzwart">
+                ← Andere wijk
+              </button>
+            </>
+          )}
+
+          {/* ── Stap: detectie-resultaat ── */}
+          {step === "detectie" && gekozenWijk && (
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-full bg-terracotta-50 flex items-center justify-center mx-auto mb-4">
+                {bestaandeCommunity || clusterTelling >= threshold ? (
+                  <Users size={22} className="text-terracotta" weight="fill" />
+                ) : (
+                  <Sparkle size={22} className="text-terracotta" weight="fill" />
+                )}
+              </div>
+
+              {bestaandeCommunity ? (
+                <>
+                  <h1 className="font-display text-display-sm mb-1.5">Je buren hebben al een community gestart.</h1>
+                  <p className="text-body text-warmgrijs mb-6">
+                    <span className="font-semibold text-warmzwart">{bestaandeCommunity.naam}</span> is al actief voor
+                    jouw adres.
+                  </p>
+                  <button className="btn-primary w-full" onClick={handleWordLid} disabled={saving}>
+                    {saving ? "Bezig..." : "Word lid"}
+                    <ArrowLeft size={16} weight="bold" className="rotate-180" />
+                  </button>
+                </>
+              ) : clusterTelling >= threshold ? (
+                <>
+                  <h1 className="font-display text-display-sm mb-1.5">
+                    Er zijn inmiddels {clusterTelling} bewoners uit {gebouwLabel || postcode} actief.
+                  </h1>
+                  <p className="text-body text-warmgrijs mb-6">
+                    Genoeg buren voor een eigen community. Jij mag 'm starten — of iemand anders doet dat straks.
+                  </p>
+                  <input
+                    className="input mb-3 text-left"
+                    placeholder={`Bijv. Buurtgroep ${postcode}`}
+                    value={nieuweTitel}
+                    onChange={(e) => setNieuweTitel(e.target.value)}
+                  />
+                  <button className="btn-primary w-full mb-3" onClick={handleStartCommunity} disabled={saving}>
+                    {saving ? "Bezig..." : "Start jullie community"}
+                    <ArrowLeft size={16} weight="bold" className="rotate-180" />
+                  </button>
+                  <button onClick={() => router.push(next || "/plan")} className="text-body-sm text-warmgrijs hover:text-warmzwart">
+                    Liever later
                   </button>
                 </>
               ) : (
-                <div className="animate-fade-in">
-                  <label className="text-body-sm font-semibold block mb-1.5">Naam van je blok/flat</label>
-                  <input
-                    className="input mb-4"
-                    placeholder="Bijv. Blok D"
-                    value={nieuweNaam}
-                    onChange={(e) => setNieuweNaam(e.target.value)}
-                  />
-                  <label className="text-body-sm font-semibold block mb-2">Type</label>
-                  <div className="flex gap-2 flex-wrap mb-6">
-                    {COMMUNITY_TYPES.map((type) => (
-                      <button
-                        key={type}
-                        onClick={() => setNieuwType(type)}
-                        className={`px-3.5 py-2 rounded-sm text-body-sm font-semibold capitalize border-2 transition-colors ${
-                          nieuwType === type ? "border-terracotta bg-terracotta-50 text-terracotta" : "border-lijn text-warmgrijs"
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    className="btn-primary w-full mb-3"
-                    onClick={handleVoorstellen}
-                    disabled={saving || !nieuweNaam.trim()}
-                  >
-                    {saving ? "Bezig..." : "Voorstellen & doorgaan"}
-                    <Check size={16} weight="bold" />
+                <>
+                  <h1 className="font-display text-display-sm mb-1.5">
+                    Je bent een van de eerste bewoners uit dit blok op Neighbuur.
+                  </h1>
+                  <p className="text-body text-warmgrijs mb-6">
+                    Zodra er {threshold} buren zijn, kun je samen een community starten. Nodig gerust buren uit om
+                    het sneller te laten gebeuren.
+                  </p>
+                  <button className="btn-primary w-full" onClick={() => router.push(next || "/plan")}>
+                    Naar Mijn Plan
+                    <ArrowLeft size={16} weight="bold" className="rotate-180" />
                   </button>
-                  <button onClick={() => setVoorstellen(false)} className="text-body-sm text-warmgrijs hover:text-warmzwart">
-                    ← Terug naar lijst
-                  </button>
-                </div>
+                </>
               )}
-
-              {!voorstellen && (
-                <button onClick={() => setStep("wijk")} className="text-body-sm text-warmgrijs hover:text-warmzwart mt-5 block">
-                  ← Andere wijk
-                </button>
-              )}
-            </>
+            </div>
           )}
         </div>
       </div>
