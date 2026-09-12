@@ -1,4 +1,4 @@
-export type UserRole = "bewoner" | "vakman" | "community_beheerder" | "admin";
+export type UserRole = "resident" | "professional" | "community_admin" | "admin";
 export type CategorieType = "professional" | "compare";
 
 export type ContentBlokType =

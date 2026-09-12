@@ -1009,7 +1009,7 @@ export interface Database {
     Enums: {
       content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
       contact_preference: "phone" | "whatsapp" | "app";
-      user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
+      user_role: "resident" | "professional" | "community_admin" | "admin";
       notification_type: "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
       availability_status: "available" | "booked";

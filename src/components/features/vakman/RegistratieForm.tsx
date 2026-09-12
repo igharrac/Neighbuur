@@ -67,7 +67,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
 
       if (profiel) {
-        router.replace(profiel.role === "vakman" ? "/dashboard" : "/plan");
+        router.replace(profiel.role === "professional" ? "/dashboard" : "/plan");
         return;
       }
 
@@ -180,7 +180,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       name: bedrijfsnaam,
       email: user.email ?? null,
       phone: user.phone ?? null,
-      role: "vakman",
+      role: "professional",
       language: "nl",
     });
 

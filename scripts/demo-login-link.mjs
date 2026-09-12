@@ -43,7 +43,7 @@ if (!profiel) {
   process.exit(1);
 }
 
-const next = profiel.role === "vakman" ? "/dashboard" : "/plan";
+const next = profiel.role === "professional" ? "/dashboard" : "/plan";
 const { data, error } = await admin.auth.admin.generateLink({
   type: "magiclink",
   email,

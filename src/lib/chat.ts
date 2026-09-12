@@ -14,7 +14,7 @@ export async function resolveGesprekPartner(
   admin: SupabaseClient,
   deelnemer: { user_id: string; profiles: { name: string; avatar_url: string | null; role: string } | null }
 ): Promise<GesprekPartner> {
-  if (deelnemer.profiles?.role === "vakman") {
+  if (deelnemer.profiles?.role === "professional") {
     const { data: vakman } = await admin
       .from("professional_profiles")
       .select("company_name, logo_url")

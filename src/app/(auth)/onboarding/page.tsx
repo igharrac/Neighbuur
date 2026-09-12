@@ -26,7 +26,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<Step>("naam-rol");
 
   const [naam, setNaam] = useState("");
-  const [rol, setRol] = useState<Extract<UserRole, "bewoner" | "vakman"> | null>(null);
+  const [rol, setRol] = useState<Extract<UserRole, "resident" | "professional"> | null>(null);
   const [akkoord, setAkkoord] = useState(false);
 
   const [wijkQuery, setWijkQuery] = useState("");
@@ -67,7 +67,7 @@ export default function OnboardingPage() {
         if (invite) {
           router.replace(`/uitnodiging/${invite}`);
         } else {
-          router.replace(next || (profiel.role === "vakman" ? "/dashboard" : "/plan"));
+          router.replace(next || (profiel.role === "professional" ? "/dashboard" : "/plan"));
         }
         return;
       }
@@ -96,7 +96,7 @@ export default function OnboardingPage() {
   async function handleNaamRolNext() {
     if (!naam || !rol) return;
 
-    if (rol === "vakman") {
+    if (rol === "professional") {
       // Vakman-registratie heeft zijn eigen akkoord-stap met vakman-specifieke
       // voorwaarden (RegistratieForm.tsx) — hier nog niks opslaan/vragen.
       router.push("/registreer/vakman");
@@ -120,7 +120,7 @@ export default function OnboardingPage() {
         name: naam,
         email: user.email ?? null,
         phone: user.phone ?? null,
-        role: "bewoner",
+        role: "resident",
         language: lang,
       });
 
@@ -163,7 +163,7 @@ export default function OnboardingPage() {
       name: naam,
       email: user.email ?? null,
       phone: user.phone ?? null,
-      role: "bewoner",
+      role: "resident",
       language: lang,
     });
     if (profielError) {
@@ -313,8 +313,8 @@ export default function OnboardingPage() {
               <div className="flex flex-col gap-2.5 mb-6">
                 {(
                   [
-                    { value: "bewoner" as const, icon: "🏠", title: dict.login.resident, sub: dict.login.residentSub },
-                    { value: "vakman" as const, icon: "🔧", title: dict.login.professional, sub: dict.login.professionalSub },
+                    { value: "resident" as const, icon: "🏠", title: dict.login.resident, sub: dict.login.residentSub },
+                    { value: "professional" as const, icon: "🔧", title: dict.login.professional, sub: dict.login.professionalSub },
                   ]
                 ).map((option) => (
                   <button
@@ -335,7 +335,7 @@ export default function OnboardingPage() {
                 ))}
               </div>
 
-              {rol === "bewoner" && (
+              {rol === "resident" && (
                 <label className="flex items-start gap-2.5 mb-6 cursor-pointer">
                   <input
                     type="checkbox"
@@ -356,7 +356,7 @@ export default function OnboardingPage() {
               <button
                 className="btn-primary w-full"
                 onClick={handleNaamRolNext}
-                disabled={saving || !naam || !rol || (rol === "bewoner" && !akkoord)}
+                disabled={saving || !naam || !rol || (rol === "resident" && !akkoord)}
               >
                 {dict.login.letsGo}
                 <ArrowLeft size={16} weight="bold" className="rotate-180" />
