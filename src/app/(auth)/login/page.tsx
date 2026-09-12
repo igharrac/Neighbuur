@@ -49,7 +49,12 @@ export default function LoginPage() {
     const { error } =
       method === "phone"
         ? await supabase.auth.signInWithOtp({ phone: fullPhone })
-        : await supabase.auth.signInWithOtp({ email });
+        : await supabase.auth.signInWithOtp({
+            email,
+            options: {
+              emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(onboardingUrl())}`,
+            },
+          });
 
     setLoading(false);
     if (error) {
@@ -66,6 +71,16 @@ export default function LoginPage() {
     next[idx] = val.slice(-1);
     setOtp(next);
     if (val && idx < otp.length - 1) otpRefs.current[idx + 1]?.focus();
+  }
+
+  function handleOtpPaste(e: React.ClipboardEvent<HTMLInputElement>) {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, otp.length);
+    if (!pasted) return;
+    const next = [...otp];
+    for (let i = 0; i < otp.length; i++) next[i] = pasted[i] ?? next[i];
+    setOtp(next);
+    otpRefs.current[Math.min(pasted.length, otp.length - 1)]?.focus();
   }
 
   function handleOtpKeyDown(idx: number, e: React.KeyboardEvent) {
@@ -241,6 +256,7 @@ export default function LoginPage() {
                     value={digit}
                     onChange={(e) => handleOtpInput(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                    onPaste={handleOtpPaste}
                     className="flex-1 min-w-0 h-[52px] text-center font-display text-[18px] font-bold border-2 border-lijn rounded-sm outline-none transition-all focus:border-terracotta focus:shadow-glow"
                   />
                 ))}
