@@ -92,18 +92,18 @@ export default async function DashboardPage() {
   const klantIds = [...new Set(boekingen.map((b) => b.klant_id))];
   if (klantIds.length > 0) {
     const admin = createAdminSupabase();
-    const { data: mijnGesprekken } = await admin.from("gesprek_deelnemers").select("gesprek_id").eq("user_id", user.id);
-    const mijnGesprekIds = (mijnGesprekken ?? []).map((g) => g.gesprek_id as string);
+    const { data: mijnGesprekken } = await admin.from("conversation_participants").select("conversation_id").eq("user_id", user.id);
+    const mijnGesprekIds = (mijnGesprekken ?? []).map((g) => g.conversation_id as string);
 
     if (mijnGesprekIds.length > 0) {
       const { data: deelnames } = await admin
-        .from("gesprek_deelnemers")
-        .select("gesprek_id, user_id")
-        .in("gesprek_id", mijnGesprekIds)
+        .from("conversation_participants")
+        .select("conversation_id, user_id")
+        .in("conversation_id", mijnGesprekIds)
         .in("user_id", klantIds);
 
       (deelnames ?? []).forEach((d) => {
-        gesprekPerKlant[d.user_id as string] = d.gesprek_id as string;
+        gesprekPerKlant[d.user_id as string] = d.conversation_id as string;
       });
     }
   }

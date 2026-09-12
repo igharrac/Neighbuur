@@ -19,9 +19,9 @@ export default async function GesprekPage({ params }: { params: { gesprek_id: st
   const admin = createAdminSupabase();
 
   const { data: deelnemers } = await admin
-    .from("gesprek_deelnemers")
+    .from("conversation_participants")
     .select("user_id, profielen(naam, avatar_url, rol)")
-    .eq("gesprek_id", params.gesprek_id);
+    .eq("conversation_id", params.gesprek_id);
 
   const eigenDeelname = (deelnemers ?? []).some((d) => d.user_id === user.id);
   if (!eigenDeelname) notFound();
@@ -33,9 +33,9 @@ export default async function GesprekPage({ params }: { params: { gesprek_id: st
   const andereDeelnemer = andere ? await resolveGesprekPartner(admin, andere) : null;
 
   const { data: berichten } = await admin
-    .from("berichten")
+    .from("messages")
     .select("*")
-    .eq("gesprek_id", params.gesprek_id)
+    .eq("conversation_id", params.gesprek_id)
     .order("created_at", { ascending: true });
 
   return (

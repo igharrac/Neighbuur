@@ -18,10 +18,10 @@ export function useOngelezenBerichten(): number {
     }
     const supabase = createClient();
     supabase
-      .from("berichten")
+      .from("messages")
       .select("id", { count: "exact", head: true })
-      .is("gelezen_op", null)
-      .neq("van_id", user.id)
+      .is("read_at", null)
+      .neq("sender_id", user.id)
       .then(({ count }) => setAantal(count ?? 0));
   }, [user, pathname]);
 

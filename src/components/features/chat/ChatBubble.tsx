@@ -18,7 +18,7 @@ export function ChatBubble({ bericht, eigen, fotoUrl }: ChatBubbleProps) {
           eigen ? "bg-terracotta text-white rounded-br-sm" : "bg-white border border-lijn text-warmzwart rounded-bl-sm"
         }`}
       >
-        {bericht.foto_url && (
+        {bericht.photo_url && (
           <div className="w-48 max-w-full aspect-square rounded-lg mb-1.5 overflow-hidden bg-cream-dark">
             {fotoUrl ? (
               <img src={fotoUrl} alt="" className="w-full h-full object-cover" />
@@ -27,10 +27,10 @@ export function ChatBubble({ bericht, eigen, fotoUrl }: ChatBubbleProps) {
             )}
           </div>
         )}
-        {bericht.tekst && <p className="text-body-sm whitespace-pre-wrap break-words">{bericht.tekst}</p>}
+        {bericht.text && <p className="text-body-sm whitespace-pre-wrap break-words">{bericht.text}</p>}
         <div className={`flex items-center gap-1 justify-end mt-1 text-body-xs ${eigen ? "text-white/70" : "text-warmgrijs"}`}>
           {tijd}
-          {eigen && (bericht.gelezen_op ? <Checks size={14} weight="bold" /> : <Check size={14} />)}
+          {eigen && (bericht.read_at ? <Checks size={14} weight="bold" /> : <Check size={14} />)}
         </div>
       </div>
     </div>

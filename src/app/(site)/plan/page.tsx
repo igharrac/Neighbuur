@@ -184,31 +184,31 @@ export default async function PlanPage() {
 
   const admin = createAdminSupabase();
   let recentGesprek: { id: string; naam: string; laatsteBericht: string | null } | null = null;
-  const { data: mijnDeelnames } = await admin.from("gesprek_deelnemers").select("gesprek_id").eq("user_id", user.id);
+  const { data: mijnDeelnames } = await admin.from("conversation_participants").select("conversation_id").eq("user_id", user.id);
   if (mijnDeelnames?.length) {
     const { data: gesprekken } = await admin
-      .from("gesprekken")
+      .from("conversations")
       .select(
-        "id, created_at, gesprek_deelnemers(user_id, profielen(naam, avatar_url, rol)), laatste:berichten(tekst, created_at)"
+        "id, created_at, conversation_participants(user_id, profielen(naam, avatar_url, rol)), laatste:messages(text, created_at)"
       )
       .in(
         "id",
-        mijnDeelnames.map((d) => d.gesprek_id)
+        mijnDeelnames.map((d) => d.conversation_id)
       )
-      .order("created_at", { ascending: false, foreignTable: "berichten" })
-      .limit(1, { foreignTable: "berichten" })
+      .order("created_at", { ascending: false, foreignTable: "messages" })
+      .limit(1, { foreignTable: "messages" })
       .order("created_at", { ascending: false })
       .limit(1);
 
     const g = gesprekken?.[0] as unknown as
-      | { id: string; gesprek_deelnemers: { user_id: string; profielen: { naam: string; avatar_url: string | null; rol: string } | null }[]; laatste: { tekst: string }[] | { tekst: string } | null }
+      | { id: string; conversation_participants: { user_id: string; profielen: { naam: string; avatar_url: string | null; rol: string } | null }[]; laatste: { text: string }[] | { text: string } | null }
       | undefined;
     if (g) {
-      const andere = g.gesprek_deelnemers.find((d) => d.user_id !== user.id);
+      const andere = g.conversation_participants.find((d) => d.user_id !== user.id);
       if (andere) {
         const partner = await resolveGesprekPartner(admin, andere);
         const laatste = Array.isArray(g.laatste) ? g.laatste[0] : g.laatste;
-        recentGesprek = { id: g.id, naam: partner.naam, laatsteBericht: laatste?.tekst ?? null };
+        recentGesprek = { id: g.id, naam: partner.naam, laatsteBericht: laatste?.text ?? null };
       }
     }
   }

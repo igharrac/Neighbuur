@@ -11,16 +11,16 @@ interface DeelnemerRow {
 }
 
 interface BerichtRow {
-  tekst: string;
-  foto_url: string | null;
+  text: string;
+  photo_url: string | null;
   created_at: string;
-  van_id: string;
+  sender_id: string;
 }
 
 interface GesprekRow {
   id: string;
   created_at: string;
-  gesprek_deelnemers: DeelnemerRow[];
+  conversation_participants: DeelnemerRow[];
   laatste_bericht: BerichtRow[] | BerichtRow | null;
 }
 
@@ -32,14 +32,14 @@ export default async function BerichtenPage() {
   if (!user) redirect("/login");
 
   // Leest bewust via de service-role client i.p.v. de RLS-gebonden
-  // client: de bestaande "own_read"-policy op gesprek_deelnemers is
+  // client: de bestaande "own_read"-policy op conversation_participants is
   // zelf-refererend en geeft "infinite recursion" (zie migratie
   // 0006). De scoping naar "mijn eigen gesprekken" gebeurt hier
   // alsnog expliciet in code, via mijnGesprekIds hieronder.
   const admin = createAdminSupabase();
 
-  const { data: mijnDeelnames } = await admin.from("gesprek_deelnemers").select("gesprek_id").eq("user_id", user.id);
-  const mijnGesprekIds = (mijnDeelnames ?? []).map((d) => d.gesprek_id);
+  const { data: mijnDeelnames } = await admin.from("conversation_participants").select("conversation_id").eq("user_id", user.id);
+  const mijnGesprekIds = (mijnDeelnames ?? []).map((d) => d.conversation_id);
 
   if (mijnGesprekIds.length === 0) {
     return (
@@ -51,30 +51,30 @@ export default async function BerichtenPage() {
   }
 
   const { data: gesprekkenData } = await admin
-    .from("gesprekken")
+    .from("conversations")
     .select(
       `
       id,
       created_at,
-      gesprek_deelnemers(user_id, profielen(naam, avatar_url, rol)),
-      laatste_bericht:berichten(tekst, foto_url, created_at, van_id)
+      conversation_participants(user_id, profielen(naam, avatar_url, rol)),
+      laatste_bericht:messages(text, photo_url, created_at, sender_id)
     `
     )
     .in("id", mijnGesprekIds)
-    .order("created_at", { ascending: false, foreignTable: "berichten" })
-    .limit(1, { foreignTable: "berichten" })
+    .order("created_at", { ascending: false, foreignTable: "messages" })
+    .limit(1, { foreignTable: "messages" })
     .order("created_at", { ascending: false });
 
   const { data: ongelezenRows } = await admin
-    .from("berichten")
-    .select("gesprek_id")
-    .is("gelezen_op", null)
-    .neq("van_id", user.id)
-    .in("gesprek_id", mijnGesprekIds);
+    .from("messages")
+    .select("conversation_id")
+    .is("read_at", null)
+    .neq("sender_id", user.id)
+    .in("conversation_id", mijnGesprekIds);
 
   const ongelezenPerGesprek = new Map<string, number>();
   (ongelezenRows ?? []).forEach((r) => {
-    ongelezenPerGesprek.set(r.gesprek_id, (ongelezenPerGesprek.get(r.gesprek_id) ?? 0) + 1);
+    ongelezenPerGesprek.set(r.conversation_id, (ongelezenPerGesprek.get(r.conversation_id) ?? 0) + 1);
   });
 
   const tijdVoorSortering = (g: GesprekRow) => {
@@ -86,14 +86,14 @@ export default async function BerichtenPage() {
     ((gesprekkenData ?? []) as unknown as GesprekRow[])
       .sort((a, b) => tijdVoorSortering(b) - tijdVoorSortering(a))
       .map(async (g) => {
-        const andere = g.gesprek_deelnemers.find((d) => d.user_id !== user.id);
+        const andere = g.conversation_participants.find((d) => d.user_id !== user.id);
         const laatsteRaw = Array.isArray(g.laatste_bericht) ? g.laatste_bericht[0] : g.laatste_bericht;
 
         return {
           id: g.id,
           andereDeelnemer: andere ? await resolveGesprekPartner(admin, andere) : null,
           laatsteBericht: laatsteRaw
-            ? { tekst: laatsteRaw.tekst, foto_url: laatsteRaw.foto_url, created_at: laatsteRaw.created_at, van_id: laatsteRaw.van_id }
+            ? { tekst: laatsteRaw.text, foto_url: laatsteRaw.photo_url, created_at: laatsteRaw.created_at, van_id: laatsteRaw.sender_id }
             : null,
           ongelezenAantal: ongelezenPerGesprek.get(g.id) ?? 0,
         };

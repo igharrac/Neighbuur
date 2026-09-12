@@ -126,11 +126,11 @@ export interface VakmanProfiel {
 
 export interface Bericht {
   id: string;
-  gesprek_id: string;
-  van_id: string;
-  tekst: string;
-  foto_url: string | null;
-  gelezen_op: string | null;
+  conversation_id: string;
+  sender_id: string;
+  text: string;
+  photo_url: string | null;
+  read_at: string | null;
   created_at: string;
 }
 

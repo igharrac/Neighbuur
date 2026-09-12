@@ -50,7 +50,7 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
         .channel(`gesprek-${gesprekId}`)
         .on(
           "postgres_changes",
-          { event: "INSERT", schema: "public", table: "berichten", filter: `gesprek_id=eq.${gesprekId}` },
+          { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${gesprekId}` },
           (payload) => {
             const nieuw = payload.new as Bericht;
             setBerichten((prev) => (prev.some((b) => b.id === nieuw.id) ? prev : [...prev, nieuw]));
@@ -70,21 +70,21 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
   }, [berichten.length]);
 
   useEffect(() => {
-    const ongelezenIds = berichten.filter((b) => b.van_id !== currentUserId && !b.gelezen_op).map((b) => b.id);
+    const ongelezenIds = berichten.filter((b) => b.sender_id !== currentUserId && !b.read_at).map((b) => b.id);
     if (ongelezenIds.length === 0) return;
     const supabase = createClient();
-    supabase.from("berichten").update({ gelezen_op: new Date().toISOString() }).in("id", ongelezenIds).then();
+    supabase.from("messages").update({ read_at: new Date().toISOString() }).in("id", ongelezenIds).then();
   }, [berichten, currentUserId]);
 
   useEffect(() => {
-    const nietOpgehaald = berichten.filter((b) => b.foto_url && !fotoUrls[b.foto_url]);
+    const nietOpgehaald = berichten.filter((b) => b.photo_url && !fotoUrls[b.photo_url]);
     if (nietOpgehaald.length === 0) return;
     const supabase = createClient();
     (async () => {
       const paren = await Promise.all(
         nietOpgehaald.map(async (b) => {
-          const { data } = await supabase.storage.from("chat-fotos").createSignedUrl(b.foto_url!, 3600);
-          return [b.foto_url!, data?.signedUrl ?? ""] as const;
+          const { data } = await supabase.storage.from("chat-fotos").createSignedUrl(b.photo_url!, 3600);
+          return [b.photo_url!, data?.signedUrl ?? ""] as const;
         })
       );
       setFotoUrls((prev) => ({ ...prev, ...Object.fromEntries(paren) }));
@@ -94,8 +94,8 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
   async function handleSend({ tekst, fotoPath }: { tekst: string; fotoPath: string | null }): Promise<boolean> {
     const supabase = createClient();
     const { data, error } = await supabase
-      .from("berichten")
-      .insert({ gesprek_id: gesprekId, van_id: currentUserId, tekst, foto_url: fotoPath })
+      .from("messages")
+      .insert({ conversation_id: gesprekId, sender_id: currentUserId, text: tekst, photo_url: fotoPath })
       .select()
       .single();
 
@@ -139,8 +139,8 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
               {toonLabel && <div className="text-center text-body-xs text-warmgrijs my-3">{label}</div>}
               <ChatBubble
                 bericht={bericht}
-                eigen={bericht.van_id === currentUserId}
-                fotoUrl={bericht.foto_url ? fotoUrls[bericht.foto_url] : undefined}
+                eigen={bericht.sender_id === currentUserId}
+                fotoUrl={bericht.photo_url ? fotoUrls[bericht.photo_url] : undefined}
               />
             </div>
           );

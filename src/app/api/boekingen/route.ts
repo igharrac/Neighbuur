@@ -90,10 +90,10 @@ export async function POST(request: Request) {
     .filter(Boolean)
     .join(" ");
 
-  await admin.from("berichten").insert({
-    gesprek_id: gesprekId,
-    van_id: user.id,
-    tekst: samenvatting,
+  await admin.from("messages").insert({
+    conversation_id: gesprekId,
+    sender_id: user.id,
+    text: samenvatting,
   });
 
   await notifyUser(admin, {
