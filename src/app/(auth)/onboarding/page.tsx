@@ -27,6 +27,7 @@ export default function OnboardingPage() {
 
   const [naam, setNaam] = useState("");
   const [rol, setRol] = useState<Extract<UserRole, "bewoner" | "vakman"> | null>(null);
+  const [akkoord, setAkkoord] = useState(false);
 
   const [wijkQuery, setWijkQuery] = useState("");
   const [wijken, setWijken] = useState<Wijk[]>([]);
@@ -104,9 +105,13 @@ export default function OnboardingPage() {
     if (!naam || !rol) return;
 
     if (rol === "vakman") {
+      // Vakman-registratie heeft zijn eigen akkoord-stap met vakman-specifieke
+      // voorwaarden (RegistratieForm.tsx) — hier nog niks opslaan/vragen.
       router.push("/registreer/vakman");
       return;
     }
+
+    if (!akkoord) return;
 
     if (invite) {
       // Invite bepaalt de community — sla alleen het profiel op en laat de
@@ -285,7 +290,29 @@ export default function OnboardingPage() {
                 ))}
               </div>
 
-              <button className="btn-primary w-full" onClick={handleNaamRolNext} disabled={saving || !naam || !rol}>
+              {rol === "bewoner" && (
+                <label className="flex items-start gap-2.5 mb-6 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5"
+                    checked={akkoord}
+                    onChange={(e) => setAkkoord(e.target.checked)}
+                  />
+                  <span className="text-body-sm text-warmgrijs">
+                    Ik ga akkoord met de{" "}
+                    <a href="/voorwaarden/bewoner" target="_blank" rel="noopener noreferrer" className="text-terracotta underline">
+                      voorwaarden voor bewoners
+                    </a>{" "}
+                    van Neighbuur
+                  </span>
+                </label>
+              )}
+
+              <button
+                className="btn-primary w-full"
+                onClick={handleNaamRolNext}
+                disabled={saving || !naam || !rol || (rol === "bewoner" && !akkoord)}
+              >
                 {dict.login.letsGo}
                 <ArrowLeft size={16} weight="bold" className="rotate-180" />
               </button>

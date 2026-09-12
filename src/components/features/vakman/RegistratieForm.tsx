@@ -512,7 +512,11 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                     onChange={(e) => setAkkoord(e.target.checked)}
                   />
                   <span className="text-body-sm text-warmgrijs">
-                    Ik ga akkoord met de <a href="#" className="text-terracotta underline">voorwaarden</a> van Neighbuur
+                    Ik ga akkoord met de{" "}
+                    <a href="/voorwaarden/vakman" target="_blank" rel="noopener noreferrer" className="text-terracotta underline">
+                      voorwaarden voor vakmensen
+                    </a>{" "}
+                    van Neighbuur
                   </span>
                 </label>
 
