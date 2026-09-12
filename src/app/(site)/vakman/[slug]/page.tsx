@@ -64,7 +64,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   });
 
   const alleCategorieen = await getCategorieen();
-  const vakmanCategorieen = alleCategorieen.filter((c) => c.type === "vakman");
+  const vakmanCategorieen = alleCategorieen.filter((c) => c.type === "professional");
 
   return (
     <VakmanProfielClient

@@ -86,7 +86,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       const { data } = await supabase
         .from("categories")
         .select("*")
-        .eq("type", "vakman")
+        .eq("type", "professional")
         .eq("active", true)
         .order("sort_order");
       setCategorieen((data ?? []) as Categorie[]);

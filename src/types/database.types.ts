@@ -775,7 +775,7 @@ export interface Database {
         Row: {
           id: string;
           slug: string;
-          type: Database["public"]["Enums"]["categorie_type"];
+          type: Database["public"]["Enums"]["category_type"];
           name_nl: string;
           name_en: string;
           description_nl: string | null;
@@ -790,7 +790,7 @@ export interface Database {
         Insert: {
           id?: string;
           slug: string;
-          type?: Database["public"]["Enums"]["categorie_type"];
+          type?: Database["public"]["Enums"]["category_type"];
           name_nl: string;
           name_en: string;
           description_nl?: string | null;
@@ -805,7 +805,7 @@ export interface Database {
         Update: {
           id?: string;
           slug?: string;
-          type?: Database["public"]["Enums"]["categorie_type"];
+          type?: Database["public"]["Enums"]["category_type"];
           name_nl?: string;
           name_en?: string;
           description_nl?: string | null;
@@ -1013,7 +1013,7 @@ export interface Database {
       notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
       beschikbaarheid_type: "beschikbaar" | "bezet";
-      categorie_type: "vakman" | "vergelijk";
+      category_type: "professional" | "compare";
     };
   };
 }

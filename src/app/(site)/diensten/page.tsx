@@ -3,7 +3,7 @@ import { DienstenGrid } from "@/components/features/categories/DienstenGrid";
 
 export default async function DienstenPage() {
   const alleCategorieen = await getCategorieen();
-  const categorieen = alleCategorieen.filter((c) => c.type === "vakman" || c.type === "vergelijk");
+  const categorieen = alleCategorieen.filter((c) => c.type === "professional" || c.type === "compare");
 
   return (
     <div className="bg-cream-warm min-h-screen">

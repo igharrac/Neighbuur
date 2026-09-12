@@ -1,5 +1,5 @@
 export type UserRole = "bewoner" | "vakman" | "community_beheerder" | "admin";
-export type CategorieType = "vakman" | "vergelijk";
+export type CategorieType = "professional" | "compare";
 
 export type ContentBlokType =
   | "hero_banner"

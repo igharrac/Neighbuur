@@ -19,7 +19,7 @@ const emptyForm: FormState = {
   description_nl: "",
   description_en: "",
   slug: "",
-  type: "vakman",
+  type: "professional",
   icon: "",
   image_url: null,
   active: true,
@@ -241,12 +241,12 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
               <div>
                 <label className="text-body-sm font-semibold block mb-1.5">Type</label>
                 <select
-                  value={form.type ?? "vakman"}
+                  value={form.type ?? "professional"}
                   onChange={(e) => setField("type", e.target.value as CategorieType)}
                   className="input"
                 >
-                  <option value="vakman">Vakman</option>
-                  <option value="vergelijk">Vergelijk</option>
+                  <option value="professional">Vakman</option>
+                  <option value="compare">Vergelijk</option>
                 </select>
               </div>
               <Input

@@ -15,7 +15,7 @@ interface ZoekenSearchParams {
 export default async function ZoekenPage({ searchParams }: { searchParams: ZoekenSearchParams }) {
   const supabase = createServerSupabase();
   const alleCategorieen = await getCategorieen();
-  const vakmanCategorieen = alleCategorieen.filter((c) => c.type === "vakman");
+  const vakmanCategorieen = alleCategorieen.filter((c) => c.type === "professional");
 
   let query = supabase.from("vakman_overzicht").select("*");
 
