@@ -5,34 +5,34 @@ import { WijkZoeken } from "@/components/features/community/WijkZoeken";
 
 interface WijkRow {
   id: string;
-  naam: string;
+  name: string;
   slug: string;
-  stad: string;
-  postcode: string | null;
-  aantal_woningen: number | null;
+  city: string;
+  postal_code: string | null;
+  home_count: number | null;
 }
 
 interface CommunityRow {
   naam: string;
   slug: string;
-  wijk_id: string;
+  district_id: string;
 }
 
 export default async function WijkIndexPage() {
   const supabase = createServerSupabase();
 
   const { data: wijkenData } = await supabase
-    .from("wijken")
-    .select("id, naam, slug, stad, postcode, aantal_woningen")
-    .eq("actief", true)
-    .order("naam");
+    .from("districts")
+    .select("id, name, slug, city, postal_code, home_count")
+    .eq("active", true)
+    .order("name");
   const wijken = (wijkenData ?? []) as WijkRow[];
 
-  const { data: communitiesData } = await supabase.from("communities").select("naam, slug, wijk_id").eq("actief", true);
+  const { data: communitiesData } = await supabase.from("communities").select("naam, slug, district_id").eq("actief", true);
   const communities = (communitiesData ?? []) as CommunityRow[];
 
   const communitiesPerWijk = new Map<string, number>();
-  communities.forEach((c) => communitiesPerWijk.set(c.wijk_id, (communitiesPerWijk.get(c.wijk_id) ?? 0) + 1));
+  communities.forEach((c) => communitiesPerWijk.set(c.district_id, (communitiesPerWijk.get(c.district_id) ?? 0) + 1));
 
   return (
     <div className="bg-cream-warm min-h-screen">
@@ -56,11 +56,11 @@ export default async function WijkIndexPage() {
             en welke wijkdeals lopen.
           </p>
           <WijkZoeken
-            wijken={wijken.map((w) => ({ naam: w.naam, slug: w.slug, stad: w.stad, postcode: w.postcode }))}
+            wijken={wijken.map((w) => ({ naam: w.name, slug: w.slug, stad: w.city, postcode: w.postal_code }))}
             communities={communities.map((c) => ({
               naam: c.naam,
               slug: c.slug,
-              wijkNaam: wijken.find((w) => w.id === c.wijk_id)?.naam ?? "",
+              wijkNaam: wijken.find((w) => w.id === c.district_id)?.name ?? "",
             }))}
           />
         </div>
@@ -78,18 +78,18 @@ export default async function WijkIndexPage() {
                 className="bg-white rounded-2xl p-6 no-underline shadow-[0px_4px_10px_rgba(92,64,40,0.04)] hover:-translate-y-0.5 hover:shadow-[0px_8px_15px_rgba(92,64,40,0.08)] transition-all"
               >
                 <div className="flex items-start justify-between gap-2 mb-3">
-                  <h3 className="font-display font-bold text-[19px] text-warmzwart">{w.naam}</h3>
+                  <h3 className="font-display font-bold text-[19px] text-warmzwart">{w.name}</h3>
                   <ArrowRight size={16} className="text-terracotta shrink-0 mt-1" weight="bold" />
                 </div>
                 <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-1">
                   <MapPin size={14} />
-                  {w.stad}
-                  {w.postcode && ` · ${w.postcode}`}
+                  {w.city}
+                  {w.postal_code && ` · ${w.postal_code}`}
                 </p>
-                {w.aantal_woningen != null && (
+                {w.home_count != null && (
                   <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5">
                     <House size={14} />
-                    {w.aantal_woningen} woningen
+                    {w.home_count} woningen
                   </p>
                 )}
                 <p className="font-body font-semibold text-[13px] text-terracotta mt-3">

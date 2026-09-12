@@ -17,7 +17,7 @@ interface CommunityOverzichtRow {
 export default async function WijkPage({ params }: { params: { slug: string } }) {
   const supabase = createServerSupabase();
 
-  const { data: wijk } = await supabase.from("wijken").select("*").eq("slug", params.slug).maybeSingle();
+  const { data: wijk } = await supabase.from("districts").select("*").eq("slug", params.slug).maybeSingle();
   if (!wijk) notFound();
   const w = wijk as Wijk;
 
@@ -44,11 +44,11 @@ export default async function WijkPage({ params }: { params: { slug: string } })
         </Link>
         <div className="mt-3 mb-10">
           <h1 className="font-display font-bold text-[38px] leading-[44px] text-warmzwart mb-2">
-            {w.naam}, <span className="text-warmgrijs">{w.stad}</span>
+            {w.name}, <span className="text-warmgrijs">{w.city}</span>
           </h1>
           <div className="flex flex-wrap gap-4 font-body text-[14px] text-warmgrijs">
-            {w.opleverdatum && <span>Opleverdatum: {formatDate(w.opleverdatum)}</span>}
-            {w.aantal_woningen != null && <span>{w.aantal_woningen} woningen</span>}
+            {w.completion_date && <span>Opleverdatum: {formatDate(w.completion_date)}</span>}
+            {w.home_count != null && <span>{w.home_count} woningen</span>}
             <span>{rows.length} {rows.length === 1 ? "blok" : "blokken"}</span>
           </div>
         </div>

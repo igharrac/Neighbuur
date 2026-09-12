@@ -48,19 +48,19 @@ export interface Categorie {
 
 export interface Wijk {
   id: string;
-  naam: string;
-  stad: string;
-  postcode: string | null;
-  opleverdatum: string | null;
-  aantal_woningen: number | null;
+  name: string;
+  city: string;
+  postal_code: string | null;
+  completion_date: string | null;
+  home_count: number | null;
   slug: string;
-  actief: boolean;
+  active: boolean;
   community_threshold: number | null;
 }
 
 export interface Community {
   id: string;
-  wijk_id: string;
+  district_id: string;
   naam: string;
   slug: string;
   type: string;

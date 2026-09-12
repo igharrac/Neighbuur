@@ -45,7 +45,7 @@ export default async function PlanPage() {
 
   const { data: bewonerProfiel } = await supabase
     .from("bewoner_profielen")
-    .select("community_id, wijk_id, postcode, toon_community_suggesties")
+    .select("community_id, district_id, postcode, toon_community_suggesties")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -63,11 +63,11 @@ export default async function PlanPage() {
   // communityvorming) — alleen mogelijk als er een postcode bekend is
   // (oudere/demo-accounts zonder adres slaan dit gewoon over).
   let detectie: DetectieResultaat | null = null;
-  if (!community && bewonerProfiel?.wijk_id && bewonerProfiel?.postcode && bewonerProfiel.toon_community_suggesties !== false) {
+  if (!community && bewonerProfiel?.district_id && bewonerProfiel?.postcode && bewonerProfiel.toon_community_suggesties !== false) {
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, naam, slug")
-      .eq("wijk_id", bewonerProfiel.wijk_id)
+      .eq("district_id", bewonerProfiel.district_id)
       .eq("postcode_cluster", bewonerProfiel.postcode)
       .neq("status", "slapend")
       .maybeSingle();
@@ -76,12 +76,12 @@ export default async function PlanPage() {
       detectie = { type: "bestaande", naam: bestaande.naam, slug: bestaande.slug, communityId: bestaande.id };
     } else {
       const { data: wijkRow } = await supabase
-        .from("wijken")
+        .from("districts")
         .select("community_threshold")
-        .eq("id", bewonerProfiel.wijk_id)
+        .eq("id", bewonerProfiel.district_id)
         .maybeSingle();
       const { data: telling } = await supabase.rpc("bewoners_cluster_telling", {
-        p_wijk_id: bewonerProfiel.wijk_id,
+        p_wijk_id: bewonerProfiel.district_id,
         p_postcode: bewonerProfiel.postcode,
         p_gebouw_label: null,
       });
@@ -89,7 +89,7 @@ export default async function PlanPage() {
       const count = typeof telling === "number" ? telling : 1;
       detectie =
         count >= threshold
-          ? { type: "drempel", postcode: bewonerProfiel.postcode, telling: count, threshold, wijkId: bewonerProfiel.wijk_id }
+          ? { type: "drempel", postcode: bewonerProfiel.postcode, telling: count, threshold, wijkId: bewonerProfiel.district_id }
           : { type: "vroeg", threshold };
     }
   }

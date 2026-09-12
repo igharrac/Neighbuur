@@ -116,51 +116,12 @@ export interface Database {
           { foreignKeyName: "conversation_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
         ];
       };
-      wijken: {
-        Row: {
-          id: string;
-          naam: string;
-          stad: string;
-          postcode: string | null;
-          opleverdatum: string | null;
-          aantal_woningen: number | null;
-          slug: string;
-          actief: boolean | null;
-          created_at: string | null;
-          community_threshold: number | null;
-        };
-        Insert: {
-          id?: string;
-          naam: string;
-          stad: string;
-          postcode?: string | null;
-          opleverdatum?: string | null;
-          aantal_woningen?: number | null;
-          slug: string;
-          actief?: boolean | null;
-          created_at?: string | null;
-          community_threshold?: number | null;
-        };
-        Update: {
-          id?: string;
-          naam?: string;
-          stad?: string;
-          postcode?: string | null;
-          opleverdatum?: string | null;
-          aantal_woningen?: number | null;
-          slug?: string;
-          actief?: boolean | null;
-          created_at?: string | null;
-          community_threshold?: number | null;
-        };
-        Relationships: [];
-      };
       bewoner_profielen: {
         Row: {
           id: string;
           user_id: string;
           community_id: string | null;
-          wijk_id: string | null;
+          district_id: string | null;
           opleverdatum: string | null;
           adres: string | null;
           uitnodigingscode: string | null;
@@ -175,7 +136,7 @@ export interface Database {
           id?: string;
           user_id: string;
           community_id?: string | null;
-          wijk_id?: string | null;
+          district_id?: string | null;
           opleverdatum?: string | null;
           adres?: string | null;
           uitnodigingscode?: string | null;
@@ -190,7 +151,7 @@ export interface Database {
           id?: string;
           user_id?: string;
           community_id?: string | null;
-          wijk_id?: string | null;
+          district_id?: string | null;
           opleverdatum?: string | null;
           adres?: string | null;
           uitnodigingscode?: string | null;
@@ -204,7 +165,7 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "bewoner_profielen_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "bewoner_profielen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "bewoner_profielen_wijk_id_fkey"; columns: ["wijk_id"]; isOneToOne: false; referencedRelation: "wijken"; referencedColumns: ["id"] },
+          { foreignKeyName: "bewoner_profielen_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
         ];
       };
       groepskorting_deelnemers: {
@@ -444,6 +405,45 @@ export interface Database {
           { foreignKeyName: "boekingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
+      districts: {
+        Row: {
+          id: string;
+          name: string;
+          city: string;
+          postal_code: string | null;
+          completion_date: string | null;
+          home_count: number | null;
+          slug: string;
+          active: boolean | null;
+          created_at: string | null;
+          community_threshold: number | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          city: string;
+          postal_code?: string | null;
+          completion_date?: string | null;
+          home_count?: number | null;
+          slug: string;
+          active?: boolean | null;
+          created_at?: string | null;
+          community_threshold?: number | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          city?: string;
+          postal_code?: string | null;
+          completion_date?: string | null;
+          home_count?: number | null;
+          slug?: string;
+          active?: boolean | null;
+          created_at?: string | null;
+          community_threshold?: number | null;
+        };
+        Relationships: [];
+      };
       availability: {
         Row: {
           id: string;
@@ -470,7 +470,7 @@ export interface Database {
       communities: {
         Row: {
           id: string;
-          wijk_id: string;
+          district_id: string;
           naam: string;
           slug: string;
           type: string;
@@ -483,7 +483,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          wijk_id: string;
+          district_id: string;
           naam: string;
           slug: string;
           type?: string;
@@ -496,7 +496,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          wijk_id?: string;
+          district_id?: string;
           naam?: string;
           slug?: string;
           type?: string;
@@ -508,7 +508,7 @@ export interface Database {
           postcode_cluster?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "communities_wijk_id_fkey"; columns: ["wijk_id"]; isOneToOne: false; referencedRelation: "wijken"; referencedColumns: ["id"] },
+          { foreignKeyName: "communities_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
         ];
       };
       review_votes: {
@@ -976,7 +976,7 @@ export interface Database {
           lopende_acties: string | null;
         };
         Relationships: [
-          { foreignKeyName: "community_overzicht_wijk_id_fkey"; columns: ["wijk_id"]; isOneToOne: false; referencedRelation: "wijken"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_overzicht_wijk_id_fkey"; columns: ["wijk_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
         ];
       };
     };

@@ -17,13 +17,13 @@ export async function POST(request: Request) {
 
   const admin = createAdminSupabase();
 
-  const { data: wijk } = await admin.from("wijken").select("community_threshold").eq("id", wijkId).maybeSingle();
+  const { data: wijk } = await admin.from("districts").select("community_threshold").eq("id", wijkId).maybeSingle();
   const threshold = wijk?.community_threshold ?? 3;
 
   const { data: leden } = await admin
     .from("bewoner_profielen")
     .select("user_id, toon_community_suggesties")
-    .eq("wijk_id", wijkId)
+    .eq("district_id", wijkId)
     .eq("postcode", postcode)
     .is("community_id", null);
 

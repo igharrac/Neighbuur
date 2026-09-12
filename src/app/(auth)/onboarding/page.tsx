@@ -83,14 +83,14 @@ export default function OnboardingPage() {
     if (step !== "wijk") return;
     async function load() {
       const supabase = createClient();
-      const { data } = await supabase.from("wijken").select("*").eq("actief", true).order("naam");
+      const { data } = await supabase.from("districts").select("*").eq("active", true).order("name");
       setWijken((data ?? []) as Wijk[]);
     }
     load();
   }, [step]);
 
   const gefilterdeWijken = wijken.filter((w) =>
-    `${w.naam} ${w.stad}`.toLowerCase().includes(wijkQuery.toLowerCase())
+    `${w.name} ${w.city}`.toLowerCase().includes(wijkQuery.toLowerCase())
   );
 
   async function handleNaamRolNext() {
@@ -181,7 +181,7 @@ export default function OnboardingPage() {
 
     const { error: bewonerError } = await supabase.from("bewoner_profielen").insert({
       user_id: user.id,
-      wijk_id: gekozenWijk.id,
+      district_id: gekozenWijk.id,
       postcode: postcodeNorm,
       huisnummer: huisnummer.trim(),
       huisnummer_toevoeging: huisnummerToevoeging.trim() || null,
@@ -198,7 +198,7 @@ export default function OnboardingPage() {
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, naam, slug")
-      .eq("wijk_id", gekozenWijk.id)
+      .eq("district_id", gekozenWijk.id)
       .eq("postcode_cluster", postcodeNorm)
       .neq("status", "slapend")
       .maybeSingle();
@@ -392,8 +392,8 @@ export default function OnboardingPage() {
                     className="flex items-center justify-between gap-2 p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 transition-all text-left"
                   >
                     <div>
-                      <div className="font-semibold text-body-sm">{wijk.naam}</div>
-                      <div className="text-body-xs text-warmgrijs">{wijk.stad}</div>
+                      <div className="font-semibold text-body-sm">{wijk.name}</div>
+                      <div className="text-body-xs text-warmgrijs">{wijk.city}</div>
                     </div>
                     <ArrowLeft size={15} weight="bold" className="rotate-180 text-warmgrijs" />
                   </button>
@@ -411,7 +411,7 @@ export default function OnboardingPage() {
             <>
               <h1 className="font-display text-display-sm text-center mb-1.5">Wat is je adres?</h1>
               <p className="text-center text-body text-warmgrijs mb-6">
-                In <span className="font-semibold text-warmzwart">{gekozenWijk.naam}</span> — dit gebruiken we alleen
+                In <span className="font-semibold text-warmzwart">{gekozenWijk.name}</span> — dit gebruiken we alleen
                 om te zien welke buren al actief zijn. Niet zichtbaar voor anderen, tenzij je samen lid wordt van
                 dezelfde community.
               </p>
