@@ -29,7 +29,7 @@ interface WerkFoto {
 interface ProfielFormProps {
   vakman: VakmanProfiel;
   werkFotos: WerkFoto[];
-  beschikbaarheid: Record<string, "beschikbaar" | "bezet">;
+  beschikbaarheid: Record<string, "available" | "booked">;
 }
 
 export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid }: ProfielFormProps) {

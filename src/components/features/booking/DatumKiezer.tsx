@@ -19,14 +19,14 @@ function buildDagen(): Date[] {
 const DAG_LABELS = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 
 interface DatumKiezerProps {
-  beschikbaarheid: Record<string, "beschikbaar" | "bezet">;
+  beschikbaarheid: Record<string, "available" | "booked">;
   waarde: string | null;
   onChange: (datum: string) => void;
 }
 
 export function DatumKiezer({ beschikbaarheid, waarde, onChange }: DatumKiezerProps) {
   const dagen = buildDagen();
-  const heeftBeschikbaarheid = dagen.some((d) => beschikbaarheid[toDateStr(d)] === "beschikbaar");
+  const heeftBeschikbaarheid = dagen.some((d) => beschikbaarheid[toDateStr(d)] === "available");
 
   return (
     <div>
@@ -50,7 +50,7 @@ export function DatumKiezer({ beschikbaarheid, waarde, onChange }: DatumKiezerPr
             {dagen.map((dag) => {
               const key = toDateStr(dag);
               const status = beschikbaarheid[key];
-              const beschikbaar = status === "beschikbaar";
+              const beschikbaar = status === "available";
               const geselecteerd = waarde === key;
               return (
                 <button

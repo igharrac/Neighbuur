@@ -547,19 +547,19 @@ export interface Database {
           id: string;
           professional_id: string;
           date: string;
-          status: Database["public"]["Enums"]["beschikbaarheid_type"];
+          status: Database["public"]["Enums"]["availability_status"];
         };
         Insert: {
           id?: string;
           professional_id: string;
           date: string;
-          status?: Database["public"]["Enums"]["beschikbaarheid_type"];
+          status?: Database["public"]["Enums"]["availability_status"];
         };
         Update: {
           id?: string;
           professional_id?: string;
           date?: string;
-          status?: Database["public"]["Enums"]["beschikbaarheid_type"];
+          status?: Database["public"]["Enums"]["availability_status"];
         };
         Relationships: [
           { foreignKeyName: "availability_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
@@ -1012,7 +1012,7 @@ export interface Database {
       user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
       notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
-      beschikbaarheid_type: "beschikbaar" | "bezet";
+      availability_status: "available" | "booked";
       category_type: "professional" | "compare";
     };
   };

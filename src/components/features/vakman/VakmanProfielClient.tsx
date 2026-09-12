@@ -64,7 +64,7 @@ interface VakmanProfielClientProps {
   isLoggedIn: boolean;
   heeftAlGereviewed: boolean;
   communityId: string | null;
-  beschikbaarheid: Record<string, "beschikbaar" | "bezet">;
+  beschikbaarheid: Record<string, "available" | "booked">;
   categorieen: Categorie[];
 }
 
@@ -211,7 +211,7 @@ export function VakmanProfielClient({
                 <div
                   key={key}
                   className={`text-center py-3 px-1 rounded-sm border-[1.5px] text-body-sm font-semibold min-h-11 ${
-                    status === "beschikbaar"
+                    status === "available"
                       ? "bg-groen-light border-groen text-groen"
                       : "bg-cream-dark border-lijn text-warmgrijs"
                   }`}

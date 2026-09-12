@@ -19,7 +19,7 @@ interface BookingFlowProps {
   vakmanId: string;
   bedrijfsnaam: string;
   logoUrl: string | null;
-  beschikbaarheid: Record<string, "beschikbaar" | "bezet">;
+  beschikbaarheid: Record<string, "available" | "booked">;
   categorieen: Categorie[];
   communityId: string | null;
 }

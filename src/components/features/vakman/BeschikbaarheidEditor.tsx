@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 
-type Status = "beschikbaar" | "bezet" | undefined;
+type Status = "available" | "booked" | undefined;
 
 function toDateStr(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -28,14 +28,14 @@ export function BeschikbaarheidEditor({
   initialData,
 }: {
   vakmanId: string;
-  initialData: Record<string, "beschikbaar" | "bezet">;
+  initialData: Record<string, "available" | "booked">;
 }) {
   const [data, setData] = useState<Record<string, Status>>(initialData);
   const dagen = buildDagen();
 
   function nextStatus(current: Status): Status {
-    if (current === undefined) return "beschikbaar";
-    if (current === "beschikbaar") return "bezet";
+    if (current === undefined) return "available";
+    if (current === "available") return "booked";
     return undefined;
   }
 
@@ -72,9 +72,9 @@ export function BeschikbaarheidEditor({
               key={key}
               onClick={() => handleClick(dag)}
               className={`aspect-square min-h-11 min-w-11 rounded-md flex items-center justify-center text-body-sm font-medium transition-colors ${
-                status === "beschikbaar"
+                status === "available"
                   ? "bg-groen text-white"
-                  : status === "bezet"
+                  : status === "booked"
                   ? "bg-cream-dark text-warmgrijs line-through"
                   : "bg-white border border-lijn text-warmzwart hover:border-terracotta"
               }`}

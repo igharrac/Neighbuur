@@ -54,7 +54,7 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
     const { data: beschikbaarheid } = await supabase
       .from("availability")
       .select("professional_id")
-      .eq("status", "beschikbaar")
+      .eq("status", "available")
       .gte("date", toDateStr(vandaag))
       .lte("date", toDateStr(over7Dagen))
       .in("professional_id", vakmen.map((v) => v.id));

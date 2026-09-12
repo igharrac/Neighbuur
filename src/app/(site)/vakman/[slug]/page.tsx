@@ -58,7 +58,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
     .select("date, status")
     .eq("professional_id", vakman.id);
 
-  const beschikbaarheid: Record<string, "beschikbaar" | "bezet"> = {};
+  const beschikbaarheid: Record<string, "available" | "booked"> = {};
   (beschikbaarheidRows ?? []).forEach((r) => {
     beschikbaarheid[r.date] = r.status;
   });
