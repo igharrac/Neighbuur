@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: { params: { code: string
     return NextResponse.redirect(`${origin}/login?invite=${code}`);
   }
 
-  const { data: profiel } = await supabase.from("profielen").select("id").eq("id", user.id).maybeSingle();
+  const { data: profiel } = await supabase.from("profiles").select("id").eq("id", user.id).maybeSingle();
   if (!profiel) {
     return NextResponse.redirect(`${origin}/onboarding?invite=${code}`);
   }
@@ -94,8 +94,8 @@ export async function GET(request: Request, { params }: { params: { code: string
       used_at: new Date().toISOString(),
     });
 
-    const { data: nieuweGebruiker } = await admin.from("profielen").select("naam").eq("id", user.id).maybeSingle();
-    const naam = nieuweGebruiker?.naam ?? "Iemand";
+    const { data: nieuweGebruiker } = await admin.from("profiles").select("name").eq("id", user.id).maybeSingle();
+    const naam = nieuweGebruiker?.name ?? "Iemand";
 
     await notifyUser(admin, {
       userId: uitnodigerProfiel.user_id,

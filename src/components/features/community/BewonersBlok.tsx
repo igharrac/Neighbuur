@@ -7,7 +7,7 @@ interface BewonersBlokData {
 
 interface LidRow {
   user_id: string;
-  profielen: { naam: string; avatar_url: string | null } | null;
+  profiles: { name: string; avatar_url: string | null } | null;
 }
 
 const MAX_SHOWN = 24;
@@ -16,7 +16,7 @@ export async function BewonersBlok({ data, community_id }: { data: BewonersBlokD
   const supabase = createServerSupabase();
   const { data: leden } = await supabase
     .from("community_members")
-    .select("user_id, profielen(naam, avatar_url)")
+    .select("user_id, profiles(name, avatar_url)")
     .eq("community_id", community_id);
 
   const rows = (leden ?? []) as unknown as LidRow[];
@@ -35,9 +35,9 @@ export async function BewonersBlok({ data, community_id }: { data: BewonersBlokD
         <div className="flex flex-wrap gap-4">
           {shown.map((lid) => (
             <div key={lid.user_id} className="flex flex-col items-center gap-1.5 w-14">
-              <Avatar naam={lid.profielen?.naam ?? "?"} src={lid.profielen?.avatar_url} size="md" />
+              <Avatar naam={lid.profiles?.name ?? "?"} src={lid.profiles?.avatar_url} size="md" />
               <span className="text-body-xs text-warmgrijs truncate w-full text-center">
-                {lid.profielen?.naam?.split(" ")[0]}
+                {lid.profiles?.name?.split(" ")[0]}
               </span>
             </div>
           ))}

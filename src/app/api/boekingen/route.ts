@@ -54,8 +54,8 @@ export async function POST(request: Request) {
     });
   }
 
-  const { data: profiel } = await admin.from("profielen").select("naam").eq("id", user.id).maybeSingle();
-  const klantNaam = profiel?.naam ?? "Een bewoner";
+  const { data: profiel } = await admin.from("profiles").select("name").eq("id", user.id).maybeSingle();
+  const klantNaam = profiel?.name ?? "Een bewoner";
 
   let categorieNaam: string | null = null;
   if (body?.categorieId) {

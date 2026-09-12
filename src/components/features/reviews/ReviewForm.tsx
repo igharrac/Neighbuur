@@ -130,7 +130,7 @@ export function ReviewForm({
       upvote_score: data.upvote_score ?? 0,
       created_at: data.created_at ?? new Date().toISOString(),
       updated_at: data.updated_at ?? new Date().toISOString(),
-      auteur_naam: profiel?.naam ?? "Jij",
+      auteur_naam: profiel?.name ?? "Jij",
       auteur_avatar: profiel?.avatar_url ?? null,
       community_naam: null,
       reactie_tekst: null,

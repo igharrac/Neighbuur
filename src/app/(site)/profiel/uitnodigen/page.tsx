@@ -4,7 +4,7 @@ import { InviteCard } from "@/components/features/invite/InviteCard";
 
 interface UitnodigingRow {
   used_at: string;
-  profielen: { naam: string } | null;
+  profiles: { name: string } | null;
 }
 
 export default async function UitnodigenPage() {
@@ -33,13 +33,13 @@ export default async function UitnodigenPage() {
 
   const { data: uitnodigingen } = await supabase
     .from("invitations")
-    .select("used_at, profielen:used_by(naam)")
+    .select("used_at, profiles:used_by(name)")
     .eq("inviter_id", user.id)
     .not("used_by", "is", null)
     .order("used_at", { ascending: false });
 
   const genodigden = ((uitnodigingen ?? []) as unknown as UitnodigingRow[]).map((u) => ({
-    naam: u.profielen?.naam ?? "Iemand",
+    naam: u.profiles?.name ?? "Iemand",
     datum: u.used_at,
   }));
 

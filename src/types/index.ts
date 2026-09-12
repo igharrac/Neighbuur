@@ -22,12 +22,12 @@ export interface CommunityContentBlok {
 
 export interface Profiel {
   id: string;
-  naam: string;
+  name: string;
   email: string | null;
-  telefoon: string | null;
-  rol: UserRole;
+  phone: string | null;
+  role: UserRole;
   avatar_url: string | null;
-  taal: "nl" | "en";
+  language: "nl" | "en";
   created_at: string;
   updated_at: string;
 }

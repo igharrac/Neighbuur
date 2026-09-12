@@ -30,8 +30,8 @@ export async function POST(request: Request) {
   const vakman = review.vakman_profielen as unknown as { user_id: string; bedrijfsnaam: string; slug: string } | null;
   if (!vakman) return NextResponse.json({ ok: true });
 
-  const { data: auteurProfiel } = await admin.from("profielen").select("naam").eq("id", user.id).maybeSingle();
-  const klantNaam = auteurProfiel?.naam ?? "Een klant";
+  const { data: auteurProfiel } = await admin.from("profiles").select("name").eq("id", user.id).maybeSingle();
+  const klantNaam = auteurProfiel?.name ?? "Een klant";
 
   const scores = review.scores as ReviewScores;
   const scoreWaarden = Object.values(scores ?? {}).filter((v): v is number => typeof v === "number");

@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function loadProfiel(userId: string) {
     const supabase = createClient();
-    const { data } = await supabase.from("profielen").select("*").eq("id", userId).maybeSingle();
+    const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
     setProfiel(data as Profiel | null);
   }
 

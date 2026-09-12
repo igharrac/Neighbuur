@@ -13,7 +13,7 @@ interface NotifyInput {
   link?: string;
   /** Web push versturen. Standaard aan. */
   push?: boolean;
-  /** E-mailsjabloon versturen (taal wordt automatisch bepaald aan de hand van profielen.taal). */
+  /** E-mailsjabloon versturen (taal wordt automatisch bepaald aan de hand van profiles.language). */
   email?: EmailTemplate;
 }
 
@@ -39,8 +39,8 @@ export async function notifyUser(admin: SupabaseClient<any>, input: NotifyInput)
   const wantsEmail = !!input.email;
   if (!wantsPush && !wantsEmail) return;
 
-  const { data: profiel } = await admin.from("profielen").select("taal, email").eq("id", input.userId).maybeSingle();
-  const taal: "nl" | "en" = profiel?.taal === "en" ? "en" : "nl";
+  const { data: profiel } = await admin.from("profiles").select("language, email").eq("id", input.userId).maybeSingle();
+  const taal: "nl" | "en" = profiel?.language === "en" ? "en" : "nl";
 
   const tasks: Promise<unknown>[] = [];
 

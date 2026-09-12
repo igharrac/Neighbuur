@@ -36,7 +36,7 @@ export function UserMenu() {
     router.push("/");
   }
 
-  const naam = profiel?.naam ?? "?";
+  const naam = profiel?.name ?? "?";
 
   return (
     <div className="relative" ref={ref}>

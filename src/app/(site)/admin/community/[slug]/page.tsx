@@ -18,9 +18,9 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
     .maybeSingle();
   if (!community) notFound();
 
-  const { data: profiel } = await supabase.from("profielen").select("rol").eq("id", user.id).maybeSingle();
+  const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
 
-  let geautoriseerd = profiel?.rol === "admin";
+  let geautoriseerd = profiel?.role === "admin";
   if (!geautoriseerd) {
     const { data: lid } = await supabase
       .from("community_members")

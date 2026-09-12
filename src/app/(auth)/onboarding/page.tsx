@@ -61,13 +61,13 @@ export default function OnboardingPage() {
         return;
       }
 
-      const { data: profiel } = await supabase.from("profielen").select("rol").eq("id", user.id).maybeSingle();
+      const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
 
       if (profiel) {
         if (invite) {
           router.replace(`/uitnodiging/${invite}`);
         } else {
-          router.replace(next || (profiel.rol === "vakman" ? "/dashboard" : "/plan"));
+          router.replace(next || (profiel.role === "vakman" ? "/dashboard" : "/plan"));
         }
         return;
       }
@@ -115,13 +115,13 @@ export default function OnboardingPage() {
       } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { error } = await supabase.from("profielen").insert({
+      const { error } = await supabase.from("profiles").insert({
         id: user.id,
-        naam,
+        name: naam,
         email: user.email ?? null,
-        telefoon: user.phone ?? null,
-        rol: "bewoner",
-        taal: lang,
+        phone: user.phone ?? null,
+        role: "bewoner",
+        language: lang,
       });
 
       setSaving(false);
@@ -158,13 +158,13 @@ export default function OnboardingPage() {
 
     // Account bestaat vanaf hier — met of zonder community. Community-
     // koppeling gebeurt pas na een expliciete keuze op de volgende stap.
-    const { error: profielError } = await supabase.from("profielen").insert({
+    const { error: profielError } = await supabase.from("profiles").insert({
       id: user.id,
-      naam,
+      name: naam,
       email: user.email ?? null,
-      telefoon: user.phone ?? null,
-      rol: "bewoner",
-      taal: lang,
+      phone: user.phone ?? null,
+      role: "bewoner",
+      language: lang,
     });
     if (profielError) {
       setSaving(false);

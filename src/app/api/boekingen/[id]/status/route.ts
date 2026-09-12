@@ -50,8 +50,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
     .eq("id", boeking.id);
   if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
 
-  const { data: klantProfiel } = await admin.from("profielen").select("naam").eq("id", boeking.customer_id).maybeSingle();
-  const klantNaam = klantProfiel?.naam ?? "De klant";
+  const { data: klantProfiel } = await admin.from("profiles").select("name").eq("id", boeking.customer_id).maybeSingle();
+  const klantNaam = klantProfiel?.name ?? "De klant";
 
   // "bevestigd" gaat altijd naar de klant; bij "geannuleerd"/"afgerond" is de
   // ontvanger de partij die de actie niet zelf uitvoerde.

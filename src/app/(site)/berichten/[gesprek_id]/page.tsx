@@ -20,14 +20,14 @@ export default async function GesprekPage({ params }: { params: { gesprek_id: st
 
   const { data: deelnemers } = await admin
     .from("conversation_participants")
-    .select("user_id, profielen(naam, avatar_url, rol)")
+    .select("user_id, profiles(name, avatar_url, role)")
     .eq("conversation_id", params.gesprek_id);
 
   const eigenDeelname = (deelnemers ?? []).some((d) => d.user_id === user.id);
   if (!eigenDeelname) notFound();
 
   const andere = (deelnemers ?? []).find((d) => d.user_id !== user.id) as
-    | { user_id: string; profielen: { naam: string; avatar_url: string | null; rol: string } | null }
+    | { user_id: string; profiles: { name: string; avatar_url: string | null; role: string } | null }
     | undefined;
 
   const andereDeelnemer = andere ? await resolveGesprekPartner(admin, andere) : null;

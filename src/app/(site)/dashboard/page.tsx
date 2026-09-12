@@ -20,7 +20,7 @@ interface BoekingRow {
   professional_notes: string | null;
   created_at: string;
   updated_at: string;
-  profielen: { naam: string; avatar_url: string | null } | null;
+  profiles: { name: string; avatar_url: string | null } | null;
   communities: { naam: string } | null;
   categories: { name_nl: string } | null;
 }
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
       `
       id, customer_id, professional_id, category_id, community_id, description, foto_urls,
       date, status, price_cents, customer_notes, professional_notes, created_at, updated_at,
-      profielen:customer_id(naam, avatar_url),
+      profiles:customer_id(name, avatar_url),
       communities(naam),
       categories(name_nl)
     `
@@ -80,8 +80,8 @@ export default async function DashboardPage() {
     professional_notes: b.professional_notes,
     created_at: b.created_at,
     updated_at: b.updated_at,
-    klant_naam: b.profielen?.naam ?? "Onbekend",
-    klant_avatar: b.profielen?.avatar_url ?? null,
+    klant_naam: b.profiles?.name ?? "Onbekend",
+    klant_avatar: b.profiles?.avatar_url ?? null,
     community_naam: b.communities?.naam ?? null,
     categorie_naam: b.categories?.name_nl ?? null,
   }));

@@ -37,13 +37,13 @@ if (!email) {
 const APP_URL = env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
 
-const { data: profiel } = await admin.from("profielen").select("id, naam, rol").eq("email", email).maybeSingle();
+const { data: profiel } = await admin.from("profiles").select("id, name, role").eq("email", email).maybeSingle();
 if (!profiel) {
   console.error(`Geen profiel gevonden voor ${email}`);
   process.exit(1);
 }
 
-const next = profiel.rol === "vakman" ? "/dashboard" : "/plan";
+const next = profiel.role === "vakman" ? "/dashboard" : "/plan";
 const { data, error } = await admin.auth.admin.generateLink({
   type: "magiclink",
   email,
@@ -51,7 +51,7 @@ const { data, error } = await admin.auth.admin.generateLink({
 });
 if (error) throw new Error(error.message);
 
-console.log(`\n${profiel.naam} (${profiel.rol}) — ${email}`);
+console.log(`\n${profiel.name} (${profiel.role}) — ${email}`);
 console.log(`\nOpen deze link in je browser om direct ingelogd te zijn:\n`);
 console.log(data.properties.action_link);
 console.log(`\nEenmalig bruikbaar, geldig 1 uur.`);

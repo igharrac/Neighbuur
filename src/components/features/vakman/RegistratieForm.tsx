@@ -64,10 +64,10 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       }
 
       const supabase = createClient();
-      const { data: profiel } = await supabase.from("profielen").select("rol").eq("id", user.id).maybeSingle();
+      const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
 
       if (profiel) {
-        router.replace(profiel.rol === "vakman" ? "/dashboard" : "/plan");
+        router.replace(profiel.role === "vakman" ? "/dashboard" : "/plan");
         return;
       }
 
@@ -175,13 +175,13 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     setSaving(true);
     const supabase = createClient();
 
-    const { error: profielError } = await supabase.from("profielen").insert({
+    const { error: profielError } = await supabase.from("profiles").insert({
       id: user.id,
-      naam: bedrijfsnaam,
+      name: bedrijfsnaam,
       email: user.email ?? null,
-      telefoon: user.phone ?? null,
-      rol: "vakman",
-      taal: "nl",
+      phone: user.phone ?? null,
+      role: "vakman",
+      language: "nl",
     });
 
     if (profielError) {

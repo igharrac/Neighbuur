@@ -7,7 +7,7 @@ import type { GesprekMetLaatsteBericht } from "@/types";
 
 interface DeelnemerRow {
   user_id: string;
-  profielen: { naam: string; avatar_url: string | null; rol: string } | null;
+  profiles: { name: string; avatar_url: string | null; role: string } | null;
 }
 
 interface BerichtRow {
@@ -56,7 +56,7 @@ export default async function BerichtenPage() {
       `
       id,
       created_at,
-      conversation_participants(user_id, profielen(naam, avatar_url, rol)),
+      conversation_participants(user_id, profiles(name, avatar_url, role)),
       laatste_bericht:messages(text, photo_url, created_at, sender_id)
     `
     )

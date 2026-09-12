@@ -11,8 +11,8 @@ export default async function AdminCategorieenPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profiel } = await supabase.from("profielen").select("rol").eq("id", user.id).maybeSingle();
-  if (profiel?.rol !== "admin") redirect("/");
+  const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+  if (profiel?.role !== "admin") redirect("/");
 
   const { data: categorieen } = await supabase
     .from("categories")

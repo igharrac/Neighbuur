@@ -12,9 +12,9 @@ export interface GesprekPartner {
  */
 export async function resolveGesprekPartner(
   admin: SupabaseClient,
-  deelnemer: { user_id: string; profielen: { naam: string; avatar_url: string | null; rol: string } | null }
+  deelnemer: { user_id: string; profiles: { name: string; avatar_url: string | null; role: string } | null }
 ): Promise<GesprekPartner> {
-  if (deelnemer.profielen?.rol === "vakman") {
+  if (deelnemer.profiles?.role === "vakman") {
     const { data: vakman } = await admin
       .from("vakman_profielen")
       .select("bedrijfsnaam, logo_url")
@@ -27,7 +27,7 @@ export async function resolveGesprekPartner(
 
   return {
     user_id: deelnemer.user_id,
-    naam: deelnemer.profielen?.naam ?? "Onbekend",
-    avatar_url: deelnemer.profielen?.avatar_url ?? null,
+    naam: deelnemer.profiles?.name ?? "Onbekend",
+    avatar_url: deelnemer.profiles?.avatar_url ?? null,
   };
 }

@@ -40,8 +40,8 @@ export default async function PlanPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/plan");
 
-  const { data: profiel } = await supabase.from("profielen").select("naam").eq("id", user.id).maybeSingle();
-  const voornaam = (profiel?.naam ?? "buur").split(" ")[0];
+  const { data: profiel } = await supabase.from("profiles").select("name").eq("id", user.id).maybeSingle();
+  const voornaam = (profiel?.name ?? "buur").split(" ")[0];
 
   const { data: bewonerProfiel } = await supabase
     .from("bewoner_profielen")
@@ -189,7 +189,7 @@ export default async function PlanPage() {
     const { data: gesprekken } = await admin
       .from("conversations")
       .select(
-        "id, created_at, conversation_participants(user_id, profielen(naam, avatar_url, rol)), laatste:messages(text, created_at)"
+        "id, created_at, conversation_participants(user_id, profiles(name, avatar_url, role)), laatste:messages(text, created_at)"
       )
       .in(
         "id",
@@ -201,7 +201,7 @@ export default async function PlanPage() {
       .limit(1);
 
     const g = gesprekken?.[0] as unknown as
-      | { id: string; conversation_participants: { user_id: string; profielen: { naam: string; avatar_url: string | null; rol: string } | null }[]; laatste: { text: string }[] | { text: string } | null }
+      | { id: string; conversation_participants: { user_id: string; profiles: { name: string; avatar_url: string | null; role: string } | null }[]; laatste: { text: string }[] | { text: string } | null }
       | undefined;
     if (g) {
       const andere = g.conversation_participants.find((d) => d.user_id !== user.id);
