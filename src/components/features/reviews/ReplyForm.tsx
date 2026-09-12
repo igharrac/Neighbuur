@@ -29,8 +29,8 @@ export function ReplyForm({ reviewId, vakmanId, bedrijfsnaam, isOwner, initialTe
 
     const supabase = createClient();
     const { error } = await supabase
-      .from("review_reacties")
-      .upsert({ review_id: reviewId, vakman_id: vakmanId, tekst: waarde }, { onConflict: "review_id" });
+      .from("review_replies")
+      .upsert({ review_id: reviewId, professional_id: vakmanId, text: waarde }, { onConflict: "review_id" });
 
     setSubmitting(false);
 

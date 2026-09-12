@@ -151,34 +151,34 @@ export interface Database {
           { foreignKeyName: "beschikbaarheid_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
         ];
       };
-      review_reacties: {
+      review_replies: {
         Row: {
           id: string;
           review_id: string;
-          vakman_id: string;
-          tekst: string;
+          professional_id: string;
+          text: string;
           created_at: string | null;
           updated_at: string | null;
         };
         Insert: {
           id?: string;
           review_id: string;
-          vakman_id: string;
-          tekst: string;
+          professional_id: string;
+          text: string;
           created_at?: string | null;
           updated_at?: string | null;
         };
         Update: {
           id?: string;
           review_id?: string;
-          vakman_id?: string;
-          tekst?: string;
+          professional_id?: string;
+          text?: string;
           created_at?: string | null;
           updated_at?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "review_reacties_review_id_fkey"; columns: ["review_id"]; isOneToOne: false; referencedRelation: "reviews"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_reacties_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_replies_review_id_fkey"; columns: ["review_id"]; isOneToOne: false; referencedRelation: "reviews"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_replies_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
         ];
       };
       categorieen: {
@@ -385,6 +385,46 @@ export interface Database {
           { foreignKeyName: "notificaties_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
         ];
       };
+      transactions: {
+        Row: {
+          id: string;
+          booking_id: string | null;
+          professional_id: string | null;
+          customer_id: string | null;
+          amount_cents: number;
+          commission_cents: number | null;
+          status: string | null;
+          mollie_payment_id: string | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          booking_id?: string | null;
+          professional_id?: string | null;
+          customer_id?: string | null;
+          amount_cents: number;
+          commission_cents?: number | null;
+          status?: string | null;
+          mollie_payment_id?: string | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string | null;
+          professional_id?: string | null;
+          customer_id?: string | null;
+          amount_cents?: number;
+          commission_cents?: number | null;
+          status?: string | null;
+          mollie_payment_id?: string | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "transactions_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
+          { foreignKeyName: "transactions_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "transactions_customer_id_fkey"; columns: ["customer_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+        ];
+      };
       profielen: {
         Row: {
           id: string;
@@ -481,46 +521,6 @@ export interface Database {
           { foreignKeyName: "boekingen_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "boekingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categorieen"; referencedColumns: ["id"] },
           { foreignKeyName: "boekingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-        ];
-      };
-      transacties: {
-        Row: {
-          id: string;
-          boeking_id: string | null;
-          vakman_id: string | null;
-          klant_id: string | null;
-          bedrag_cents: number;
-          commissie_cents: number | null;
-          status: string | null;
-          mollie_payment_id: string | null;
-          created_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          boeking_id?: string | null;
-          vakman_id?: string | null;
-          klant_id?: string | null;
-          bedrag_cents: number;
-          commissie_cents?: number | null;
-          status?: string | null;
-          mollie_payment_id?: string | null;
-          created_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          boeking_id?: string | null;
-          vakman_id?: string | null;
-          klant_id?: string | null;
-          bedrag_cents?: number;
-          commissie_cents?: number | null;
-          status?: string | null;
-          mollie_payment_id?: string | null;
-          created_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "transacties_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
-          { foreignKeyName: "transacties_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "transacties_klant_id_fkey"; columns: ["klant_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
         ];
       };
       gesprekken: {
