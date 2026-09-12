@@ -106,7 +106,7 @@ export function DashboardClient({
               <BookingCard
                 key={boeking.id}
                 boeking={boeking}
-                gesprekId={gesprekPerKlant[boeking.klant_id] ?? null}
+                gesprekId={gesprekPerKlant[boeking.customer_id] ?? null}
                 onStatusChange={handleStatusChange}
               />
             ))}
@@ -122,7 +122,7 @@ export function DashboardClient({
               <BookingCard
                 key={boeking.id}
                 boeking={boeking}
-                gesprekId={gesprekPerKlant[boeking.klant_id] ?? null}
+                gesprekId={gesprekPerKlant[boeking.customer_id] ?? null}
                 onStatusChange={handleStatusChange}
               />
             ))}
@@ -138,7 +138,7 @@ export function DashboardClient({
               <BookingCard
                 key={boeking.id}
                 boeking={boeking}
-                gesprekId={gesprekPerKlant[boeking.klant_id] ?? null}
+                gesprekId={gesprekPerKlant[boeking.customer_id] ?? null}
                 onStatusChange={handleStatusChange}
               />
             ))}

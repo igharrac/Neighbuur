@@ -22,8 +22,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const admin = createAdminSupabase();
 
   const { data: boeking } = await admin
-    .from("boekingen")
-    .select("id, klant_id, vakman_id, status, datum, vakman_profielen(user_id, bedrijfsnaam)")
+    .from("bookings")
+    .select("id, customer_id, professional_id, status, date, vakman_profielen(user_id, bedrijfsnaam)")
     .eq("id", params.id)
     .maybeSingle();
   if (!boeking) return NextResponse.json({ error: "Boeking niet gevonden" }, { status: 404 });
@@ -32,7 +32,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const vakmanUserId = vakmanProfiel?.user_id;
   const bedrijfsnaam = vakmanProfiel?.bedrijfsnaam ?? "De vakman";
 
-  const isKlant = boeking.klant_id === user.id;
+  const isKlant = boeking.customer_id === user.id;
   const isVakman = vakmanUserId === user.id;
   if (!isKlant && !isVakman) {
     return NextResponse.json({ error: "Geen toegang tot deze boeking" }, { status: 403 });
@@ -45,17 +45,17 @@ export async function POST(request: Request, { params }: { params: { id: string 
   }
 
   const { error: updateError } = await admin
-    .from("boekingen")
+    .from("bookings")
     .update({ status, updated_at: new Date().toISOString() })
     .eq("id", boeking.id);
   if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
 
-  const { data: klantProfiel } = await admin.from("profielen").select("naam").eq("id", boeking.klant_id).maybeSingle();
+  const { data: klantProfiel } = await admin.from("profielen").select("naam").eq("id", boeking.customer_id).maybeSingle();
   const klantNaam = klantProfiel?.naam ?? "De klant";
 
   // "bevestigd" gaat altijd naar de klant; bij "geannuleerd"/"afgerond" is de
   // ontvanger de partij die de actie niet zelf uitvoerde.
-  const ontvangerId = status === "bevestigd" ? boeking.klant_id : isVakman ? boeking.klant_id : vakmanUserId;
+  const ontvangerId = status === "bevestigd" ? boeking.customer_id : isVakman ? boeking.customer_id : vakmanUserId;
   const ontvangerIsVakman = status !== "bevestigd" && isKlant;
 
   if (ontvangerId) {
@@ -84,8 +84,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     const tekst = teksten[status as Exclude<BoekingStatus, "aangevraagd">];
     const link = ontvangerIsVakman ? "/dashboard" : "/plan";
-    const datumTekst = boeking.datum
-      ? new Date(boeking.datum).toLocaleDateString("nl-NL", { day: "numeric", month: "long" })
+    const datumTekst = boeking.date
+      ? new Date(boeking.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long" })
       : null;
 
     await notifyUser(admin, {

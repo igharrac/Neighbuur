@@ -64,15 +64,15 @@ export async function POST(request: Request) {
   }
 
   const { data: boeking, error: boekingError } = await admin
-    .from("boekingen")
+    .from("bookings")
     .insert({
-      klant_id: user.id,
-      vakman_id: vakman.id,
-      categorie_id: body?.categorieId ?? null,
+      customer_id: user.id,
+      professional_id: vakman.id,
+      category_id: body?.categorieId ?? null,
       community_id: body?.communityId ?? null,
-      omschrijving: body?.omschrijving || null,
+      description: body?.omschrijving || null,
       foto_urls: body?.fotoUrls ?? [],
-      datum: body?.datum ?? null,
+      date: body?.datum ?? null,
     })
     .select()
     .single();

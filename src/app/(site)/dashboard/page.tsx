@@ -7,17 +7,17 @@ import type { BoekingMetKlant, VakmanProfiel } from "@/types";
 
 interface BoekingRow {
   id: string;
-  klant_id: string;
-  vakman_id: string;
-  categorie_id: string | null;
+  customer_id: string;
+  professional_id: string;
+  category_id: string | null;
   community_id: string | null;
-  omschrijving: string | null;
+  description: string | null;
   foto_urls: string[];
-  datum: string | null;
+  date: string | null;
   status: BoekingMetKlant["status"];
-  prijs_cents: number | null;
-  notities_klant: string | null;
-  notities_vakman: string | null;
+  price_cents: number | null;
+  customer_notes: string | null;
+  professional_notes: string | null;
   created_at: string;
   updated_at: string;
   profielen: { naam: string; avatar_url: string | null } | null;
@@ -52,32 +52,32 @@ export default async function DashboardPage() {
     .eq("professional_id", vakman.id);
 
   const { data: boekingenData } = await supabase
-    .from("boekingen")
+    .from("bookings")
     .select(
       `
-      id, klant_id, vakman_id, categorie_id, community_id, omschrijving, foto_urls,
-      datum, status, prijs_cents, notities_klant, notities_vakman, created_at, updated_at,
-      profielen:klant_id(naam, avatar_url),
+      id, customer_id, professional_id, category_id, community_id, description, foto_urls,
+      date, status, price_cents, customer_notes, professional_notes, created_at, updated_at,
+      profielen:customer_id(naam, avatar_url),
       communities(naam),
       categories(name_nl)
     `
     )
-    .eq("vakman_id", vakman.id)
+    .eq("professional_id", vakman.id)
     .order("created_at", { ascending: false });
 
   const boekingen: BoekingMetKlant[] = ((boekingenData ?? []) as unknown as BoekingRow[]).map((b) => ({
     id: b.id,
-    klant_id: b.klant_id,
-    vakman_id: b.vakman_id,
-    categorie_id: b.categorie_id,
+    customer_id: b.customer_id,
+    professional_id: b.professional_id,
+    category_id: b.category_id,
     community_id: b.community_id,
-    omschrijving: b.omschrijving,
+    description: b.description,
     foto_urls: b.foto_urls,
-    datum: b.datum,
+    date: b.date,
     status: b.status,
-    prijs_cents: b.prijs_cents,
-    notities_klant: b.notities_klant,
-    notities_vakman: b.notities_vakman,
+    price_cents: b.price_cents,
+    customer_notes: b.customer_notes,
+    professional_notes: b.professional_notes,
     created_at: b.created_at,
     updated_at: b.updated_at,
     klant_naam: b.profielen?.naam ?? "Onbekend",
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
   // Gesprek-id per klant opzoeken, zodat de "Bericht"-knop op elke
   // aanvraagkaart direct naar het juiste gesprek linkt.
   const gesprekPerKlant: Record<string, string> = {};
-  const klantIds = [...new Set(boekingen.map((b) => b.klant_id))];
+  const klantIds = [...new Set(boekingen.map((b) => b.customer_id))];
   if (klantIds.length > 0) {
     const admin = createAdminSupabase();
     const { data: mijnGesprekken } = await admin.from("conversation_participants").select("conversation_id").eq("user_id", user.id);

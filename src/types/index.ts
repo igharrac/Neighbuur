@@ -160,17 +160,17 @@ export type BoekingStatus = "aangevraagd" | "bevestigd" | "afgerond" | "geannule
 
 export interface Boeking {
   id: string;
-  klant_id: string;
-  vakman_id: string;
-  categorie_id: string | null;
+  customer_id: string;
+  professional_id: string;
+  category_id: string | null;
   community_id: string | null;
-  omschrijving: string | null;
+  description: string | null;
   foto_urls: string[];
-  datum: string | null;
+  date: string | null;
   status: BoekingStatus;
-  prijs_cents: number | null;
-  notities_klant: string | null;
-  notities_vakman: string | null;
+  price_cents: number | null;
+  customer_notes: string | null;
+  professional_notes: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -95,24 +95,24 @@ export default async function PlanPage() {
   }
 
   const { data: boekingenData } = await supabase
-    .from("boekingen")
-    .select("id, status, omschrijving, datum, created_at, vakman_profielen(bedrijfsnaam, slug), categories(name_nl)")
-    .eq("klant_id", user.id)
+    .from("bookings")
+    .select("id, status, description, date, created_at, vakman_profielen(bedrijfsnaam, slug), categories(name_nl)")
+    .eq("customer_id", user.id)
     .order("created_at", { ascending: false });
 
   const boekingen: BoekingRij[] = ((boekingenData ?? []) as unknown as {
     id: string;
     status: BoekingStatus;
-    omschrijving: string | null;
-    datum: string | null;
+    description: string | null;
+    date: string | null;
     created_at: string;
     vakman_profielen: { bedrijfsnaam: string; slug: string } | null;
     categories: { name_nl: string } | null;
   }[]).map((b) => ({
     id: b.id,
     status: b.status,
-    omschrijving: b.omschrijving,
-    datum: b.datum,
+    omschrijving: b.description,
+    datum: b.date,
     created_at: b.created_at,
     vakman: b.vakman_profielen,
     categorieNaam: b.categories?.name_nl ?? null,

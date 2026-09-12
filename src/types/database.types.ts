@@ -268,7 +268,7 @@ export interface Database {
           created_at?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "transactions_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
+          { foreignKeyName: "transactions_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "transactions_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "transactions_customer_id_fkey"; columns: ["customer_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
         ];
@@ -309,6 +309,68 @@ export interface Database {
         };
         Relationships: [];
       };
+      bookings: {
+        Row: {
+          id: string;
+          customer_id: string;
+          professional_id: string;
+          category_id: string | null;
+          community_id: string | null;
+          description: string | null;
+          foto_urls: string[] | null;
+          date: string | null;
+          status: Database["public"]["Enums"]["boeking_status"];
+          price_cents: number | null;
+          mollie_payment_id: string | null;
+          customer_notes: string | null;
+          professional_notes: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+          review_request_sent_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          customer_id: string;
+          professional_id: string;
+          category_id?: string | null;
+          community_id?: string | null;
+          description?: string | null;
+          foto_urls?: string[] | null;
+          date?: string | null;
+          status?: Database["public"]["Enums"]["boeking_status"];
+          price_cents?: number | null;
+          mollie_payment_id?: string | null;
+          customer_notes?: string | null;
+          professional_notes?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+          review_request_sent_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          customer_id?: string;
+          professional_id?: string;
+          category_id?: string | null;
+          community_id?: string | null;
+          description?: string | null;
+          foto_urls?: string[] | null;
+          date?: string | null;
+          status?: Database["public"]["Enums"]["boeking_status"];
+          price_cents?: number | null;
+          mollie_payment_id?: string | null;
+          customer_notes?: string | null;
+          professional_notes?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+          review_request_sent_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "bookings_customer_id_fkey"; columns: ["customer_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "bookings_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "bookings_category_id_fkey"; columns: ["category_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
+          { foreignKeyName: "bookings_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+        ];
+      };
       invitations: {
         Row: {
           id: string;
@@ -341,68 +403,6 @@ export interface Database {
           { foreignKeyName: "invitations_inviter_id_fkey"; columns: ["inviter_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "invitations_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
           { foreignKeyName: "invitations_used_by_fkey"; columns: ["used_by"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
-        ];
-      };
-      boekingen: {
-        Row: {
-          id: string;
-          klant_id: string;
-          vakman_id: string;
-          categorie_id: string | null;
-          community_id: string | null;
-          omschrijving: string | null;
-          foto_urls: string[] | null;
-          datum: string | null;
-          status: Database["public"]["Enums"]["boeking_status"];
-          prijs_cents: number | null;
-          mollie_payment_id: string | null;
-          notities_klant: string | null;
-          notities_vakman: string | null;
-          created_at: string | null;
-          updated_at: string | null;
-          review_verzoek_verstuurd_op: string | null;
-        };
-        Insert: {
-          id?: string;
-          klant_id: string;
-          vakman_id: string;
-          categorie_id?: string | null;
-          community_id?: string | null;
-          omschrijving?: string | null;
-          foto_urls?: string[] | null;
-          datum?: string | null;
-          status?: Database["public"]["Enums"]["boeking_status"];
-          prijs_cents?: number | null;
-          mollie_payment_id?: string | null;
-          notities_klant?: string | null;
-          notities_vakman?: string | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-          review_verzoek_verstuurd_op?: string | null;
-        };
-        Update: {
-          id?: string;
-          klant_id?: string;
-          vakman_id?: string;
-          categorie_id?: string | null;
-          community_id?: string | null;
-          omschrijving?: string | null;
-          foto_urls?: string[] | null;
-          datum?: string | null;
-          status?: Database["public"]["Enums"]["boeking_status"];
-          prijs_cents?: number | null;
-          mollie_payment_id?: string | null;
-          notities_klant?: string | null;
-          notities_vakman?: string | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-          review_verzoek_verstuurd_op?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "boekingen_klant_id_fkey"; columns: ["klant_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "boekingen_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "boekingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
-          { foreignKeyName: "boekingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
       districts: {
@@ -862,7 +862,7 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "reviews_auteur_id_fkey"; columns: ["auteur_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "reviews_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
+          { foreignKeyName: "reviews_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
@@ -883,7 +883,7 @@ export interface Database {
           created_at?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "conversations_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
+          { foreignKeyName: "conversations_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
         ];
       };
     };
@@ -912,7 +912,7 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "review_compleet_auteur_id_fkey"; columns: ["auteur_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "review_compleet_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_compleet_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "review_compleet_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };

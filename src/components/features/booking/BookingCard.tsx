@@ -34,8 +34,8 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
     onStatusChange(boeking.id, status);
   }
 
-  const datumLabel = boeking.datum
-    ? new Date(boeking.datum).toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" })
+  const datumLabel = boeking.date
+    ? new Date(boeking.date).toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" })
     : "Datum nog te overleggen";
 
   return (
@@ -57,8 +57,8 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
         <BookingStatusBadge status={boeking.status} />
       </div>
 
-      {boeking.omschrijving && (
-        <p className="text-body-sm text-warmgrijs-dark mb-3">&ldquo;{boeking.omschrijving}&rdquo;</p>
+      {boeking.description && (
+        <p className="text-body-sm text-warmgrijs-dark mb-3">&ldquo;{boeking.description}&rdquo;</p>
       )}
 
       <div className="flex flex-wrap gap-2">

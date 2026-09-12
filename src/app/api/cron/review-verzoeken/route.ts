@@ -12,10 +12,10 @@ export async function GET() {
   const grens = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   const { data: boekingen, error } = await admin
-    .from("boekingen")
-    .select("id, klant_id, updated_at, vakman_profielen(bedrijfsnaam, slug)")
+    .from("bookings")
+    .select("id, customer_id, updated_at, vakman_profielen(bedrijfsnaam, slug)")
     .eq("status", "afgerond")
-    .is("review_verzoek_verstuurd_op", null)
+    .is("review_request_sent_at", null)
     .lte("updated_at", grens);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -27,7 +27,7 @@ export async function GET() {
 
     const link = `/vakman/${vakman.slug}?review=${boeking.id}`;
     await notifyUser(admin, {
-      userId: boeking.klant_id,
+      userId: boeking.customer_id,
       type: "review",
       titelNl: "Hoe was je ervaring?",
       titelEn: "How was your experience?",
@@ -38,8 +38,8 @@ export async function GET() {
     });
 
     await admin
-      .from("boekingen")
-      .update({ review_verzoek_verstuurd_op: new Date().toISOString() })
+      .from("bookings")
+      .update({ review_request_sent_at: new Date().toISOString() })
       .eq("id", boeking.id);
 
     verstuurd++;
