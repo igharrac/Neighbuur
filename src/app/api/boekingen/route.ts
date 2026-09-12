@@ -59,8 +59,8 @@ export async function POST(request: Request) {
 
   let categorieNaam: string | null = null;
   if (body?.categorieId) {
-    const { data: categorie } = await admin.from("categorieen").select("naam_nl").eq("id", body.categorieId).maybeSingle();
-    categorieNaam = categorie?.naam_nl ?? null;
+    const { data: categorie } = await admin.from("categories").select("name_nl").eq("id", body.categorieId).maybeSingle();
+    categorieNaam = categorie?.name_nl ?? null;
   }
 
   const { data: boeking, error: boekingError } = await admin

@@ -116,54 +116,6 @@ export interface Database {
           { foreignKeyName: "conversation_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
         ];
       };
-      categorieen: {
-        Row: {
-          id: string;
-          slug: string;
-          type: Database["public"]["Enums"]["categorie_type"];
-          naam_nl: string;
-          naam_en: string;
-          beschrijving_nl: string | null;
-          beschrijving_en: string | null;
-          afbeelding_url: string | null;
-          icoon: string | null;
-          sorteer: number | null;
-          actief: boolean | null;
-          created_at: string | null;
-          updated_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          slug: string;
-          type?: Database["public"]["Enums"]["categorie_type"];
-          naam_nl: string;
-          naam_en: string;
-          beschrijving_nl?: string | null;
-          beschrijving_en?: string | null;
-          afbeelding_url?: string | null;
-          icoon?: string | null;
-          sorteer?: number | null;
-          actief?: boolean | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          slug?: string;
-          type?: Database["public"]["Enums"]["categorie_type"];
-          naam_nl?: string;
-          naam_en?: string;
-          beschrijving_nl?: string | null;
-          beschrijving_en?: string | null;
-          afbeelding_url?: string | null;
-          icoon?: string | null;
-          sorteer?: number | null;
-          actief?: boolean | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-        };
-        Relationships: [];
-      };
       wijken: {
         Row: {
           id: string;
@@ -488,7 +440,7 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "boekingen_klant_id_fkey"; columns: ["klant_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
           { foreignKeyName: "boekingen_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "boekingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categorieen"; referencedColumns: ["id"] },
+          { foreignKeyName: "boekingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
           { foreignKeyName: "boekingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
@@ -816,8 +768,56 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "groepskortingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "groepskortingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categorieen"; referencedColumns: ["id"] },
+          { foreignKeyName: "groepskortingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
         ];
+      };
+      categories: {
+        Row: {
+          id: string;
+          slug: string;
+          type: Database["public"]["Enums"]["categorie_type"];
+          name_nl: string;
+          name_en: string;
+          description_nl: string | null;
+          description_en: string | null;
+          image_url: string | null;
+          icon: string | null;
+          sort_order: number | null;
+          active: boolean | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          type?: Database["public"]["Enums"]["categorie_type"];
+          name_nl: string;
+          name_en: string;
+          description_nl?: string | null;
+          description_en?: string | null;
+          image_url?: string | null;
+          icon?: string | null;
+          sort_order?: number | null;
+          active?: boolean | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          type?: Database["public"]["Enums"]["categorie_type"];
+          name_nl?: string;
+          name_en?: string;
+          description_nl?: string | null;
+          description_en?: string | null;
+          image_url?: string | null;
+          icon?: string | null;
+          sort_order?: number | null;
+          active?: boolean | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
       };
       reviews: {
         Row: {
@@ -1008,12 +1008,12 @@ export interface Database {
     };
     Enums: {
       content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
-      categorie_type: "vakman" | "vergelijk";
       notificatie_type: "review" | "boeking" | "bericht" | "uitnodiging" | "groepskorting" | "systeem" | "premium";
       user_role: "bewoner" | "vakman" | "community_beheerder" | "admin";
       boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
       beschikbaarheid_type: "beschikbaar" | "bezet";
       contact_voorkeur: "telefoon" | "whatsapp" | "app";
+      categorie_type: "vakman" | "vergelijk";
     };
   };
 }

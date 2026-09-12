@@ -7,10 +7,10 @@ export async function getCategorieen(): Promise<Categorie[]> {
   try {
     const supabase = createServerSupabase();
     const { data, error } = await supabase
-      .from("categorieen")
+      .from("categories")
       .select("*")
-      .eq("actief", true)
-      .order("sorteer", { ascending: true });
+      .eq("active", true)
+      .order("sort_order", { ascending: true });
 
     if (error || !data || data.length === 0) return fallbackCategorieen;
     return data as Categorie[];

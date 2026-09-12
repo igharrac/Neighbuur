@@ -36,14 +36,14 @@ export interface Categorie {
   id: string;
   slug: string;
   type: CategorieType;
-  naam_nl: string;
-  naam_en: string;
-  beschrijving_nl: string | null;
-  beschrijving_en: string | null;
-  afbeelding_url: string | null;
-  icoon: string | null;
-  sorteer: number;
-  actief: boolean;
+  name_nl: string;
+  name_en: string;
+  description_nl: string | null;
+  description_en: string | null;
+  image_url: string | null;
+  icon: string | null;
+  sort_order: number;
+  active: boolean;
 }
 
 export interface Wijk {

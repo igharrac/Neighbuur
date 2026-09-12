@@ -42,7 +42,7 @@ export function SearchFilters({ categorieen }: { categorieen: Categorie[] }) {
         <option value="">Categorie</option>
         {categorieen.map((c) => (
           <option key={c.slug} value={c.slug}>
-            {c.naam_nl}
+            {c.name_nl}
           </option>
         ))}
       </select>

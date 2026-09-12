@@ -52,7 +52,7 @@ export function KlusOmschrijving({
           <option value="">Kies een categorie (optioneel)...</option>
           {categorieen.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.naam_nl}
+              {c.name_nl}
             </option>
           ))}
         </select>

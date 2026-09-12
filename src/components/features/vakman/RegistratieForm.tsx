@@ -84,11 +84,11 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     async function loadCategorieen() {
       const supabase = createClient();
       const { data } = await supabase
-        .from("categorieen")
+        .from("categories")
         .select("*")
         .eq("type", "vakman")
-        .eq("actief", true)
-        .order("sorteer");
+        .eq("active", true)
+        .order("sort_order");
       setCategorieen((data ?? []) as Categorie[]);
     }
     loadCategorieen();
@@ -429,7 +429,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                   <option value="">Kies een categorie...</option>
                   {categorieen.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.naam_nl}
+                      {c.name_nl}
                     </option>
                   ))}
                 </select>

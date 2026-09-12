@@ -22,7 +22,7 @@ interface BoekingRow {
   updated_at: string;
   profielen: { naam: string; avatar_url: string | null } | null;
   communities: { naam: string } | null;
-  categorieen: { naam_nl: string } | null;
+  categories: { name_nl: string } | null;
 }
 
 export default async function DashboardPage() {
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
       datum, status, prijs_cents, notities_klant, notities_vakman, created_at, updated_at,
       profielen:klant_id(naam, avatar_url),
       communities(naam),
-      categorieen(naam_nl)
+      categories(name_nl)
     `
     )
     .eq("vakman_id", vakman.id)
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
     klant_naam: b.profielen?.naam ?? "Onbekend",
     klant_avatar: b.profielen?.avatar_url ?? null,
     community_naam: b.communities?.naam ?? null,
-    categorie_naam: b.categorieen?.naam_nl ?? null,
+    categorie_naam: b.categories?.name_nl ?? null,
   }));
 
   // Gesprek-id per klant opzoeken, zodat de "Bericht"-knop op elke

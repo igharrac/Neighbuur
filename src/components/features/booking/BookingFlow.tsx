@@ -92,7 +92,7 @@ export function BookingFlow({
     setVerstuurd(true);
   }
 
-  const categorieNaam = categorieen.find((c) => c.id === categorieId)?.naam_nl ?? null;
+  const categorieNaam = categorieen.find((c) => c.id === categorieId)?.name_nl ?? null;
   const kanVerder = stap !== 2 || omschrijving.trim().length > 0;
 
   return (

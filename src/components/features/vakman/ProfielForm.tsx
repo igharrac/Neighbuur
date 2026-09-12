@@ -52,7 +52,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
   useEffect(() => {
     async function load() {
       const supabase = createClient();
-      const { data } = await supabase.from("categorieen").select("*").eq("type", "vakman").eq("actief", true).order("sorteer");
+      const { data } = await supabase.from("categories").select("*").eq("type", "vakman").eq("active", true).order("sort_order");
       setCategorieen((data ?? []) as Categorie[]);
     }
     load();
@@ -159,7 +159,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
               <option value="">Kies een categorie...</option>
               {categorieen.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.naam_nl}
+                  {c.name_nl}
                 </option>
               ))}
             </select>

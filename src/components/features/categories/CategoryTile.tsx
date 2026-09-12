@@ -8,8 +8,8 @@ import type { Categorie } from "@/types";
 
 export function CategoryTile({ categorie }: { categorie: Categorie }) {
   const { lang } = useLang();
-  const naam = lang === "nl" ? categorie.naam_nl : categorie.naam_en;
-  const beschrijving = lang === "nl" ? categorie.beschrijving_nl : categorie.beschrijving_en;
+  const naam = lang === "nl" ? categorie.name_nl : categorie.name_en;
+  const beschrijving = lang === "nl" ? categorie.description_nl : categorie.description_en;
   const href = `/zoeken?categorie=${categorie.slug}`;
 
   return (
@@ -18,9 +18,9 @@ export function CategoryTile({ categorie }: { categorie: Categorie }) {
       className="group no-underline flex flex-col bg-[#F5F0E8] rounded overflow-hidden transition-all duration-300 hover:-translate-y-[5px] hover:shadow-medium"
     >
       <div className="w-full aspect-square overflow-hidden">
-        {categorie.afbeelding_url ? (
+        {categorie.image_url ? (
           <img
-            src={categorie.afbeelding_url}
+            src={categorie.image_url}
             alt={naam}
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />

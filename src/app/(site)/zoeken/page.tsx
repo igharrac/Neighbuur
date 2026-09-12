@@ -64,7 +64,7 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   }
 
   const categorieNaamPerSlug: Record<string, string> = Object.fromEntries(
-    alleCategorieen.map((c) => [c.slug, c.naam_nl])
+    alleCategorieen.map((c) => [c.slug, c.name_nl])
   );
 
   return (

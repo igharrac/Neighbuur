@@ -15,9 +15,9 @@ export default async function AdminCategorieenPage() {
   if (profiel?.rol !== "admin") redirect("/");
 
   const { data: categorieen } = await supabase
-    .from("categorieen")
+    .from("categories")
     .select("*")
-    .order("sorteer", { ascending: true });
+    .order("sort_order", { ascending: true });
 
   return <CategorieEditor initialCategorieen={(categorieen ?? []) as Categorie[]} />;
 }

@@ -14,21 +14,21 @@ import type { Categorie, CategorieType } from "@/types";
 type FormState = Partial<Categorie>;
 
 const emptyForm: FormState = {
-  naam_nl: "",
-  naam_en: "",
-  beschrijving_nl: "",
-  beschrijving_en: "",
+  name_nl: "",
+  name_en: "",
+  description_nl: "",
+  description_en: "",
   slug: "",
   type: "vakman",
-  icoon: "",
-  afbeelding_url: null,
-  actief: true,
+  icon: "",
+  image_url: null,
+  active: true,
 };
 
 export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Categorie[] }) {
   const { showToast } = useToast();
   const [categorieen, setCategorieen] = useState(
-    [...initialCategorieen].sort((a, b) => a.sorteer - b.sorteer)
+    [...initialCategorieen].sort((a, b) => a.sort_order - b.sort_order)
   );
   const [editingId, setEditingId] = useState<string | "new" | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
@@ -56,12 +56,12 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
     setForm((f) => ({
       ...f,
       [field]: value,
-      ...(field === "naam_nl" && !slugTouched ? { slug: slugify(value as string) } : {}),
+      ...(field === "name_nl" && !slugTouched ? { slug: slugify(value as string) } : {}),
     }));
   }
 
   async function handleSave() {
-    if (!form.naam_nl || !form.naam_en || !form.slug) {
+    if (!form.name_nl || !form.name_en || !form.slug) {
       showToast("Naam (NL+EN) en slug zijn verplicht", "error");
       return;
     }
@@ -69,22 +69,22 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
     setSaving(true);
     const supabase = createClient();
     const payload = {
-      naam_nl: form.naam_nl,
-      naam_en: form.naam_en,
-      beschrijving_nl: form.beschrijving_nl || null,
-      beschrijving_en: form.beschrijving_en || null,
+      name_nl: form.name_nl,
+      name_en: form.name_en,
+      description_nl: form.description_nl || null,
+      description_en: form.description_en || null,
       slug: form.slug,
       type: form.type as CategorieType,
-      icoon: form.icoon || null,
-      afbeelding_url: form.afbeelding_url || null,
-      actief: form.actief ?? true,
+      icon: form.icon || null,
+      image_url: form.image_url || null,
+      active: form.active ?? true,
     };
 
     if (editingId === "new") {
-      const sorteer = categorieen.length > 0 ? Math.max(...categorieen.map((c) => c.sorteer)) + 1 : 1;
+      const sortOrder = categorieen.length > 0 ? Math.max(...categorieen.map((c) => c.sort_order)) + 1 : 1;
       const { data, error } = await supabase
-        .from("categorieen")
-        .insert({ ...payload, sorteer })
+        .from("categories")
+        .insert({ ...payload, sort_order: sortOrder })
         .select()
         .single();
 
@@ -96,7 +96,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       setCategorieen((prev) => [...prev, data as Categorie]);
       showToast("Categorie toegevoegd", "success");
     } else if (editingId) {
-      const { error } = await supabase.from("categorieen").update(payload).eq("id", editingId);
+      const { error } = await supabase.from("categories").update(payload).eq("id", editingId);
 
       setSaving(false);
       if (error) {
@@ -125,9 +125,9 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       return;
     }
 
-    if (!window.confirm(`"${cat.naam_nl}" verwijderen?`)) return;
+    if (!window.confirm(`"${cat.name_nl}" verwijderen?`)) return;
 
-    const { error } = await supabase.from("categorieen").delete().eq("id", cat.id);
+    const { error } = await supabase.from("categories").delete().eq("id", cat.id);
     if (error) {
       showToast(error.message, "error");
       return;
@@ -139,14 +139,14 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
   async function toggleActief(cat: Categorie) {
     const supabase = createClient();
     const { error } = await supabase
-      .from("categorieen")
-      .update({ actief: !cat.actief })
+      .from("categories")
+      .update({ active: !cat.active })
       .eq("id", cat.id);
     if (error) {
       showToast(error.message, "error");
       return;
     }
-    setCategorieen((prev) => prev.map((c) => (c.id === cat.id ? { ...c, actief: !c.actief } : c)));
+    setCategorieen((prev) => prev.map((c) => (c.id === cat.id ? { ...c, active: !c.active } : c)));
   }
 
   async function handleMove(index: number, direction: -1 | 1) {
@@ -156,15 +156,15 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
     const a = categorieen[index];
     const b = categorieen[target];
     const next = [...categorieen];
-    next[index] = { ...b, sorteer: a.sorteer };
-    next[target] = { ...a, sorteer: b.sorteer };
-    next.sort((x, y) => x.sorteer - y.sorteer);
+    next[index] = { ...b, sort_order: a.sort_order };
+    next[target] = { ...a, sort_order: b.sort_order };
+    next.sort((x, y) => x.sort_order - y.sort_order);
     setCategorieen(next);
 
     const supabase = createClient();
     await Promise.all([
-      supabase.from("categorieen").update({ sorteer: b.sorteer }).eq("id", a.id),
-      supabase.from("categorieen").update({ sorteer: a.sorteer }).eq("id", b.id),
+      supabase.from("categories").update({ sort_order: b.sort_order }).eq("id", a.id),
+      supabase.from("categories").update({ sort_order: a.sort_order }).eq("id", b.id),
     ]);
   }
 
@@ -192,39 +192,39 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
             <ImageUploader
               bucket="categorie-images"
               pathPrefix={`${editingId === "new" ? crypto.randomUUID() : editingId}`}
-              value={form.afbeelding_url}
-              onUploaded={(url) => setField("afbeelding_url", url)}
+              value={form.image_url}
+              onUploaded={(url) => setField("image_url", url)}
               aspect="square"
               label="Afbeelding"
             />
 
             <div className="grid grid-cols-2 gap-4">
               <Input
-                name="naam_nl"
+                name="name_nl"
                 label="Naam (NL)"
-                value={form.naam_nl ?? ""}
-                onChange={(e) => setField("naam_nl", e.target.value)}
+                value={form.name_nl ?? ""}
+                onChange={(e) => setField("name_nl", e.target.value)}
               />
               <Input
-                name="naam_en"
+                name="name_en"
                 label="Naam (EN)"
-                value={form.naam_en ?? ""}
-                onChange={(e) => setField("naam_en", e.target.value)}
+                value={form.name_en ?? ""}
+                onChange={(e) => setField("name_en", e.target.value)}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <Input
-                name="beschrijving_nl"
+                name="description_nl"
                 label="Beschrijving (NL)"
-                value={form.beschrijving_nl ?? ""}
-                onChange={(e) => setField("beschrijving_nl", e.target.value)}
+                value={form.description_nl ?? ""}
+                onChange={(e) => setField("description_nl", e.target.value)}
               />
               <Input
-                name="beschrijving_en"
+                name="description_en"
                 label="Beschrijving (EN)"
-                value={form.beschrijving_en ?? ""}
-                onChange={(e) => setField("beschrijving_en", e.target.value)}
+                value={form.description_en ?? ""}
+                onChange={(e) => setField("description_en", e.target.value)}
               />
             </div>
 
@@ -250,11 +250,11 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
                 </select>
               </div>
               <Input
-                name="icoon"
+                name="icon"
                 label="Icoon"
                 placeholder="bv. Tree"
-                value={form.icoon ?? ""}
-                onChange={(e) => setField("icoon", e.target.value)}
+                value={form.icon ?? ""}
+                onChange={(e) => setField("icon", e.target.value)}
                 hint="Phosphor icon naam"
               />
             </div>
@@ -262,8 +262,8 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
             <label className="flex items-center gap-2 text-body-sm font-medium cursor-pointer">
               <input
                 type="checkbox"
-                checked={form.actief ?? true}
-                onChange={(e) => setField("actief", e.target.checked)}
+                checked={form.active ?? true}
+                onChange={(e) => setField("active", e.target.checked)}
               />
               Actief (zichtbaar op homepage)
             </label>
@@ -293,25 +293,25 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
             </div>
 
             <div className="w-11 h-11 rounded-md bg-cream overflow-hidden shrink-0">
-              {cat.afbeelding_url && (
-                <img src={cat.afbeelding_url} alt={cat.naam_nl} className="w-full h-full object-cover" />
+              {cat.image_url && (
+                <img src={cat.image_url} alt={cat.name_nl} className="w-full h-full object-cover" />
               )}
             </div>
 
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-body-sm text-warmzwart truncate">
-                {cat.naam_nl} <span className="text-warmgrijs font-normal">/ {cat.naam_en}</span>
+                {cat.name_nl} <span className="text-warmgrijs font-normal">/ {cat.name_en}</span>
               </p>
               <span className="badge badge-blauw mt-0.5">{cat.type}</span>
             </div>
 
             <button
               onClick={() => toggleActief(cat)}
-              className={`shrink-0 w-11 h-6 rounded-full relative transition-colors ${cat.actief ? "bg-groen" : "bg-lijn"}`}
+              className={`shrink-0 w-11 h-6 rounded-full relative transition-colors ${cat.active ? "bg-groen" : "bg-lijn"}`}
               aria-label="Actief wisselen"
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${cat.actief ? "translate-x-5" : ""}`}
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${cat.active ? "translate-x-5" : ""}`}
               />
             </button>
 
