@@ -543,36 +543,6 @@ export interface Database {
           { foreignKeyName: "gesprekken_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "boekingen"; referencedColumns: ["id"] },
         ];
       };
-      werk_fotos: {
-        Row: {
-          id: string;
-          vakman_id: string;
-          community_id: string | null;
-          foto_url: string;
-          bijschrift: string | null;
-          created_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          vakman_id: string;
-          community_id?: string | null;
-          foto_url: string;
-          bijschrift?: string | null;
-          created_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          vakman_id?: string;
-          community_id?: string | null;
-          foto_url?: string;
-          bijschrift?: string | null;
-          created_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "werk_fotos_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "werk_fotos_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-        ];
-      };
       gesprek_deelnemers: {
         Row: {
           gesprek_id: string;
@@ -755,6 +725,36 @@ export interface Database {
         };
         Relationships: [
           { foreignKeyName: "vakman_profielen_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+        ];
+      };
+      work_photos: {
+        Row: {
+          id: string;
+          professional_id: string;
+          community_id: string | null;
+          photo_url: string;
+          caption: string | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          professional_id: string;
+          community_id?: string | null;
+          photo_url: string;
+          caption?: string | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          professional_id?: string;
+          community_id?: string | null;
+          photo_url?: string;
+          caption?: string | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "work_photos_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "work_photos_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
       groepskortingen: {

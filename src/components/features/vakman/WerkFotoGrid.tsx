@@ -9,8 +9,8 @@ import { PremiumUpsell } from "@/components/features/premium/PremiumUpsell";
 
 interface WerkFoto {
   id: string;
-  foto_url: string;
-  bijschrift: string | null;
+  photo_url: string;
+  caption: string | null;
 }
 
 const GRATIS_MAX_FOTOS = 3;
@@ -43,8 +43,8 @@ export function WerkFotoGrid({
 
     const supabase = createClient();
     const { data, error } = await supabase
-      .from("werk_fotos")
-      .insert({ vakman_id: vakmanId, foto_url: url })
+      .from("work_photos")
+      .insert({ professional_id: vakmanId, photo_url: url })
       .select()
       .single();
 
@@ -53,12 +53,12 @@ export function WerkFotoGrid({
 
   async function handleCaptionSave(id: string, bijschrift: string) {
     const supabase = createClient();
-    await supabase.from("werk_fotos").update({ bijschrift }).eq("id", id);
+    await supabase.from("work_photos").update({ caption: bijschrift }).eq("id", id);
   }
 
   async function handleDelete(id: string) {
     const supabase = createClient();
-    await supabase.from("werk_fotos").delete().eq("id", id);
+    await supabase.from("work_photos").delete().eq("id", id);
     setFotos((prev) => prev.filter((f) => f.id !== id));
   }
 
@@ -67,7 +67,7 @@ export function WerkFotoGrid({
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {fotos.map((foto) => (
           <div key={foto.id} className="group relative rounded-md overflow-hidden bg-cream aspect-square">
-            <img src={foto.foto_url} alt={foto.bijschrift ?? ""} className="w-full h-full object-cover" />
+            <img src={foto.photo_url} alt={foto.caption ?? ""} className="w-full h-full object-cover" />
             <button
               onClick={() => handleDelete(foto.id)}
               className="absolute top-1.5 right-1.5 w-7 h-7 rounded-sm bg-warmzwart/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
@@ -76,7 +76,7 @@ export function WerkFotoGrid({
               <Trash size={13} />
             </button>
             <input
-              defaultValue={foto.bijschrift ?? ""}
+              defaultValue={foto.caption ?? ""}
               onBlur={(e) => handleCaptionSave(foto.id, e.target.value)}
               placeholder="Bijschrift..."
               className="absolute bottom-0 left-0 right-0 bg-warmzwart/70 text-white text-body-xs px-2 py-1.5 outline-none placeholder:text-white/60"

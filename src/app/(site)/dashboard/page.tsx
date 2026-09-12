@@ -42,9 +42,9 @@ export default async function DashboardPage() {
   if (!vakman) redirect("/registreer/vakman");
 
   const { count: werkFotoCount } = await supabase
-    .from("werk_fotos")
+    .from("work_photos")
     .select("id", { count: "exact", head: true })
-    .eq("vakman_id", vakman.id);
+    .eq("professional_id", vakman.id);
 
   const { count: beschikbaarheidCount } = await supabase
     .from("beschikbaarheid")

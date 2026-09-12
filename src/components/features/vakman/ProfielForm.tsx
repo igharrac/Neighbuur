@@ -16,8 +16,8 @@ const STRAAL_OPTIES = [5, 10, 15, 25];
 
 interface WerkFoto {
   id: string;
-  foto_url: string;
-  bijschrift: string | null;
+  photo_url: string;
+  caption: string | null;
 }
 
 interface ProfielFormProps {

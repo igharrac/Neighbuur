@@ -20,9 +20,9 @@ export default async function DashboardProfielPage() {
   if (!vakman) redirect("/registreer/vakman");
 
   const { data: werkFotos } = await supabase
-    .from("werk_fotos")
-    .select("id, foto_url, bijschrift")
-    .eq("vakman_id", vakman.id)
+    .from("work_photos")
+    .select("id, photo_url, caption")
+    .eq("professional_id", vakman.id)
     .order("created_at", { ascending: true });
 
   const { data: beschikbaarheidRows } = await supabase
