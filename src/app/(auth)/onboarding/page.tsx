@@ -174,19 +174,19 @@ export default function OnboardingPage() {
 
     let code = generateUitnodigingscode();
     for (let i = 0; i < 5; i++) {
-      const { data: existing } = await supabase.from("bewoner_profielen").select("id").eq("uitnodigingscode", code).maybeSingle();
+      const { data: existing } = await supabase.from("resident_profiles").select("id").eq("invite_code", code).maybeSingle();
       if (!existing) break;
       code = generateUitnodigingscode();
     }
 
-    const { error: bewonerError } = await supabase.from("bewoner_profielen").insert({
+    const { error: bewonerError } = await supabase.from("resident_profiles").insert({
       user_id: user.id,
       district_id: gekozenWijk.id,
-      postcode: postcodeNorm,
-      huisnummer: huisnummer.trim(),
-      huisnummer_toevoeging: huisnummerToevoeging.trim() || null,
-      gebouw_label: gebouwNorm,
-      uitnodigingscode: code,
+      postal_code: postcodeNorm,
+      house_number: huisnummer.trim(),
+      house_number_suffix: huisnummerToevoeging.trim() || null,
+      building_label: gebouwNorm,
+      invite_code: code,
     });
     if (bewonerError) {
       setSaving(false);
@@ -241,7 +241,7 @@ export default function OnboardingPage() {
     if (!user) return;
 
     await supabase.from("community_members").insert({ community_id: bestaandeCommunity.id, user_id: user.id, role: "lid" });
-    await supabase.from("bewoner_profielen").update({ community_id: bestaandeCommunity.id }).eq("user_id", user.id);
+    await supabase.from("resident_profiles").update({ community_id: bestaandeCommunity.id }).eq("user_id", user.id);
 
     setSaving(false);
     router.push(`/community/${bestaandeCommunity.slug}`);

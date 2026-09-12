@@ -44,8 +44,8 @@ export default async function PlanPage() {
   const voornaam = (profiel?.name ?? "buur").split(" ")[0];
 
   const { data: bewonerProfiel } = await supabase
-    .from("bewoner_profielen")
-    .select("community_id, district_id, postcode, toon_community_suggesties")
+    .from("resident_profiles")
+    .select("community_id, district_id, postal_code, show_community_suggestions")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -63,12 +63,12 @@ export default async function PlanPage() {
   // communityvorming) — alleen mogelijk als er een postcode bekend is
   // (oudere/demo-accounts zonder adres slaan dit gewoon over).
   let detectie: DetectieResultaat | null = null;
-  if (!community && bewonerProfiel?.district_id && bewonerProfiel?.postcode && bewonerProfiel.toon_community_suggesties !== false) {
+  if (!community && bewonerProfiel?.district_id && bewonerProfiel?.postal_code && bewonerProfiel.show_community_suggestions !== false) {
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, naam, slug")
       .eq("district_id", bewonerProfiel.district_id)
-      .eq("postcode_cluster", bewonerProfiel.postcode)
+      .eq("postcode_cluster", bewonerProfiel.postal_code)
       .neq("status", "slapend")
       .maybeSingle();
 
@@ -82,14 +82,14 @@ export default async function PlanPage() {
         .maybeSingle();
       const { data: telling } = await supabase.rpc("bewoners_cluster_telling", {
         p_wijk_id: bewonerProfiel.district_id,
-        p_postcode: bewonerProfiel.postcode,
+        p_postcode: bewonerProfiel.postal_code,
         p_gebouw_label: null,
       });
       const threshold = wijkRow?.community_threshold ?? 3;
       const count = typeof telling === "number" ? telling : 1;
       detectie =
         count >= threshold
-          ? { type: "drempel", postcode: bewonerProfiel.postcode, telling: count, threshold, wijkId: bewonerProfiel.district_id }
+          ? { type: "drempel", postcode: bewonerProfiel.postal_code, telling: count, threshold, wijkId: bewonerProfiel.district_id }
           : { type: "vroeg", threshold };
     }
   }

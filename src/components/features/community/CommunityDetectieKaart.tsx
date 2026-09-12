@@ -23,7 +23,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return;
-    await supabase.from("bewoner_profielen").update({ toon_community_suggesties: false }).eq("user_id", user.id);
+    await supabase.from("resident_profiles").update({ show_community_suggestions: false }).eq("user_id", user.id);
   }
 
   if (verborgen) return null;
@@ -38,7 +38,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
     if (!user) return;
 
     await supabase.from("community_members").insert({ community_id: props.communityId, user_id: user.id, role: "lid" });
-    await supabase.from("bewoner_profielen").update({ community_id: props.communityId }).eq("user_id", user.id);
+    await supabase.from("resident_profiles").update({ community_id: props.communityId }).eq("user_id", user.id);
     router.push(`/community/${props.slug}`);
   }
 

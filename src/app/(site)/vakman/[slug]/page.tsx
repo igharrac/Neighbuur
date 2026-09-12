@@ -43,7 +43,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
     }
 
     const { data: bewoner } = await supabase
-      .from("bewoner_profielen")
+      .from("resident_profiles")
       .select("community_id")
       .eq("user_id", user.id)
       .maybeSingle();

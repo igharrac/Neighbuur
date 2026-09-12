@@ -116,58 +116,6 @@ export interface Database {
           { foreignKeyName: "conversation_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
-      bewoner_profielen: {
-        Row: {
-          id: string;
-          user_id: string;
-          community_id: string | null;
-          district_id: string | null;
-          opleverdatum: string | null;
-          adres: string | null;
-          uitnodigingscode: string | null;
-          created_at: string | null;
-          postcode: string | null;
-          huisnummer: string | null;
-          huisnummer_toevoeging: string | null;
-          gebouw_label: string | null;
-          toon_community_suggesties: boolean;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          community_id?: string | null;
-          district_id?: string | null;
-          opleverdatum?: string | null;
-          adres?: string | null;
-          uitnodigingscode?: string | null;
-          created_at?: string | null;
-          postcode?: string | null;
-          huisnummer?: string | null;
-          huisnummer_toevoeging?: string | null;
-          gebouw_label?: string | null;
-          toon_community_suggesties?: boolean;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          community_id?: string | null;
-          district_id?: string | null;
-          opleverdatum?: string | null;
-          adres?: string | null;
-          uitnodigingscode?: string | null;
-          created_at?: string | null;
-          postcode?: string | null;
-          huisnummer?: string | null;
-          huisnummer_toevoeging?: string | null;
-          gebouw_label?: string | null;
-          toon_community_suggesties?: boolean;
-        };
-        Relationships: [
-          { foreignKeyName: "bewoner_profielen_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "bewoner_profielen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "bewoner_profielen_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
-        ];
-      };
       groepskorting_deelnemers: {
         Row: {
           id: string;
@@ -443,6 +391,58 @@ export interface Database {
           community_threshold?: number | null;
         };
         Relationships: [];
+      };
+      resident_profiles: {
+        Row: {
+          id: string;
+          user_id: string;
+          community_id: string | null;
+          district_id: string | null;
+          completion_date: string | null;
+          address: string | null;
+          invite_code: string | null;
+          created_at: string | null;
+          postal_code: string | null;
+          house_number: string | null;
+          house_number_suffix: string | null;
+          building_label: string | null;
+          show_community_suggestions: boolean;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          community_id?: string | null;
+          district_id?: string | null;
+          completion_date?: string | null;
+          address?: string | null;
+          invite_code?: string | null;
+          created_at?: string | null;
+          postal_code?: string | null;
+          house_number?: string | null;
+          house_number_suffix?: string | null;
+          building_label?: string | null;
+          show_community_suggestions?: boolean;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          community_id?: string | null;
+          district_id?: string | null;
+          completion_date?: string | null;
+          address?: string | null;
+          invite_code?: string | null;
+          created_at?: string | null;
+          postal_code?: string | null;
+          house_number?: string | null;
+          house_number_suffix?: string | null;
+          building_label?: string | null;
+          show_community_suggestions?: boolean;
+        };
+        Relationships: [
+          { foreignKeyName: "resident_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "resident_profiles_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+          { foreignKeyName: "resident_profiles_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
+        ];
       };
       availability: {
         Row: {

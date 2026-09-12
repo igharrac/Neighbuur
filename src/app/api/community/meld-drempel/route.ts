@@ -21,10 +21,10 @@ export async function POST(request: Request) {
   const threshold = wijk?.community_threshold ?? 3;
 
   const { data: leden } = await admin
-    .from("bewoner_profielen")
-    .select("user_id, toon_community_suggesties")
+    .from("resident_profiles")
+    .select("user_id, show_community_suggestions")
     .eq("district_id", wijkId)
-    .eq("postcode", postcode)
+    .eq("postal_code", postcode)
     .is("community_id", null);
 
   const aantal = leden?.length ?? 0;
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
 
   let verstuurd = 0;
   for (const lid of leden ?? []) {
-    if (!lid.toon_community_suggesties) continue;
+    if (!lid.show_community_suggestions) continue;
     await notifyUser(admin, {
       userId: lid.user_id,
       type: "systeem",

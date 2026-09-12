@@ -30,10 +30,10 @@ export async function POST(request: Request) {
   if (userIds.length === 0) return NextResponse.json({ verstuurd: 0 });
 
   const { data: voorkeuren } = await admin
-    .from("bewoner_profielen")
-    .select("user_id, toon_community_suggesties")
+    .from("resident_profiles")
+    .select("user_id, show_community_suggestions")
     .in("user_id", userIds);
-  const teMelden = (voorkeuren ?? []).filter((v) => v.toon_community_suggesties).map((v) => v.user_id);
+  const teMelden = (voorkeuren ?? []).filter((v) => v.show_community_suggestions).map((v) => v.user_id);
 
   let verstuurd = 0;
   for (const uid of teMelden) {

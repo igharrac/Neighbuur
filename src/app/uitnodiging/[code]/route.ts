@@ -11,9 +11,9 @@ export async function GET(request: Request, { params }: { params: { code: string
 
   // Zoek de uitnodiger via zijn persoonlijke code
   const { data: uitnodigerProfiel } = await admin
-    .from("bewoner_profielen")
+    .from("resident_profiles")
     .select("user_id, community_id, district_id, communities(slug)")
-    .eq("uitnodigingscode", code)
+    .eq("invite_code", code)
     .maybeSingle();
 
   if (!uitnodigerProfiel || !uitnodigerProfiel.community_id) {
@@ -52,7 +52,7 @@ export async function GET(request: Request, { params }: { params: { code: string
 
   // Zorg dat de nieuwe gebruiker zelf ook een uitnodigingscode heeft
   const { data: eigenBewonerProfiel } = await admin
-    .from("bewoner_profielen")
+    .from("resident_profiles")
     .select("id")
     .eq("user_id", user.id)
     .maybeSingle();
@@ -61,19 +61,19 @@ export async function GET(request: Request, { params }: { params: { code: string
     let eigenCode = generateUitnodigingscode();
     for (let i = 0; i < 5; i++) {
       const { data: existing } = await admin
-        .from("bewoner_profielen")
+        .from("resident_profiles")
         .select("id")
-        .eq("uitnodigingscode", eigenCode)
+        .eq("invite_code", eigenCode)
         .maybeSingle();
       if (!existing) break;
       eigenCode = generateUitnodigingscode();
     }
 
-    await admin.from("bewoner_profielen").insert({
+    await admin.from("resident_profiles").insert({
       user_id: user.id,
       community_id: uitnodigerProfiel.community_id,
       district_id: uitnodigerProfiel.district_id,
-      uitnodigingscode: eigenCode,
+      invite_code: eigenCode,
     });
   }
 

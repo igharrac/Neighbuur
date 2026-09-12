@@ -16,12 +16,12 @@ export default async function UitnodigenPage() {
   if (!user) redirect("/login");
 
   const { data: bewonerProfiel } = await supabase
-    .from("bewoner_profielen")
-    .select("uitnodigingscode")
+    .from("resident_profiles")
+    .select("invite_code")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!bewonerProfiel?.uitnodigingscode) {
+  if (!bewonerProfiel?.invite_code) {
     return (
       <div className="max-w-[520px] mx-auto px-6 py-16 text-center">
         <p className="text-body text-warmgrijs">
@@ -45,7 +45,7 @@ export default async function UitnodigenPage() {
 
   return (
     <div className="px-6 py-10">
-      <InviteCard code={bewonerProfiel.uitnodigingscode} genodigden={genodigden} />
+      <InviteCard code={bewonerProfiel.invite_code} genodigden={genodigden} />
     </div>
   );
 }

@@ -57,7 +57,7 @@ export function CommunityHeader({
     }
 
     await supabase
-      .from("bewoner_profielen")
+      .from("resident_profiles")
       .upsert({ user_id: user.id, community_id: communityId, district_id: wijkId }, { onConflict: "user_id" });
 
     setJoining(false);
