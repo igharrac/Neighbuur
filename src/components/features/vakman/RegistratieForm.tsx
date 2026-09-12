@@ -50,6 +50,9 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   const fullPhone = "+31" + phone.replace(/\s/g, "").replace(/^0/, "");
   const maskedPhone = "+31 6 ****" + phone.slice(-2);
 
+  // E-mail-codes zijn in dit Supabase-project 8 cijfers, sms-codes 6.
+  const otpLength = method === "email" ? 8 : 6;
+
   // Bepaal of deze gebruiker al ingelogd/geregistreerd is
   useEffect(() => {
     if (authLoading) return;
@@ -99,13 +102,19 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     const { error } =
       method === "phone"
         ? await supabase.auth.signInWithOtp({ phone: fullPhone })
-        : await supabase.auth.signInWithOtp({ email });
+        : await supabase.auth.signInWithOtp({
+            email,
+            options: {
+              emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(registreerNext)}`,
+            },
+          });
 
     setAuthLoadingLocal(false);
     if (error) {
       showToast(error.message, "error");
       return;
     }
+    setOtp(Array(otpLength).fill(""));
     setAuthStep("otp");
     setTimeout(() => otpRefs.current[0]?.focus(), 100);
   }
@@ -341,7 +350,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                       </span>
                     </p>
 
-                    <div className="flex gap-2 justify-center mb-6">
+                    <div className="flex gap-1.5 justify-center mb-6">
                       {otp.map((digit, i) => (
                         <input
                           key={i}
@@ -354,7 +363,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                           value={digit}
                           onChange={(e) => handleOtpInput(i, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                          className="w-[42px] h-[54px] text-center font-display text-[20px] font-bold border-2 border-lijn rounded-sm outline-none transition-all focus:border-terracotta focus:shadow-glow"
+                          className="flex-1 min-w-0 h-[52px] text-center font-display text-[18px] font-bold border-2 border-lijn rounded-sm outline-none transition-all focus:border-terracotta focus:shadow-glow"
                         />
                       ))}
                     </div>
