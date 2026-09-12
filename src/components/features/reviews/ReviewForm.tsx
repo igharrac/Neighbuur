@@ -97,11 +97,11 @@ export function ReviewForm({
     const { data, error } = await supabase
       .from("reviews")
       .insert({
-        auteur_id: user.id,
-        vakman_id: vakmanId,
-        boeking_id: boekingId,
+        author_id: user.id,
+        professional_id: vakmanId,
+        booking_id: boekingId,
         community_id: communityId,
-        tekst: tekst.trim(),
+        text: tekst.trim(),
         scores,
         foto_urls: fotoUrls,
       })
@@ -115,8 +115,16 @@ export function ReviewForm({
       return;
     }
 
+    // review_compleet (de view die ReviewCompleet typeert) bevriest haar
+    // kolomnamen bij aanmaak — data komt hier van de reviews-tabel zelf
+    // (nieuwe kolomnamen) en wordt dus expliciet naar de view-vorm gemapt.
     const nieuweReview: ReviewCompleet = {
-      ...data,
+      id: data.id,
+      auteur_id: data.author_id,
+      vakman_id: data.professional_id,
+      boeking_id: data.booking_id,
+      community_id: data.community_id,
+      tekst: data.text,
       scores: scores as Partial<ReviewScores>,
       foto_urls: data.foto_urls ?? [],
       upvote_score: data.upvote_score ?? 0,

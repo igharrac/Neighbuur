@@ -516,19 +516,19 @@ export interface Database {
           id: string;
           review_id: string;
           user_id: string;
-          waarde: number;
+          value: number;
         };
         Insert: {
           id?: string;
           review_id: string;
           user_id: string;
-          waarde?: number;
+          value?: number;
         };
         Update: {
           id?: string;
           review_id?: string;
           user_id?: string;
-          waarde?: number;
+          value?: number;
         };
         Relationships: [
           { foreignKeyName: "review_votes_review_id_fkey"; columns: ["review_id"]; isOneToOne: false; referencedRelation: "reviews"; referencedColumns: ["id"] },
@@ -822,11 +822,11 @@ export interface Database {
       reviews: {
         Row: {
           id: string;
-          auteur_id: string;
-          vakman_id: string;
-          boeking_id: string | null;
+          author_id: string;
+          professional_id: string;
+          booking_id: string | null;
           community_id: string | null;
-          tekst: string;
+          text: string;
           scores: Json;
           foto_urls: string[] | null;
           upvote_score: number | null;
@@ -835,11 +835,11 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          auteur_id: string;
-          vakman_id: string;
-          boeking_id?: string | null;
+          author_id: string;
+          professional_id: string;
+          booking_id?: string | null;
           community_id?: string | null;
-          tekst: string;
+          text: string;
           scores: Json;
           foto_urls?: string[] | null;
           upvote_score?: number | null;
@@ -848,11 +848,11 @@ export interface Database {
         };
         Update: {
           id?: string;
-          auteur_id?: string;
-          vakman_id?: string;
-          boeking_id?: string | null;
+          author_id?: string;
+          professional_id?: string;
+          booking_id?: string | null;
           community_id?: string | null;
-          tekst?: string;
+          text?: string;
           scores?: Json;
           foto_urls?: string[] | null;
           upvote_score?: number | null;
@@ -860,9 +860,9 @@ export interface Database {
           updated_at?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "reviews_auteur_id_fkey"; columns: ["auteur_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "reviews_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
-          { foreignKeyName: "reviews_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
+          { foreignKeyName: "reviews_author_id_fkey"; columns: ["author_id"]; isOneToOne: false; referencedRelation: "profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "reviews_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "vakman_profielen"; referencedColumns: ["id"] },
+          { foreignKeyName: "reviews_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };

@@ -46,7 +46,7 @@ export function UpvoteButton({ reviewId, initialScore, initialVoted }: UpvoteBut
       if (typeof navigator.vibrate === "function") navigator.vibrate(10);
       const { error } = await supabase
         .from("review_votes")
-        .upsert({ review_id: reviewId, user_id: user.id, waarde: 1 }, { onConflict: "review_id,user_id" });
+        .upsert({ review_id: reviewId, user_id: user.id, value: 1 }, { onConflict: "review_id,user_id" });
       if (error) {
         setVoted(false);
         setScore((s) => s - 1);

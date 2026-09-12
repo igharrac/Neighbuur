@@ -76,6 +76,9 @@ export type ReviewScores = {
   prijs: number;
 };
 
+// Kolomnamen hier volgen de review_compleet-view, niet de reviews-tabel:
+// een view's kolomnamen bevriezen bij aanmaak en volgen een onderliggende
+// kolomrename niet automatisch (zie migratie 0019). Wordt in Fase 4 herzien.
 export interface ReviewCompleet {
   id: string;
   auteur_id: string;

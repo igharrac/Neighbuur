@@ -20,10 +20,10 @@ export async function POST(request: Request) {
 
   const { data: review } = await admin
     .from("reviews")
-    .select("id, auteur_id, vakman_id, scores, vakman_profielen(user_id, bedrijfsnaam, slug)")
+    .select("id, author_id, professional_id, scores, vakman_profielen(user_id, bedrijfsnaam, slug)")
     .eq("id", reviewId)
     .maybeSingle();
-  if (!review || review.auteur_id !== user.id) {
+  if (!review || review.author_id !== user.id) {
     return NextResponse.json({ error: "Review niet gevonden" }, { status: 404 });
   }
 
