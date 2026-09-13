@@ -76,14 +76,14 @@ export default async function CommunityPage({ params }: { params: { slug: string
           {heroBlok && <div className="mb-6"><HeroBanner data={heroBlok.data} /></div>}
 
           <CommunityHeader
-            naam={c.name}
+            name={c.name}
             type={c.type}
-            wijkNaam={c.district_name}
-            wijkId={c.district_id}
+            districtName={c.district_name}
+            districtId={c.district_id}
             communityId={c.id}
-            aantalLeden={c.member_count}
-            aantalReviews={c.review_count}
-            lopendeActies={c.active_deals}
+            memberCount={c.member_count}
+            reviewCount={c.review_count}
+            activeDeals={c.active_deals}
             initialIsMember={isMember}
           />
 

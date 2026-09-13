@@ -73,7 +73,7 @@ export default async function PlanPage() {
       .maybeSingle();
 
     if (bestaande) {
-      detectie = { type: "bestaande", naam: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
+      detectie = { type: "bestaande", name: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
     } else {
       const { data: wijkRow } = await supabase
         .from("districts")
@@ -89,7 +89,7 @@ export default async function PlanPage() {
       const count = typeof telling === "number" ? telling : 1;
       detectie =
         count >= threshold
-          ? { type: "drempel", postcode: bewonerProfiel.postal_code, telling: count, threshold, wijkId: bewonerProfiel.district_id }
+          ? { type: "drempel", postcode: bewonerProfiel.postal_code, telling: count, threshold, districtId: bewonerProfiel.district_id }
           : { type: "vroeg", threshold };
     }
   }

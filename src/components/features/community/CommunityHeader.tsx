@@ -8,26 +8,26 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useToast } from "@/components/ui/Toast";
 
 interface CommunityHeaderProps {
-  naam: string;
+  name: string;
   type: string;
-  wijkNaam: string;
-  wijkId: string;
+  districtName: string;
+  districtId: string;
   communityId: string;
-  aantalLeden: number;
-  aantalReviews: number;
-  lopendeActies: number;
+  memberCount: number;
+  reviewCount: number;
+  activeDeals: number;
   initialIsMember: boolean;
 }
 
 export function CommunityHeader({
-  naam,
+  name,
   type,
-  wijkNaam,
-  wijkId,
+  districtName,
+  districtId,
   communityId,
-  aantalLeden,
-  aantalReviews,
-  lopendeActies,
+  memberCount,
+  reviewCount,
+  activeDeals,
   initialIsMember,
 }: CommunityHeaderProps) {
   const { user } = useAuth();
@@ -35,7 +35,7 @@ export function CommunityHeader({
   const { showToast } = useToast();
   const [isMember, setIsMember] = useState(initialIsMember);
   const [joining, setJoining] = useState(false);
-  const [leden, setLeden] = useState(aantalLeden);
+  const [leden, setLeden] = useState(memberCount);
 
   async function handleJoin() {
     if (!user) {
@@ -58,7 +58,7 @@ export function CommunityHeader({
 
     await supabase
       .from("resident_profiles")
-      .upsert({ user_id: user.id, community_id: communityId, district_id: wijkId }, { onConflict: "user_id" });
+      .upsert({ user_id: user.id, community_id: communityId, district_id: districtId }, { onConflict: "user_id" });
 
     setJoining(false);
     setIsMember(true);
@@ -71,9 +71,9 @@ export function CommunityHeader({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-body-xs font-semibold uppercase tracking-wider text-terracotta mb-1">
-            {type} · {wijkNaam}
+            {type} · {districtName}
           </p>
-          <h1 className="font-display text-display-md text-warmzwart">{naam}</h1>
+          <h1 className="font-display text-display-md text-warmzwart">{name}</h1>
         </div>
 
         {isMember ? (
@@ -95,11 +95,11 @@ export function CommunityHeader({
         </span>
         <span className="flex items-center gap-1.5">
           <Star size={16} />
-          {aantalReviews} reviews
+          {reviewCount} reviews
         </span>
         <span className="flex items-center gap-1.5">
           <Tag size={16} />
-          {lopendeActies} acties
+          {activeDeals} acties
         </span>
       </div>
     </div>

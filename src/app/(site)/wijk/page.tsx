@@ -56,11 +56,11 @@ export default async function WijkIndexPage() {
             en welke wijkdeals lopen.
           </p>
           <WijkZoeken
-            wijken={wijken.map((w) => ({ naam: w.name, slug: w.slug, stad: w.city, postcode: w.postal_code }))}
+            districts={wijken.map((w) => ({ name: w.name, slug: w.slug, stad: w.city, postcode: w.postal_code }))}
             communities={communities.map((c) => ({
-              naam: c.name,
+              name: c.name,
               slug: c.slug,
-              wijkNaam: wijken.find((w) => w.id === c.district_id)?.name ?? "",
+              districtName: wijken.find((w) => w.id === c.district_id)?.name ?? "",
             }))}
           />
         </div>

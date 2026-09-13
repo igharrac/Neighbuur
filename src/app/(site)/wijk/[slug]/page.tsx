@@ -60,11 +60,11 @@ export default async function WijkPage({ params }: { params: { slug: string } })
             {rows.map((c) => (
               <CommunityCard
                 key={c.id}
-                naam={c.name}
+                name={c.name}
                 type={c.type}
                 slug={c.slug}
-                aantalLeden={c.member_count}
-                aantalReviews={c.review_count}
+                memberCount={c.member_count}
+                reviewCount={c.review_count}
               />
             ))}
           </div>

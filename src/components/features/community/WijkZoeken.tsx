@@ -4,20 +4,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MagnifyingGlass, ArrowRight } from "@phosphor-icons/react";
 
-interface WijkOptie {
-  naam: string;
+interface DistrictOption {
+  name: string;
   slug: string;
   stad: string;
   postcode: string | null;
 }
 
-interface CommunityOptie {
-  naam: string;
+interface CommunityOption {
+  name: string;
   slug: string;
-  wijkNaam: string;
+  districtName: string;
 }
 
-export function WijkZoeken({ wijken, communities }: { wijken: WijkOptie[]; communities: CommunityOptie[] }) {
+export function WijkZoeken({ districts, communities }: { districts: DistrictOption[]; communities: CommunityOption[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [geenResultaat, setGeenResultaat] = useState(false);
@@ -27,14 +27,14 @@ export function WijkZoeken({ wijken, communities }: { wijken: WijkOptie[]; commu
     const q = query.trim().toLowerCase();
     if (!q) return;
 
-    const communityMatch = communities.find((c) => c.naam.toLowerCase().includes(q));
+    const communityMatch = communities.find((c) => c.name.toLowerCase().includes(q));
     if (communityMatch) {
       router.push(`/community/${communityMatch.slug}`);
       return;
     }
 
-    const wijkMatch = wijken.find(
-      (w) => w.naam.toLowerCase().includes(q) || w.stad.toLowerCase().includes(q) || w.postcode?.toLowerCase().includes(q)
+    const wijkMatch = districts.find(
+      (w) => w.name.toLowerCase().includes(q) || w.stad.toLowerCase().includes(q) || w.postcode?.toLowerCase().includes(q)
     );
     if (wijkMatch) {
       router.push(`/wijk/${wijkMatch.slug}`);
