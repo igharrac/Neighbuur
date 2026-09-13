@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Je kan jezelf niet boeken" }, { status: 400 });
   }
 
-  const { data: magAanvragen } = await admin.rpc("kan_boeking_aanvragen", { p_vakman_id: vakman.id });
+  const { data: magAanvragen } = await admin.rpc("can_request_booking", { p_vakman_id: vakman.id });
   if (!magAanvragen) {
     return NextResponse.json(
       {

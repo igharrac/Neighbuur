@@ -59,7 +59,7 @@ export function DashboardClient({
     const supabase = createClient();
     await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", vakman.id);
 
-    const { data: sterkte } = await supabase.rpc("bereken_profiel_sterkte", { v_id: vakman.id });
+    const { data: sterkte } = await supabase.rpc("calculate_profile_strength", { v_id: vakman.id });
     const nieuweSterkte = sterkte ?? vakman.profile_strength;
     await supabase.from("professional_profiles").update({ profile_strength: nieuweSterkte }).eq("id", vakman.id);
 

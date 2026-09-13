@@ -80,7 +80,7 @@ export default async function PlanPage() {
         .select("community_threshold")
         .eq("id", bewonerProfiel.district_id)
         .maybeSingle();
-      const { data: telling } = await supabase.rpc("bewoners_cluster_telling", {
+      const { data: telling } = await supabase.rpc("count_residents_in_cluster", {
         p_wijk_id: bewonerProfiel.district_id,
         p_postcode: bewonerProfiel.postal_code,
         p_gebouw_label: null,

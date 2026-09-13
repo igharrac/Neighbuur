@@ -66,7 +66,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
 
   async function recalcSterkte() {
     const supabase = createClient();
-    const { data: sterkte } = await supabase.rpc("bereken_profiel_sterkte", { v_id: vakman.id });
+    const { data: sterkte } = await supabase.rpc("calculate_profile_strength", { v_id: vakman.id });
     if (sterkte != null) {
       await supabase.from("professional_profiles").update({ profile_strength: sterkte }).eq("id", vakman.id);
       setVakman((v) => ({ ...v, profile_strength: sterkte }));

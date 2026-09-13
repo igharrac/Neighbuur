@@ -129,29 +129,33 @@ const enumsBlock = Object.entries(enums)
 // RPC-functies: de swagger-spec beschrijft parameters/return-types niet
 // betrouwbaar genoeg om te genereren — handmatig opgenomen, 1-op-1 met de
 // SQL-definities in supabase/migrations.
-const functionsBlock = `      bereken_profiel_sterkte: {
+const functionsBlock = `      calculate_profile_strength: {
         Args: { v_id: string };
         Returns: number;
       };
-      kan_boeking_aanvragen: {
+      can_request_booking: {
         Args: { p_vakman_id: string };
         Returns: boolean;
       };
-      vakman_afgeronde_klussen: {
+      count_professional_completed_jobs: {
         Args: { p_vakman_id: string };
         Returns: number;
       };
-      is_gesprek_deelnemer: {
+      is_conversation_participant: {
         Args: { p_gesprek_id: string };
         Returns: boolean;
       };
-      bewoners_cluster_telling: {
+      count_residents_in_cluster: {
         Args: { p_wijk_id: string; p_postcode: string; p_gebouw_label?: string | null };
         Returns: number;
       };
       start_community: {
         Args: { p_wijk_id: string; p_postcode: string; p_titel_nl: string | null };
         Returns: { id: string; slug: string; aangemaakt: boolean }[];
+      };
+      reset_monthly_requests: {
+        Args: Record<string, never>;
+        Returns: void;
       };`;
 
 const output = `/**

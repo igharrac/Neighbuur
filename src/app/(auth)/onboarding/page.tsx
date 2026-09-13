@@ -206,7 +206,7 @@ export default function OnboardingPage() {
     if (bestaande) {
       setBestaandeCommunity(bestaande);
     } else {
-      const { data: telling } = await supabase.rpc("bewoners_cluster_telling", {
+      const { data: telling } = await supabase.rpc("count_residents_in_cluster", {
         p_wijk_id: gekozenWijk.id,
         p_postcode: postcodeNorm,
         p_gebouw_label: gebouwNorm,
