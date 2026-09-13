@@ -14,7 +14,7 @@ export interface Database {
         Row: {
           id: string;
           community_id: string;
-          type: Database["public"]["Enums"]["content_blok_type"];
+          type: Database["public"]["Enums"]["content_block_type"];
           positie: number;
           data: Json;
           actief: boolean | null;
@@ -24,7 +24,7 @@ export interface Database {
         Insert: {
           id?: string;
           community_id: string;
-          type: Database["public"]["Enums"]["content_blok_type"];
+          type: Database["public"]["Enums"]["content_block_type"];
           positie?: number;
           data: Json;
           actief?: boolean | null;
@@ -34,7 +34,7 @@ export interface Database {
         Update: {
           id?: string;
           community_id?: string;
-          type?: Database["public"]["Enums"]["content_blok_type"];
+          type?: Database["public"]["Enums"]["content_block_type"];
           positie?: number;
           data?: Json;
           actief?: boolean | null;
@@ -1007,7 +1007,7 @@ export interface Database {
       };
     };
     Enums: {
-      content_blok_type: "hero_banner" | "tekst" | "afbeelding" | "reviews" | "groepskortingen" | "bewoners" | "aankondiging" | "vakman_spotlight";
+      content_block_type: "hero_banner" | "text" | "image" | "reviews" | "group_discounts" | "residents" | "announcement" | "professional_spotlight";
       contact_preference: "phone" | "whatsapp" | "app";
       user_role: "resident" | "professional" | "community_admin" | "admin";
       notification_type: "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";

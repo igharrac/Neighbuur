@@ -11,13 +11,13 @@ import type { Json } from "@/types/database.types";
 
 const TYPE_LABELS: Record<ContentBlokType, string> = {
   hero_banner: "Hero banner",
-  tekst: "Tekst",
-  afbeelding: "Afbeelding",
+  text: "Tekst",
+  image: "Afbeelding",
   reviews: "Reviews",
-  groepskortingen: "Groepskortingen",
-  bewoners: "Bewoners",
-  aankondiging: "Aankondiging",
-  vakman_spotlight: "Vakman spotlight",
+  group_discounts: "Groepskortingen",
+  residents: "Bewoners",
+  announcement: "Aankondiging",
+  professional_spotlight: "Vakman spotlight",
 };
 
 const ALL_TYPES = Object.keys(TYPE_LABELS) as ContentBlokType[];
@@ -25,7 +25,7 @@ const ALL_TYPES = Object.keys(TYPE_LABELS) as ContentBlokType[];
 function blockPreview(blok: CommunityContentBlok): string {
   if (blok.data.titel) return String(blok.data.titel);
   if (blok.data.bijschrift) return String(blok.data.bijschrift);
-  if (blok.type === "vakman_spotlight") return blok.data.vakman_id ? "Vakman geselecteerd" : "Geen vakman gekozen";
+  if (blok.type === "professional_spotlight") return blok.data.vakman_id ? "Vakman geselecteerd" : "Geen vakman gekozen";
   return "—";
 }
 

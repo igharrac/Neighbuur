@@ -22,19 +22,19 @@ interface ContentBlockProps {
  */
 export function ContentBlock({ type, data, community_id, lang }: ContentBlockProps) {
   switch (type) {
-    case "tekst":
+    case "text":
       return <TekstBlok data={data} />;
-    case "afbeelding":
+    case "image":
       return <AfbeeldingBlok data={data} />;
     case "reviews":
       return <ReviewsBlok data={data} community_id={community_id} />;
-    case "groepskortingen":
+    case "group_discounts":
       return <GroepskortingenBlok community_id={community_id} lang={lang} />;
-    case "bewoners":
+    case "residents":
       return <BewonersBlok data={data} community_id={community_id} />;
-    case "aankondiging":
+    case "announcement":
       return <AankondigingBlok data={data} />;
-    case "vakman_spotlight":
+    case "professional_spotlight":
       return <VakmanSpotlight data={data} />;
     default:
       return null;

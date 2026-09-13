@@ -52,7 +52,7 @@ export function ContentBlockEditor({
   }
 
   useEffect(() => {
-    if (type !== "vakman_spotlight" || vakmanQuery.trim().length < 2) {
+    if (type !== "professional_spotlight" || vakmanQuery.trim().length < 2) {
       setVakmanResults([]);
       return;
     }
@@ -86,7 +86,7 @@ export function ContentBlockEditor({
           </>
         )}
 
-        {type === "tekst" && (
+        {type === "text" && (
           <>
             <Input name="titel" label="Titel" value={data.titel ?? ""} onChange={(e) => set("titel", e.target.value)} />
             <Textarea
@@ -99,7 +99,7 @@ export function ContentBlockEditor({
           </>
         )}
 
-        {type === "afbeelding" && (
+        {type === "image" && (
           <>
             <ImageUploader
               bucket="community-images"
@@ -113,7 +113,7 @@ export function ContentBlockEditor({
           </>
         )}
 
-        {type === "aankondiging" && (
+        {type === "announcement" && (
           <>
             <Input name="titel" label="Titel" value={data.titel ?? ""} onChange={(e) => set("titel", e.target.value)} />
             <Textarea
@@ -155,7 +155,7 @@ export function ContentBlockEditor({
           />
         )}
 
-        {type === "bewoners" && (
+        {type === "residents" && (
           <label className="flex items-center gap-2 text-body-sm font-medium cursor-pointer">
             <input
               type="checkbox"
@@ -166,13 +166,13 @@ export function ContentBlockEditor({
           </label>
         )}
 
-        {type === "groepskortingen" && (
+        {type === "group_discounts" && (
           <p className="text-body-sm text-warmgrijs">
             Dit blok toont automatisch de actieve groepskortingen van deze community. Geen instellingen nodig.
           </p>
         )}
 
-        {type === "vakman_spotlight" && (
+        {type === "professional_spotlight" && (
           <div>
             <label className="text-body-sm font-semibold block mb-1.5">Vakman</label>
             {vakmanNaam || data.vakman_id ? (

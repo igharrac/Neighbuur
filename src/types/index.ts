@@ -3,13 +3,13 @@ export type CategorieType = "professional" | "compare";
 
 export type ContentBlokType =
   | "hero_banner"
-  | "tekst"
-  | "afbeelding"
+  | "text"
+  | "image"
   | "reviews"
-  | "groepskortingen"
-  | "bewoners"
-  | "aankondiging"
-  | "vakman_spotlight";
+  | "group_discounts"
+  | "residents"
+  | "announcement"
+  | "professional_spotlight";
 
 export interface CommunityContentBlok {
   id: string;
