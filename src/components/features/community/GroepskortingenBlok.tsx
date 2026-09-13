@@ -4,22 +4,22 @@ import type { Lang } from "@/lib/i18n";
 
 interface GroepskortingRow {
   id: string;
-  titel_nl: string;
-  titel_en: string;
-  beschrijving_nl: string | null;
-  beschrijving_en: string | null;
-  min_deelnemers: number;
-  prijs_normaal: number | null;
-  prijs_groep: number | null;
+  title_nl: string;
+  title_en: string;
+  description_nl: string | null;
+  description_en: string | null;
+  min_participants: number;
+  price_normal: number | null;
+  price_group: number | null;
 }
 
 export async function GroepskortingenBlok({ community_id, lang }: { community_id: string; lang: Lang }) {
   const supabase = createServerSupabase();
   const { data: kortingen } = await supabase
-    .from("groepskortingen")
-    .select("id, titel_nl, titel_en, beschrijving_nl, beschrijving_en, min_deelnemers, prijs_normaal, prijs_groep")
+    .from("group_discounts")
+    .select("id, title_nl, title_en, description_nl, description_en, min_participants, price_normal, price_group")
     .eq("community_id", community_id)
-    .eq("actief", true);
+    .eq("active", true);
 
   const rows = (kortingen ?? []) as GroepskortingRow[];
   const ids = rows.map((r) => r.id);
@@ -27,11 +27,11 @@ export async function GroepskortingenBlok({ community_id, lang }: { community_id
   const countByKorting: Record<string, number> = {};
   if (ids.length > 0) {
     const { data: deelnemers } = await supabase
-      .from("groepskorting_deelnemers")
-      .select("groepskorting_id")
-      .in("groepskorting_id", ids);
+      .from("group_discount_participants")
+      .select("group_discount_id")
+      .in("group_discount_id", ids);
     (deelnemers ?? []).forEach((d) => {
-      countByKorting[d.groepskorting_id] = (countByKorting[d.groepskorting_id] ?? 0) + 1;
+      countByKorting[d.group_discount_id] = (countByKorting[d.group_discount_id] ?? 0) + 1;
     });
   }
 
@@ -44,20 +44,20 @@ export async function GroepskortingenBlok({ community_id, lang }: { community_id
         <div className="flex flex-col gap-3">
           {rows.map((k) => {
             const aantal = countByKorting[k.id] ?? 0;
-            const pct = Math.min(100, Math.round((aantal / k.min_deelnemers) * 100));
+            const pct = Math.min(100, Math.round((aantal / k.min_participants) * 100));
             return (
               <div key={k.id} className="border border-lijn rounded-md p-4">
                 <div className="flex justify-between items-start gap-2 mb-1">
-                  <h4 className="font-bold text-body-sm">{lang === "nl" ? k.titel_nl : k.titel_en}</h4>
-                  {k.prijs_groep != null && (
+                  <h4 className="font-bold text-body-sm">{lang === "nl" ? k.title_nl : k.title_en}</h4>
+                  {k.price_group != null && (
                     <span className="text-body-sm font-bold text-terracotta shrink-0">
-                      €{(k.prijs_groep / 100).toFixed(0)}
+                      €{(k.price_group / 100).toFixed(0)}
                     </span>
                   )}
                 </div>
-                {(lang === "nl" ? k.beschrijving_nl : k.beschrijving_en) && (
+                {(lang === "nl" ? k.description_nl : k.description_en) && (
                   <p className="text-body-xs text-warmgrijs mb-3">
-                    {lang === "nl" ? k.beschrijving_nl : k.beschrijving_en}
+                    {lang === "nl" ? k.description_nl : k.description_en}
                   </p>
                 )}
                 <div className="h-1.5 rounded-full bg-cream-dark overflow-hidden mb-1.5">
@@ -65,7 +65,7 @@ export async function GroepskortingenBlok({ community_id, lang }: { community_id
                 </div>
                 <span className="flex items-center gap-1.5 text-body-xs text-warmgrijs">
                   <Users size={13} />
-                  {aantal} / {k.min_deelnemers} nodig
+                  {aantal} / {k.min_participants} nodig
                 </span>
               </div>
             );

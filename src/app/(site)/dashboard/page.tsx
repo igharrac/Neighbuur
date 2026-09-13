@@ -21,7 +21,7 @@ interface BoekingRow {
   created_at: string;
   updated_at: string;
   profiles: { name: string; avatar_url: string | null } | null;
-  communities: { naam: string } | null;
+  communities: { name: string } | null;
   categories: { name_nl: string } | null;
 }
 
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
       id, customer_id, professional_id, category_id, community_id, description, foto_urls,
       date, status, price_cents, customer_notes, professional_notes, created_at, updated_at,
       profiles:customer_id(name, avatar_url),
-      communities(naam),
+      communities(name),
       categories(name_nl)
     `
     )
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
     updated_at: b.updated_at,
     klant_naam: b.profiles?.name ?? "Onbekend",
     klant_avatar: b.profiles?.avatar_url ?? null,
-    community_naam: b.communities?.naam ?? null,
+    community_naam: b.communities?.name ?? null,
     categorie_naam: b.categories?.name_nl ?? null,
   }));
 

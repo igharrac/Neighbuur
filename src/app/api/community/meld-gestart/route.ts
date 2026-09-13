@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "niet ingelogd" }, { status: 401 });
 
   const admin = createAdminSupabase();
-  const { data: community } = await admin.from("communities").select("naam, slug").eq("id", communityId).maybeSingle();
+  const { data: community } = await admin.from("communities").select("name, slug").eq("id", communityId).maybeSingle();
   if (!community) return NextResponse.json({ error: "community niet gevonden" }, { status: 404 });
 
   const { data: leden } = await admin.from("community_members").select("user_id").eq("community_id", communityId);
@@ -42,8 +42,8 @@ export async function POST(request: Request) {
       type: "system",
       titelNl: "Je buren zijn gestart!",
       titelEn: "Your neighbours have started!",
-      inhoudNl: `Er is een community gestart voor jouw adres: ${community.naam}. Doe mee!`,
-      inhoudEn: `A community has started for your address: ${community.naam}. Join in!`,
+      inhoudNl: `Er is een community gestart voor jouw adres: ${community.name}. Doe mee!`,
+      inhoudEn: `A community has started for your address: ${community.name}. Join in!`,
       link: `/community/${community.slug}`,
     });
     verstuurd++;

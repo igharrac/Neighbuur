@@ -10,41 +10,6 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
   public: {
     Tables: {
-      community_content_blokken: {
-        Row: {
-          id: string;
-          community_id: string;
-          type: Database["public"]["Enums"]["content_block_type"];
-          positie: number;
-          data: Json;
-          actief: boolean | null;
-          created_at: string | null;
-          updated_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          community_id: string;
-          type: Database["public"]["Enums"]["content_block_type"];
-          positie?: number;
-          data: Json;
-          actief?: boolean | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          community_id?: string;
-          type?: Database["public"]["Enums"]["content_block_type"];
-          positie?: number;
-          data?: Json;
-          actief?: boolean | null;
-          created_at?: string | null;
-          updated_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "community_content_blokken_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-        ];
-      };
       push_subscriptions: {
         Row: {
           id: string;
@@ -214,28 +179,39 @@ export interface Database {
           { foreignKeyName: "conversation_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
-      groepskorting_deelnemers: {
+      community_content_blocks: {
         Row: {
           id: string;
-          groepskorting_id: string;
-          user_id: string;
+          community_id: string;
+          type: Database["public"]["Enums"]["content_block_type"];
+          position: number;
+          data: Json;
+          active: boolean | null;
           created_at: string | null;
+          updated_at: string | null;
         };
         Insert: {
           id?: string;
-          groepskorting_id: string;
-          user_id: string;
+          community_id: string;
+          type: Database["public"]["Enums"]["content_block_type"];
+          position?: number;
+          data: Json;
+          active?: boolean | null;
           created_at?: string | null;
+          updated_at?: string | null;
         };
         Update: {
           id?: string;
-          groepskorting_id?: string;
-          user_id?: string;
+          community_id?: string;
+          type?: Database["public"]["Enums"]["content_block_type"];
+          position?: number;
+          data?: Json;
+          active?: boolean | null;
           created_at?: string | null;
+          updated_at?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "groepskorting_deelnemers_groepskorting_id_fkey"; columns: ["groepskorting_id"]; isOneToOne: false; referencedRelation: "groepskortingen"; referencedColumns: ["id"] },
-          { foreignKeyName: "groepskorting_deelnemers_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_content_blocks_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
       profiles: {
@@ -273,47 +249,6 @@ export interface Database {
           updated_at?: string | null;
         };
         Relationships: [];
-      };
-      notificaties: {
-        Row: {
-          id: string;
-          user_id: string;
-          type: Database["public"]["Enums"]["notification_type"];
-          titel_nl: string;
-          titel_en: string;
-          inhoud_nl: string | null;
-          inhoud_en: string | null;
-          link: string | null;
-          gelezen: boolean | null;
-          created_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          type: Database["public"]["Enums"]["notification_type"];
-          titel_nl: string;
-          titel_en: string;
-          inhoud_nl?: string | null;
-          inhoud_en?: string | null;
-          link?: string | null;
-          gelezen?: boolean | null;
-          created_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          type?: Database["public"]["Enums"]["notification_type"];
-          titel_nl?: string;
-          titel_en?: string;
-          inhoud_nl?: string | null;
-          inhoud_en?: string | null;
-          link?: string | null;
-          gelezen?: boolean | null;
-          created_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "notificaties_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-        ];
       };
       transactions: {
         Row: {
@@ -569,12 +504,12 @@ export interface Database {
         Row: {
           id: string;
           district_id: string;
-          naam: string;
+          name: string;
           slug: string;
           type: string;
-          beschrijving: string | null;
+          description: string | null;
           banner_url: string | null;
-          actief: boolean | null;
+          active: boolean | null;
           created_at: string | null;
           status: string;
           postcode_cluster: string | null;
@@ -582,12 +517,12 @@ export interface Database {
         Insert: {
           id?: string;
           district_id: string;
-          naam: string;
+          name: string;
           slug: string;
           type?: string;
-          beschrijving?: string | null;
+          description?: string | null;
           banner_url?: string | null;
-          actief?: boolean | null;
+          active?: boolean | null;
           created_at?: string | null;
           status?: string;
           postcode_cluster?: string | null;
@@ -595,12 +530,12 @@ export interface Database {
         Update: {
           id?: string;
           district_id?: string;
-          naam?: string;
+          name?: string;
           slug?: string;
           type?: string;
-          beschrijving?: string | null;
+          description?: string | null;
           banner_url?: string | null;
-          actief?: boolean | null;
+          active?: boolean | null;
           created_at?: string | null;
           status?: string;
           postcode_cluster?: string | null;
@@ -631,6 +566,78 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "review_votes_review_id_fkey"; columns: ["review_id"]; isOneToOne: false; referencedRelation: "reviews"; referencedColumns: ["id"] },
           { foreignKeyName: "review_votes_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+        ];
+      };
+      group_discount_participants: {
+        Row: {
+          id: string;
+          group_discount_id: string;
+          user_id: string;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          group_discount_id: string;
+          user_id: string;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          group_discount_id?: string;
+          user_id?: string;
+          created_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "group_discount_participants_group_discount_id_fkey"; columns: ["group_discount_id"]; isOneToOne: false; referencedRelation: "group_discounts"; referencedColumns: ["id"] },
+          { foreignKeyName: "group_discount_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+        ];
+      };
+      group_discounts: {
+        Row: {
+          id: string;
+          community_id: string;
+          category_id: string | null;
+          title_nl: string;
+          title_en: string;
+          description_nl: string | null;
+          description_en: string | null;
+          min_participants: number;
+          price_normal: number | null;
+          price_group: number | null;
+          active: boolean | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          community_id: string;
+          category_id?: string | null;
+          title_nl: string;
+          title_en: string;
+          description_nl?: string | null;
+          description_en?: string | null;
+          min_participants?: number;
+          price_normal?: number | null;
+          price_group?: number | null;
+          active?: boolean | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          community_id?: string;
+          category_id?: string | null;
+          title_nl?: string;
+          title_en?: string;
+          description_nl?: string | null;
+          description_en?: string | null;
+          min_participants?: number;
+          price_normal?: number | null;
+          price_group?: number | null;
+          active?: boolean | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "group_discounts_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+          { foreignKeyName: "group_discounts_category_id_fkey"; columns: ["category_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
         ];
       };
       work_photos: {
@@ -721,54 +728,6 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "community_members_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
           { foreignKeyName: "community_members_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-        ];
-      };
-      groepskortingen: {
-        Row: {
-          id: string;
-          community_id: string;
-          categorie_id: string | null;
-          titel_nl: string;
-          titel_en: string;
-          beschrijving_nl: string | null;
-          beschrijving_en: string | null;
-          min_deelnemers: number;
-          prijs_normaal: number | null;
-          prijs_groep: number | null;
-          actief: boolean | null;
-          created_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          community_id: string;
-          categorie_id?: string | null;
-          titel_nl: string;
-          titel_en: string;
-          beschrijving_nl?: string | null;
-          beschrijving_en?: string | null;
-          min_deelnemers?: number;
-          prijs_normaal?: number | null;
-          prijs_groep?: number | null;
-          actief?: boolean | null;
-          created_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          community_id?: string;
-          categorie_id?: string | null;
-          titel_nl?: string;
-          titel_en?: string;
-          beschrijving_nl?: string | null;
-          beschrijving_en?: string | null;
-          min_deelnemers?: number;
-          prijs_normaal?: number | null;
-          prijs_groep?: number | null;
-          actief?: boolean | null;
-          created_at?: string | null;
-        };
-        Relationships: [
-          { foreignKeyName: "groepskortingen_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "groepskortingen_categorie_id_fkey"; columns: ["categorie_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
         ];
       };
       categories: {
@@ -864,6 +823,47 @@ export interface Database {
           { foreignKeyName: "reviews_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "reviews_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+        ];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: Database["public"]["Enums"]["notification_type"];
+          title_nl: string;
+          title_en: string;
+          content_nl: string | null;
+          content_en: string | null;
+          link: string | null;
+          read: boolean | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          type: Database["public"]["Enums"]["notification_type"];
+          title_nl: string;
+          title_en: string;
+          content_nl?: string | null;
+          content_en?: string | null;
+          link?: string | null;
+          read?: boolean | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          type?: Database["public"]["Enums"]["notification_type"];
+          title_nl?: string;
+          title_en?: string;
+          content_nl?: string | null;
+          content_en?: string | null;
+          link?: string | null;
+          read?: boolean | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "notifications_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
       conversations: {
@@ -1004,13 +1004,13 @@ export interface Database {
       };
     };
     Enums: {
-      content_block_type: "hero_banner" | "text" | "image" | "reviews" | "group_discounts" | "residents" | "announcement" | "professional_spotlight";
       contact_preference: "phone" | "whatsapp" | "app";
+      content_block_type: "hero_banner" | "text" | "image" | "reviews" | "group_discounts" | "residents" | "announcement" | "professional_spotlight";
       user_role: "resident" | "professional" | "community_admin" | "admin";
-      notification_type: "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
       booking_status: "requested" | "confirmed" | "completed" | "cancelled";
       availability_status: "available" | "booked";
       category_type: "professional" | "compare";
+      notification_type: "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
     };
   };
 }

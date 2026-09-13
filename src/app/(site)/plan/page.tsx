@@ -66,14 +66,14 @@ export default async function PlanPage() {
   if (!community && bewonerProfiel?.district_id && bewonerProfiel?.postal_code && bewonerProfiel.show_community_suggestions !== false) {
     const { data: bestaande } = await supabase
       .from("communities")
-      .select("id, naam, slug")
+      .select("id, name, slug")
       .eq("district_id", bewonerProfiel.district_id)
       .eq("postcode_cluster", bewonerProfiel.postal_code)
       .neq("status", "slapend")
       .maybeSingle();
 
     if (bestaande) {
-      detectie = { type: "bestaande", naam: bestaande.naam, slug: bestaande.slug, communityId: bestaande.id };
+      detectie = { type: "bestaande", naam: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
     } else {
       const { data: wijkRow } = await supabase
         .from("districts")
@@ -137,29 +137,29 @@ export default async function PlanPage() {
   }[] = [];
   if (bewonerProfiel?.community_id) {
     const { data: gk } = await supabase
-      .from("groepskortingen")
-      .select("id, titel_nl, beschrijving_nl, min_deelnemers, prijs_normaal, prijs_groep")
+      .from("group_discounts")
+      .select("id, title_nl, description_nl, min_participants, price_normal, price_group")
       .eq("community_id", bewonerProfiel.community_id)
-      .eq("actief", true);
+      .eq("active", true);
 
     for (const deal of gk ?? []) {
       const { count } = await supabase
-        .from("groepskorting_deelnemers")
+        .from("group_discount_participants")
         .select("id", { count: "exact", head: true })
-        .eq("groepskorting_id", deal.id);
+        .eq("group_discount_id", deal.id);
       const { data: eigen } = await supabase
-        .from("groepskorting_deelnemers")
+        .from("group_discount_participants")
         .select("id")
-        .eq("groepskorting_id", deal.id)
+        .eq("group_discount_id", deal.id)
         .eq("user_id", user.id)
         .maybeSingle();
       groepskortingen.push({
         id: deal.id,
-        titel: deal.titel_nl,
-        beschrijving: deal.beschrijving_nl,
-        minDeelnemers: deal.min_deelnemers,
-        prijsNormaal: deal.prijs_normaal,
-        prijsGroep: deal.prijs_groep,
+        titel: deal.title_nl,
+        beschrijving: deal.description_nl,
+        minDeelnemers: deal.min_participants,
+        prijsNormaal: deal.price_normal,
+        prijsGroep: deal.price_group,
         deelnemers: count ?? 0,
         meegedaan: !!eigen,
       });

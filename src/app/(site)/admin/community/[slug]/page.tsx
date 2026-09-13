@@ -13,7 +13,7 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
 
   const { data: community } = await supabase
     .from("communities")
-    .select("id, naam, slug")
+    .select("id, name, slug")
     .eq("slug", params.slug)
     .maybeSingle();
   if (!community) notFound();
@@ -34,16 +34,16 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
   if (!geautoriseerd) redirect("/");
 
   const { data: blokken } = await supabase
-    .from("community_content_blokken")
-    .select("id, community_id, type, positie, data, actief")
+    .from("community_content_blocks")
+    .select("id, community_id, type, position, data, active")
     .eq("community_id", community.id)
-    .eq("actief", true)
-    .order("positie", { ascending: true });
+    .eq("active", true)
+    .order("position", { ascending: true });
 
   return (
     <CommunityEditorClient
       communityId={community.id}
-      communityNaam={community.naam}
+      communityNaam={community.name}
       initialBlocks={(blokken ?? []) as CommunityContentBlok[]}
     />
   );

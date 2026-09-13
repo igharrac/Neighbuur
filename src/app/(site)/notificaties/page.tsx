@@ -11,7 +11,7 @@ export default async function NotificatiesPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data } = await supabase.from("notificaties").select("*").order("created_at", { ascending: false }).limit(100);
+  const { data } = await supabase.from("notifications").select("*").order("created_at", { ascending: false }).limit(100);
 
   return (
     <div className="max-w-[700px] mx-auto px-6 pt-8 pb-8">

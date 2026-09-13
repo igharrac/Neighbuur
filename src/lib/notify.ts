@@ -25,13 +25,13 @@ interface NotifyInput {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function notifyUser(admin: SupabaseClient<any>, input: NotifyInput) {
-  await admin.from("notificaties").insert({
+  await admin.from("notifications").insert({
     user_id: input.userId,
     type: input.type,
-    titel_nl: input.titelNl,
-    titel_en: input.titelEn,
-    inhoud_nl: input.inhoudNl ?? null,
-    inhoud_en: input.inhoudEn ?? null,
+    title_nl: input.titelNl,
+    title_en: input.titelEn,
+    content_nl: input.inhoudNl ?? null,
+    content_en: input.inhoudEn ?? null,
     link: input.link ?? null,
   });
 

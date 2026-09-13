@@ -18,9 +18,9 @@ export function useOngelezenNotificaties(): number {
     }
     const supabase = createClient();
     supabase
-      .from("notificaties")
+      .from("notifications")
       .select("id", { count: "exact", head: true })
-      .eq("gelezen", false)
+      .eq("read", false)
       .then(({ count }) => setAantal(count ?? 0));
   }, [user, pathname]);
 

@@ -40,7 +40,7 @@ export function CommunityEditorClient({
 }) {
   const { showToast } = useToast();
   const [blocks, setBlocks] = useState(
-    [...initialBlocks].sort((a, b) => a.positie - b.positie)
+    [...initialBlocks].sort((a, b) => a.position - b.position)
   );
   const [editingId, setEditingId] = useState<string | null>(null);
   const [addingType, setAddingType] = useState<ContentBlokType | "">("");
@@ -49,10 +49,10 @@ export function CommunityEditorClient({
   async function handleSaveNew(type: ContentBlokType, data: Record<string, unknown>) {
     setSaving(true);
     const supabase = createClient();
-    const positie = blocks.length > 0 ? Math.max(...blocks.map((b) => b.positie)) + 1 : 0;
+    const positie = blocks.length > 0 ? Math.max(...blocks.map((b) => b.position)) + 1 : 0;
     const { data: inserted, error } = await supabase
-      .from("community_content_blokken")
-      .insert({ community_id: communityId, type, positie, data: data as Json, actief: true })
+      .from("community_content_blocks")
+      .insert({ community_id: communityId, type, position: positie, data: data as Json, active: true })
       .select()
       .single();
 
@@ -69,7 +69,7 @@ export function CommunityEditorClient({
   async function handleSaveEdit(blockId: string, data: Record<string, unknown>) {
     setSaving(true);
     const supabase = createClient();
-    const { error } = await supabase.from("community_content_blokken").update({ data: data as Json }).eq("id", blockId);
+    const { error } = await supabase.from("community_content_blocks").update({ data: data as Json }).eq("id", blockId);
 
     setSaving(false);
     if (error) {
@@ -85,8 +85,8 @@ export function CommunityEditorClient({
     if (!window.confirm("Dit blok verwijderen?")) return;
     const supabase = createClient();
     const { error } = await supabase
-      .from("community_content_blokken")
-      .update({ actief: false })
+      .from("community_content_blocks")
+      .update({ active: false })
       .eq("id", blockId);
 
     if (error) {
@@ -104,15 +104,15 @@ export function CommunityEditorClient({
     const a = blocks[index];
     const b = blocks[target];
     const next = [...blocks];
-    next[index] = { ...b, positie: a.positie };
-    next[target] = { ...a, positie: b.positie };
-    next.sort((x, y) => x.positie - y.positie);
+    next[index] = { ...b, position: a.position };
+    next[target] = { ...a, position: b.position };
+    next.sort((x, y) => x.position - y.position);
     setBlocks(next);
 
     const supabase = createClient();
     await Promise.all([
-      supabase.from("community_content_blokken").update({ positie: b.positie }).eq("id", a.id),
-      supabase.from("community_content_blokken").update({ positie: a.positie }).eq("id", b.id),
+      supabase.from("community_content_blocks").update({ position: b.position }).eq("id", a.id),
+      supabase.from("community_content_blocks").update({ position: a.position }).eq("id", b.id),
     ]);
   }
 

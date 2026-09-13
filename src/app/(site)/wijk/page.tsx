@@ -13,7 +13,7 @@ interface WijkRow {
 }
 
 interface CommunityRow {
-  naam: string;
+  name: string;
   slug: string;
   district_id: string;
 }
@@ -28,7 +28,7 @@ export default async function WijkIndexPage() {
     .order("name");
   const wijken = (wijkenData ?? []) as WijkRow[];
 
-  const { data: communitiesData } = await supabase.from("communities").select("naam, slug, district_id").eq("actief", true);
+  const { data: communitiesData } = await supabase.from("communities").select("name, slug, district_id").eq("active", true);
   const communities = (communitiesData ?? []) as CommunityRow[];
 
   const communitiesPerWijk = new Map<string, number>();
@@ -58,7 +58,7 @@ export default async function WijkIndexPage() {
           <WijkZoeken
             wijken={wijken.map((w) => ({ naam: w.name, slug: w.slug, stad: w.city, postcode: w.postal_code }))}
             communities={communities.map((c) => ({
-              naam: c.naam,
+              naam: c.name,
               slug: c.slug,
               wijkNaam: wijken.find((w) => w.id === c.district_id)?.name ?? "",
             }))}

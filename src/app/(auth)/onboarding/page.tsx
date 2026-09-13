@@ -41,7 +41,7 @@ export default function OnboardingPage() {
   const [gebouwLabel, setGebouwLabel] = useState("");
 
   // Detectie-resultaat
-  const [bestaandeCommunity, setBestaandeCommunity] = useState<{ id: string; naam: string; slug: string } | null>(null);
+  const [bestaandeCommunity, setBestaandeCommunity] = useState<{ id: string; name: string; slug: string } | null>(null);
   const [clusterTelling, setClusterTelling] = useState(1);
   const [threshold, setThreshold] = useState(STANDAARD_THRESHOLD);
   const [nieuweTitel, setNieuweTitel] = useState("");
@@ -197,7 +197,7 @@ export default function OnboardingPage() {
     // Detectie: bestaat er al een community voor dit adres-cluster?
     const { data: bestaande } = await supabase
       .from("communities")
-      .select("id, naam, slug")
+      .select("id, name, slug")
       .eq("district_id", gekozenWijk.id)
       .eq("postcode_cluster", postcodeNorm)
       .neq("status", "slapend")
@@ -478,7 +478,7 @@ export default function OnboardingPage() {
                 <>
                   <h1 className="font-display text-display-sm mb-1.5">Je buren hebben al een community gestart.</h1>
                   <p className="text-body text-warmgrijs mb-6">
-                    <span className="font-semibold text-warmzwart">{bestaandeCommunity.naam}</span> is al actief voor
+                    <span className="font-semibold text-warmzwart">{bestaandeCommunity.name}</span> is al actief voor
                     jouw adres.
                   </p>
                   <button className="btn-primary w-full" onClick={handleWordLid} disabled={saving}>

@@ -44,11 +44,11 @@ export default async function CommunityPage({ params }: { params: { slug: string
   };
 
   const { data: blokken } = await supabase
-    .from("community_content_blokken")
-    .select("id, community_id, type, positie, data, actief")
+    .from("community_content_blocks")
+    .select("id, community_id, type, position, data, active")
     .eq("community_id", c.id)
-    .eq("actief", true)
-    .order("positie", { ascending: true });
+    .eq("active", true)
+    .order("position", { ascending: true });
 
   const alleBlokken = (blokken ?? []) as CommunityContentBlok[];
   const heroBlok = alleBlokken.find((b) => b.type === "hero_banner");

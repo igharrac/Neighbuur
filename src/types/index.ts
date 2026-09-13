@@ -15,9 +15,9 @@ export interface CommunityContentBlok {
   id: string;
   community_id: string;
   type: ContentBlokType;
-  positie: number;
+  position: number;
   data: Record<string, unknown>;
-  actief: boolean;
+  active: boolean;
 }
 
 export interface Profiel {
@@ -61,12 +61,12 @@ export interface Wijk {
 export interface Community {
   id: string;
   district_id: string;
-  naam: string;
+  name: string;
   slug: string;
   type: string;
-  beschrijving: string | null;
+  description: string | null;
   banner_url: string | null;
-  actief: boolean;
+  active: boolean;
 }
 
 export type ReviewScores = {
@@ -142,12 +142,12 @@ export interface Notificatie {
   id: string;
   user_id: string;
   type: NotificatieType;
-  titel_nl: string;
-  titel_en: string;
-  inhoud_nl: string | null;
-  inhoud_en: string | null;
+  title_nl: string;
+  title_en: string;
+  content_nl: string | null;
+  content_en: string | null;
   link: string | null;
-  gelezen: boolean;
+  read: boolean;
   created_at: string;
 }
 

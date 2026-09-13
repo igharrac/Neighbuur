@@ -13,23 +13,23 @@ export function NotificatieCentrum({ initialNotificaties }: { initialNotificatie
   const router = useRouter();
   const [notificaties, setNotificaties] = useState(initialNotificaties);
 
-  const ongelezenAantal = notificaties.filter((n) => !n.gelezen).length;
+  const ongelezenAantal = notificaties.filter((n) => !n.read).length;
 
   async function handleClick(notificatie: Notificatie) {
-    if (!notificatie.gelezen) {
-      setNotificaties((prev) => prev.map((n) => (n.id === notificatie.id ? { ...n, gelezen: true } : n)));
+    if (!notificatie.read) {
+      setNotificaties((prev) => prev.map((n) => (n.id === notificatie.id ? { ...n, read: true } : n)));
       const supabase = createClient();
-      await supabase.from("notificaties").update({ gelezen: true }).eq("id", notificatie.id);
+      await supabase.from("notifications").update({ read: true }).eq("id", notificatie.id);
     }
     if (notificatie.link) router.push(notificatie.link);
   }
 
   async function handleMarkAllRead() {
-    const ongelezenIds = notificaties.filter((n) => !n.gelezen).map((n) => n.id);
+    const ongelezenIds = notificaties.filter((n) => !n.read).map((n) => n.id);
     if (ongelezenIds.length === 0) return;
-    setNotificaties((prev) => prev.map((n) => ({ ...n, gelezen: true })));
+    setNotificaties((prev) => prev.map((n) => ({ ...n, read: true })));
     const supabase = createClient();
-    await supabase.from("notificaties").update({ gelezen: true }).in("id", ongelezenIds);
+    await supabase.from("notifications").update({ read: true }).in("id", ongelezenIds);
   }
 
   if (notificaties.length === 0) {
