@@ -76,28 +76,27 @@ export type ReviewScores = {
   prijs: number;
 };
 
-// Kolomnamen hier volgen de review_compleet-view, niet de reviews-tabel:
-// een view's kolomnamen bevriezen bij aanmaak en volgen een onderliggende
-// kolomrename niet automatisch (zie migratie 0019). Wordt in Fase 4 herzien.
+// Kolomnamen hier volgen de review_compleet-view (herbouwd in migratie
+// 0031 met expliciete Engelse kolommen i.p.v. de bevroren r.*-wildcard).
 export interface ReviewCompleet {
   id: string;
-  auteur_id: string;
-  vakman_id: string;
-  boeking_id: string | null;
+  author_id: string;
+  professional_id: string;
+  booking_id: string | null;
   community_id: string | null;
-  tekst: string;
+  text: string;
   scores: Partial<ReviewScores>;
   foto_urls: string[];
   upvote_score: number;
   created_at: string;
   updated_at: string;
-  auteur_naam: string;
-  auteur_avatar: string | null;
-  community_naam: string | null;
-  reactie_tekst: string | null;
-  reactie_datum: string | null;
-  reactie_bedrijf: string | null;
-  geverifieerd: boolean;
+  author_name: string;
+  author_avatar: string | null;
+  community_name: string | null;
+  reply_text: string | null;
+  reply_date: string | null;
+  reply_company: string | null;
+  verified: boolean;
 }
 
 export interface VakmanProfiel {

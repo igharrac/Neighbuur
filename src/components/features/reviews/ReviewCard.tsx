@@ -36,18 +36,18 @@ export function ReviewCard({ review, vakmanId, bedrijfsnaam, isVakmanOwner, init
     <div className="card-flat p-6">
       <div className="flex justify-between items-start gap-3 mb-3">
         <div className="flex items-center gap-3">
-          <Avatar naam={review.auteur_naam} src={review.auteur_avatar} size="md" />
+          <Avatar naam={review.author_name} src={review.author_avatar} size="md" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-body-sm">{review.auteur_naam}</span>
-              {review.geverifieerd && (
+              <span className="font-semibold text-body-sm">{review.author_name}</span>
+              {review.verified && (
                 <span className="badge badge-groen !text-[9px] !py-0 !px-2">
                   <SealCheck size={10} weight="fill" /> Geverifieerde klus
                 </span>
               )}
             </div>
             <div className="text-body-xs text-warmgrijs">
-              {review.community_naam ? `${review.community_naam} · ` : ""}
+              {review.community_name ? `${review.community_name} · ` : ""}
               {relatief(review.created_at)}
             </div>
           </div>
@@ -55,7 +55,7 @@ export function ReviewCard({ review, vakmanId, bedrijfsnaam, isVakmanOwner, init
         <UpvoteButton reviewId={review.id} initialScore={review.upvote_score} initialVoted={initialVoted} />
       </div>
 
-      <p className="text-body-sm text-warmgrijs-dark leading-relaxed mb-3">{review.tekst}</p>
+      <p className="text-body-sm text-warmgrijs-dark leading-relaxed mb-3">{review.text}</p>
 
       {review.foto_urls.length > 0 && (
         <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-none">
@@ -80,7 +80,7 @@ export function ReviewCard({ review, vakmanId, bedrijfsnaam, isVakmanOwner, init
         vakmanId={vakmanId}
         bedrijfsnaam={bedrijfsnaam}
         isOwner={isVakmanOwner}
-        initialTekst={review.reactie_tekst}
+        initialTekst={review.reply_text}
       />
     </div>
   );

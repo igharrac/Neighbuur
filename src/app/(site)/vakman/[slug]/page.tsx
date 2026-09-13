@@ -18,7 +18,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   const { data: reviews } = await supabase
     .from("review_compleet")
     .select("*")
-    .eq("vakman_id", vakman.id)
+    .eq("professional_id", vakman.id)
     .order("upvote_score", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -51,7 +51,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   }
 
   const isOwner = !!user && user.id === vakman.user_id;
-  const heeftAlGereviewed = !!user && alleReviews.some((r) => r.auteur_id === user.id);
+  const heeftAlGereviewed = !!user && alleReviews.some((r) => r.author_id === user.id);
 
   const { data: beschikbaarheidRows } = await supabase
     .from("availability")

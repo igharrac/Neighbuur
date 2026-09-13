@@ -170,15 +170,15 @@ export default async function PlanPage() {
   if (bewonerProfiel?.community_id) {
     const { data: r } = await supabase
       .from("review_compleet")
-      .select("id, tekst, auteur_naam, reactie_bedrijf, created_at")
+      .select("id, text, author_name, reply_company, created_at")
       .eq("community_id", bewonerProfiel.community_id)
       .order("created_at", { ascending: false })
       .limit(3);
     buurtreviews = (r ?? []).map((row) => ({
       id: row.id!,
-      tekst: row.tekst!,
-      auteur_naam: row.auteur_naam!,
-      reactie_bedrijf: row.reactie_bedrijf,
+      tekst: row.text!,
+      auteur_naam: row.author_name!,
+      reactie_bedrijf: row.reply_company,
     }));
   }
 

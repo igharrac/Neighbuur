@@ -891,28 +891,28 @@ export interface Database {
       review_compleet: {
         Row: {
           id: string | null;
-          auteur_id: string | null;
-          vakman_id: string | null;
-          boeking_id: string | null;
+          author_id: string | null;
+          professional_id: string | null;
+          booking_id: string | null;
           community_id: string | null;
-          tekst: string | null;
+          text: string | null;
           scores: Json | null;
           foto_urls: string[] | null;
           upvote_score: number | null;
           created_at: string | null;
           updated_at: string | null;
-          auteur_naam: string | null;
-          auteur_avatar: string | null;
-          community_naam: string | null;
-          reactie_tekst: string | null;
-          reactie_datum: string | null;
-          reactie_bedrijf: string | null;
-          geverifieerd: boolean | null;
+          author_name: string | null;
+          author_avatar: string | null;
+          community_name: string | null;
+          reply_text: string | null;
+          reply_date: string | null;
+          reply_company: string | null;
+          verified: boolean | null;
         };
         Relationships: [
-          { foreignKeyName: "review_compleet_auteur_id_fkey"; columns: ["auteur_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_vakman_id_fkey"; columns: ["vakman_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_boeking_id_fkey"; columns: ["boeking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_compleet_author_id_fkey"; columns: ["author_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_compleet_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_compleet_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
           { foreignKeyName: "review_compleet_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };

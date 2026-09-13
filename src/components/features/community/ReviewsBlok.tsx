@@ -9,12 +9,12 @@ interface ReviewsBlokData {
 
 interface ReviewRow {
   id: string;
-  tekst: string;
+  text: string;
   scores: Record<string, number>;
   upvote_score: number;
-  auteur_naam: string;
-  auteur_avatar: string | null;
-  geverifieerd: boolean;
+  author_name: string;
+  author_avatar: string | null;
+  verified: boolean;
   created_at: string;
 }
 
@@ -23,7 +23,7 @@ export async function ReviewsBlok({ data, community_id }: { data: ReviewsBlokDat
   const supabase = createServerSupabase();
   const { data: reviews } = await supabase
     .from("review_compleet")
-    .select("id, tekst, scores, upvote_score, auteur_naam, auteur_avatar, geverifieerd, created_at")
+    .select("id, text, scores, upvote_score, author_name, author_avatar, verified, created_at")
     .eq("community_id", community_id)
     .order("upvote_score", { ascending: false })
     .limit(aantal);
@@ -56,11 +56,11 @@ export async function ReviewsBlok({ data, community_id }: { data: ReviewsBlokDat
             <div key={r.id} className="border border-lijn rounded-md p-4">
               <div className="flex justify-between items-start gap-2 mb-2">
                 <div className="flex items-center gap-2.5">
-                  <Avatar naam={r.auteur_naam} src={r.auteur_avatar} size="sm" />
+                  <Avatar naam={r.author_name} src={r.author_avatar} size="sm" />
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-semibold text-body-sm">{r.auteur_naam}</span>
-                      {r.geverifieerd && <SealCheck size={14} weight="fill" className="text-groen" />}
+                      <span className="font-semibold text-body-sm">{r.author_name}</span>
+                      {r.verified && <SealCheck size={14} weight="fill" className="text-groen" />}
                     </div>
                     <span className="text-body-xs text-warmgrijs">
                       {new Date(r.created_at).toLocaleDateString("nl-NL")}
@@ -69,7 +69,7 @@ export async function ReviewsBlok({ data, community_id }: { data: ReviewsBlokDat
                 </div>
                 <UpvoteButton reviewId={r.id} initialScore={r.upvote_score} initialVoted={votedSet.has(r.id)} />
               </div>
-              <p className="text-body-sm text-warmgrijs-dark leading-relaxed">{r.tekst}</p>
+              <p className="text-body-sm text-warmgrijs-dark leading-relaxed">{r.text}</p>
             </div>
           ))}
         </div>

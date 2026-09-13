@@ -115,28 +115,29 @@ export function ReviewForm({
       return;
     }
 
-    // review_compleet (de view die ReviewCompleet typeert) bevriest haar
-    // kolomnamen bij aanmaak — data komt hier van de reviews-tabel zelf
-    // (nieuwe kolomnamen) en wordt dus expliciet naar de view-vorm gemapt.
+    // review_compleet (de view die ReviewCompleet typeert) heeft een paar
+    // afgeleide/joined velden (author_name, community_name, reply_*) die
+    // niet op de reviews-tabel zelf bestaan — die vullen we hier lokaal in
+    // i.p.v. opnieuw op te halen.
     const nieuweReview: ReviewCompleet = {
       id: data.id,
-      auteur_id: data.author_id,
-      vakman_id: data.professional_id,
-      boeking_id: data.booking_id,
+      author_id: data.author_id,
+      professional_id: data.professional_id,
+      booking_id: data.booking_id,
       community_id: data.community_id,
-      tekst: data.text,
+      text: data.text,
       scores: scores as Partial<ReviewScores>,
       foto_urls: data.foto_urls ?? [],
       upvote_score: data.upvote_score ?? 0,
       created_at: data.created_at ?? new Date().toISOString(),
       updated_at: data.updated_at ?? new Date().toISOString(),
-      auteur_naam: profiel?.name ?? "Jij",
-      auteur_avatar: profiel?.avatar_url ?? null,
-      community_naam: null,
-      reactie_tekst: null,
-      reactie_datum: null,
-      reactie_bedrijf: null,
-      geverifieerd: !!boekingId,
+      author_name: profiel?.name ?? "Jij",
+      author_avatar: profiel?.avatar_url ?? null,
+      community_name: null,
+      reply_text: null,
+      reply_date: null,
+      reply_company: null,
+      verified: !!boekingId,
     };
 
     showToast("Bedankt voor je review! Je buren kunnen deze nu zien.", "success");
