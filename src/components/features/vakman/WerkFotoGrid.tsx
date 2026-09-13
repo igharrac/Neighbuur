@@ -17,17 +17,17 @@ const GRATIS_MAX_FOTOS = 3;
 const PREMIUM_MAX_FOTOS = 12;
 
 export function WerkFotoGrid({
-  vakmanId,
+  professionalId,
   initialFotos,
   isPremium,
 }: {
-  vakmanId: string;
+  professionalId: string;
   initialFotos: WerkFoto[];
   isPremium: boolean;
 }) {
   const [fotos, setFotos] = useState(initialFotos);
   const [toonUpsell, setToonUpsell] = useState(false);
-  const { upload, uploading } = useImageUpload({ bucket: "vakman-werkfotos", pathPrefix: `${vakmanId}/${crypto.randomUUID()}` });
+  const { upload, uploading } = useImageUpload({ bucket: "vakman-werkfotos", pathPrefix: `${professionalId}/${crypto.randomUUID()}` });
   const inputRef = useRef<HTMLInputElement>(null);
 
   const maxFotos = isPremium ? PREMIUM_MAX_FOTOS : GRATIS_MAX_FOTOS;
@@ -44,7 +44,7 @@ export function WerkFotoGrid({
     const supabase = createClient();
     const { data, error } = await supabase
       .from("work_photos")
-      .insert({ professional_id: vakmanId, photo_url: url })
+      .insert({ professional_id: professionalId, photo_url: url })
       .select()
       .single();
 

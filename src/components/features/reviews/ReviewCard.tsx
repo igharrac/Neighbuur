@@ -25,13 +25,13 @@ function relatief(datum: string): string {
 
 interface ReviewCardProps {
   review: ReviewComplete;
-  vakmanId: string;
-  bedrijfsnaam: string;
-  isVakmanOwner: boolean;
+  professionalId: string;
+  companyName: string;
+  isProfessionalOwner: boolean;
   initialVoted: boolean;
 }
 
-export function ReviewCard({ review, vakmanId, bedrijfsnaam, isVakmanOwner, initialVoted }: ReviewCardProps) {
+export function ReviewCard({ review, professionalId, companyName, isProfessionalOwner, initialVoted }: ReviewCardProps) {
   return (
     <div className="card-flat p-6">
       <div className="flex justify-between items-start gap-3 mb-3">
@@ -77,9 +77,9 @@ export function ReviewCard({ review, vakmanId, bedrijfsnaam, isVakmanOwner, init
 
       <ReplyForm
         reviewId={review.id}
-        vakmanId={vakmanId}
-        bedrijfsnaam={bedrijfsnaam}
-        isOwner={isVakmanOwner}
+        professionalId={professionalId}
+        companyName={companyName}
+        isOwner={isProfessionalOwner}
         initialTekst={review.reply_text}
       />
     </div>

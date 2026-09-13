@@ -16,8 +16,8 @@ type Stap = 1 | 2 | 3;
 interface BookingFlowProps {
   open: boolean;
   onClose: () => void;
-  vakmanId: string;
-  bedrijfsnaam: string;
+  professionalId: string;
+  companyName: string;
   logoUrl: string | null;
   beschikbaarheid: Record<string, "available" | "booked">;
   categorieen: Category[];
@@ -27,8 +27,8 @@ interface BookingFlowProps {
 export function BookingFlow({
   open,
   onClose,
-  vakmanId,
-  bedrijfsnaam,
+  professionalId,
+  companyName,
   logoUrl,
   beschikbaarheid,
   categorieen,
@@ -70,7 +70,7 @@ export function BookingFlow({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        vakmanId,
+        vakmanId: professionalId,
         datum,
         categorieId: categorieId || null,
         omschrijving,
@@ -96,7 +96,7 @@ export function BookingFlow({
   const kanVerder = stap !== 2 || omschrijving.trim().length > 0;
 
   return (
-    <Modal open={open} onClose={handleClose} title={verstuurd ? undefined : `Boek ${bedrijfsnaam}`}>
+    <Modal open={open} onClose={handleClose} title={verstuurd ? undefined : `Boek ${companyName}`}>
       {verstuurd ? (
         <div className="text-center py-4">
           <div className="w-14 h-14 rounded-full bg-groen-light text-groen flex items-center justify-center mx-auto mb-4">
@@ -104,7 +104,7 @@ export function BookingFlow({
           </div>
           <h3 className="font-display text-display-sm mb-2">Aanvraag verstuurd!</h3>
           <p className="text-body-sm text-warmgrijs mb-6">
-            {bedrijfsnaam} ontvangt een bericht en neemt snel contact met je op.
+            {companyName} ontvangt een bericht en neemt snel contact met je op.
           </p>
           <div className="flex flex-col gap-2">
             <button
@@ -144,7 +144,7 @@ export function BookingFlow({
           )}
           {stap === 3 && (
             <BookingBevestiging
-              bedrijfsnaam={bedrijfsnaam}
+              bedrijfsnaam={companyName}
               logoUrl={logoUrl}
               datum={datum}
               categorieNaam={categorieNaam}

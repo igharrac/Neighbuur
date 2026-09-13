@@ -279,9 +279,9 @@ export function VakmanProfielClient({
               <ReviewCard
                 key={review.id}
                 review={review}
-                vakmanId={professional.id}
-                bedrijfsnaam={professional.company_name}
-                isVakmanOwner={isOwner}
+                professionalId={professional.id}
+                companyName={professional.company_name}
+                isProfessionalOwner={isOwner}
                 initialVoted={votedSet.has(review.id)}
               />
             ))
@@ -343,8 +343,8 @@ export function VakmanProfielClient({
       <ReviewForm
         open={reviewFormOpen}
         onClose={() => setReviewFormOpen(false)}
-        vakmanId={professional.id}
-        bedrijfsnaam={professional.company_name}
+        professionalId={professional.id}
+        companyName={professional.company_name}
         communityId={communityId}
         boekingId={reviewBoekingId}
         onSuccess={(nieuweReview) => {
@@ -359,8 +359,8 @@ export function VakmanProfielClient({
       <BookingFlow
         open={bookingFlowOpen}
         onClose={() => setBookingFlowOpen(false)}
-        vakmanId={professional.id}
-        bedrijfsnaam={professional.company_name}
+        professionalId={professional.id}
+        companyName={professional.company_name}
         logoUrl={professional.logo_url}
         beschikbaarheid={beschikbaarheid}
         categorieen={categories}

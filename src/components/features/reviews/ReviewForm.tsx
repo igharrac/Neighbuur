@@ -46,8 +46,8 @@ function StarRow({ value, onChange, label }: { value: number; onChange: (v: numb
 interface ReviewFormProps {
   open: boolean;
   onClose: () => void;
-  vakmanId: string;
-  bedrijfsnaam: string;
+  professionalId: string;
+  companyName: string;
   communityId?: string | null;
   boekingId?: string | null;
   onSuccess: (review: ReviewComplete) => void;
@@ -56,8 +56,8 @@ interface ReviewFormProps {
 export function ReviewForm({
   open,
   onClose,
-  vakmanId,
-  bedrijfsnaam,
+  professionalId,
+  companyName,
   communityId = null,
   boekingId = null,
   onSuccess,
@@ -98,7 +98,7 @@ export function ReviewForm({
       .from("reviews")
       .insert({
         author_id: user.id,
-        professional_id: vakmanId,
+        professional_id: professionalId,
         booking_id: boekingId,
         community_id: communityId,
         text: tekst.trim(),
@@ -152,7 +152,7 @@ export function ReviewForm({
   }
 
   return (
-    <Modal open={open} onClose={onClose} title={`Review voor ${bedrijfsnaam}`}>
+    <Modal open={open} onClose={onClose} title={`Review voor ${companyName}`}>
       <div className="flex flex-col gap-5">
         <div>
           <span className="text-body-sm font-semibold block mb-2">Beoordeling</span>

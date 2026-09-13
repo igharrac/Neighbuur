@@ -9,13 +9,13 @@ const MAX_TEKST = 300;
 
 interface ReplyFormProps {
   reviewId: string;
-  vakmanId: string;
-  bedrijfsnaam: string;
+  professionalId: string;
+  companyName: string;
   isOwner: boolean;
   initialTekst?: string | null;
 }
 
-export function ReplyForm({ reviewId, vakmanId, bedrijfsnaam, isOwner, initialTekst = null }: ReplyFormProps) {
+export function ReplyForm({ reviewId, professionalId, companyName, isOwner, initialTekst = null }: ReplyFormProps) {
   const { showToast } = useToast();
   const [tekst, setTekst] = useState(initialTekst ?? "");
   const [savedTekst, setSavedTekst] = useState(initialTekst);
@@ -30,7 +30,7 @@ export function ReplyForm({ reviewId, vakmanId, bedrijfsnaam, isOwner, initialTe
     const supabase = createClient();
     const { error } = await supabase
       .from("review_replies")
-      .upsert({ review_id: reviewId, professional_id: vakmanId, text: waarde }, { onConflict: "review_id" });
+      .upsert({ review_id: reviewId, professional_id: professionalId, text: waarde }, { onConflict: "review_id" });
 
     setSubmitting(false);
 
@@ -50,7 +50,7 @@ export function ReplyForm({ reviewId, vakmanId, bedrijfsnaam, isOwner, initialTe
     return (
       <div className="mt-3 bg-cream rounded-md p-3.5">
         <div className="flex items-center justify-between gap-2 mb-1">
-          <span className="text-body-xs font-semibold text-warmzwart">Reactie van {bedrijfsnaam}</span>
+          <span className="text-body-xs font-semibold text-warmzwart">Reactie van {companyName}</span>
           {isOwner && (
             <button
               onClick={() => {

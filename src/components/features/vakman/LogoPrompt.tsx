@@ -34,13 +34,13 @@ function Confetti() {
 }
 
 interface LogoPromptProps {
-  vakmanId: string;
-  bedrijfsnaam: string;
+  professionalId: string;
+  companyName: string;
   onUploaded: (url: string) => void;
 }
 
-export function LogoPrompt({ vakmanId, bedrijfsnaam, onUploaded }: LogoPromptProps) {
-  const { upload, uploading } = useImageUpload({ bucket: "vakman-logos", pathPrefix: `${vakmanId}/logo` });
+export function LogoPrompt({ professionalId, companyName, onUploaded }: LogoPromptProps) {
+  const { upload, uploading } = useImageUpload({ bucket: "vakman-logos", pathPrefix: `${professionalId}/logo` });
   const [celebrating, setCelebrating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -71,7 +71,7 @@ export function LogoPrompt({ vakmanId, bedrijfsnaam, onUploaded }: LogoPromptPro
 
           <div className="flex items-center justify-center gap-6 mb-5">
             <div className="text-center">
-              <Avatar naam={bedrijfsnaam} size="lg" className="opacity-50 grayscale mx-auto" />
+              <Avatar naam={companyName} size="lg" className="opacity-50 grayscale mx-auto" />
               <p className="text-body-xs text-warmgrijs mt-2">Zonder logo</p>
             </div>
             <div className="text-center relative">

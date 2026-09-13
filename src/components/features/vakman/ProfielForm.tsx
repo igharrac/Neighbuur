@@ -243,13 +243,13 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
       {/* ── Werkfoto's ── */}
       <section id="fotos" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Werkfoto&apos;s</h2>
-        <WerkFotoGrid vakmanId={professional.id} initialFotos={werkFotos} isPremium={professional.is_premium} />
+        <WerkFotoGrid professionalId={professional.id} initialFotos={werkFotos} isPremium={professional.is_premium} />
       </section>
 
       {/* ── Beschikbaarheid ── */}
       <section id="beschikbaarheid" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Beschikbaarheid — komende 4 weken</h2>
-        <BeschikbaarheidEditor vakmanId={professional.id} initialData={beschikbaarheid} />
+        <BeschikbaarheidEditor professionalId={professional.id} initialData={beschikbaarheid} />
       </section>
 
       {/* ── Verzekeringsbewijs ── */}

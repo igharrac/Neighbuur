@@ -74,7 +74,7 @@ export function DashboardClient({
       </div>
 
       {!professional.logo_url && (
-        <LogoPrompt vakmanId={professional.id} bedrijfsnaam={professional.company_name} onUploaded={handleLogoUploaded} />
+        <LogoPrompt professionalId={professional.id} companyName={professional.company_name} onUploaded={handleLogoUploaded} />
       )}
 
       <ProfielSterkte professional={professional} werkFotoCount={werkFotoCount} heeftBeschikbaarheid={heeftBeschikbaarheid} />

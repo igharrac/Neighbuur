@@ -24,10 +24,10 @@ function buildDagen(): Date[] {
 const DAG_LABELS = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 
 export function BeschikbaarheidEditor({
-  vakmanId,
+  professionalId,
   initialData,
 }: {
-  vakmanId: string;
+  professionalId: string;
   initialData: Record<string, "available" | "booked">;
 }) {
   const [data, setData] = useState<Record<string, Status>>(initialData);
@@ -46,11 +46,11 @@ export function BeschikbaarheidEditor({
 
     const supabase = createClient();
     if (next === undefined) {
-      await supabase.from("availability").delete().eq("professional_id", vakmanId).eq("date", key);
+      await supabase.from("availability").delete().eq("professional_id", professionalId).eq("date", key);
     } else {
       await supabase
         .from("availability")
-        .upsert({ professional_id: vakmanId, date: key, status: next }, { onConflict: "professional_id,date" });
+        .upsert({ professional_id: professionalId, date: key, status: next }, { onConflict: "professional_id,date" });
     }
   }
 
