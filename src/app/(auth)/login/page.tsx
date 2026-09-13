@@ -98,12 +98,13 @@ export default function LoginPage() {
           </label>
           <input
             type="email"
-            className="input mb-4"
+            className="input"
             placeholder={dict.login.emailPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSendLink()}
           />
+          <p className="text-body-sm text-warmgrijs-dark mt-1.5 mb-4">{dict.login.newAccountHint}</p>
 
           <button
             className="btn-primary w-full"
@@ -134,8 +135,7 @@ export default function LoginPage() {
           </p>
 
           <div className="border-t border-lijn mt-6 pt-4 text-center">
-            <p className="text-body-sm text-warmgrijs">{dict.login.newAccountHint}</p>
-            <p className="text-body-xs text-warmgrijs-dark mt-1">
+            <p className="text-body-xs text-warmgrijs-dark">
               {dict.login.professionalHint}{" "}
               <Link href="/registreer/vakman" className="font-medium text-warmzwart underline">
                 {dict.login.professionalLink}
