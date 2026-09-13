@@ -11,9 +11,9 @@ import { ChatInput } from "./ChatInput";
 import type { Message } from "@/types";
 
 interface GesprekDetailProps {
-  gesprekId: string;
+  conversationId: string;
   currentUserId: string;
-  andereDeelnemer: { naam: string; avatar_url: string | null } | null;
+  otherParticipant: { name: string; avatar_url: string | null } | null;
   initialBerichten: Message[];
 }
 
@@ -30,7 +30,7 @@ function datumLabel(iso: string): string {
   return datum.toLocaleDateString("nl-NL", { day: "numeric", month: "long" });
 }
 
-export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initialBerichten }: GesprekDetailProps) {
+export function GesprekDetail({ conversationId, currentUserId, otherParticipant, initialBerichten }: GesprekDetailProps) {
   const { showToast } = useToast();
   const [berichten, setBerichten] = useState(initialBerichten);
   const [fotoUrls, setFotoUrls] = useState<Record<string, string>>({});
@@ -47,10 +47,10 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
     supabase.auth.getSession().then(() => {
       if (cancelled) return;
       channel = supabase
-        .channel(`gesprek-${gesprekId}`)
+        .channel(`gesprek-${conversationId}`)
         .on(
           "postgres_changes",
-          { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${gesprekId}` },
+          { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${conversationId}` },
           (payload) => {
             const nieuw = payload.new as Message;
             setBerichten((prev) => (prev.some((b) => b.id === nieuw.id) ? prev : [...prev, nieuw]));
@@ -63,7 +63,7 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
       cancelled = true;
       if (channel) supabase.removeChannel(channel);
     };
-  }, [gesprekId]);
+  }, [conversationId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -95,7 +95,7 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
     const supabase = createClient();
     const { data, error } = await supabase
       .from("messages")
-      .insert({ conversation_id: gesprekId, sender_id: currentUserId, text: tekst, photo_url: fotoPath })
+      .insert({ conversation_id: conversationId, sender_id: currentUserId, text: tekst, photo_url: fotoPath })
       .select()
       .single();
 
@@ -120,8 +120,8 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
         >
           <ArrowLeft size={20} />
         </Link>
-        <Avatar naam={andereDeelnemer?.naam ?? "?"} src={andereDeelnemer?.avatar_url} size="sm" />
-        <span className="font-semibold text-body">{andereDeelnemer?.naam ?? "Onbekend"}</span>
+        <Avatar naam={otherParticipant?.name ?? "?"} src={otherParticipant?.avatar_url} size="sm" />
+        <span className="font-semibold text-body">{otherParticipant?.name ?? "Onbekend"}</span>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
@@ -138,8 +138,8 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
             <div key={bericht.id}>
               {toonLabel && <div className="text-center text-body-xs text-warmgrijs my-3">{label}</div>}
               <ChatBubble
-                bericht={bericht}
-                eigen={bericht.sender_id === currentUserId}
+                message={bericht}
+                isOwn={bericht.sender_id === currentUserId}
                 fotoUrl={bericht.photo_url ? fotoUrls[bericht.photo_url] : undefined}
               />
             </div>
@@ -148,7 +148,7 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
         <div ref={bottomRef} />
       </div>
 
-      <ChatInput gesprekId={gesprekId} onSend={handleSend} />
+      <ChatInput conversationId={conversationId} onSend={handleSend} />
     </div>
   );
 }

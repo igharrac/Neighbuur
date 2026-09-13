@@ -13,7 +13,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
-import { resolveGesprekPartner } from "@/lib/chat";
+import { resolveConversationPartner } from "@/lib/chat";
 import { BookingStatusBadge } from "@/components/features/booking/BookingStatusBadge";
 import { CommunityDetectieKaart, type DetectieResultaat } from "@/components/features/community/CommunityDetectieKaart";
 import type { BookingStatus } from "@/types";
@@ -206,9 +206,9 @@ export default async function PlanPage() {
     if (g) {
       const andere = g.conversation_participants.find((d) => d.user_id !== user.id);
       if (andere) {
-        const partner = await resolveGesprekPartner(admin, andere);
+        const partner = await resolveConversationPartner(admin, andere);
         const laatste = Array.isArray(g.laatste) ? g.laatste[0] : g.laatste;
-        recentGesprek = { id: g.id, naam: partner.naam, laatsteBericht: laatste?.text ?? null };
+        recentGesprek = { id: g.id, naam: partner.name, laatsteBericht: laatste?.text ?? null };
       }
     }
   }

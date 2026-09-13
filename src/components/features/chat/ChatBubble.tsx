@@ -3,22 +3,22 @@ import { Check, Checks } from "@phosphor-icons/react";
 import type { Message } from "@/types";
 
 interface ChatBubbleProps {
-  bericht: Message;
-  eigen: boolean;
+  message: Message;
+  isOwn: boolean;
   fotoUrl?: string;
 }
 
-export function ChatBubble({ bericht, eigen, fotoUrl }: ChatBubbleProps) {
-  const tijd = new Date(bericht.created_at).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
+export function ChatBubble({ message, isOwn, fotoUrl }: ChatBubbleProps) {
+  const tijd = new Date(message.created_at).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className={`flex ${eigen ? "justify-end" : "justify-start"} mb-2`}>
+    <div className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-2`}>
       <div
         className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 ${
-          eigen ? "bg-terracotta text-white rounded-br-sm" : "bg-white border border-lijn text-warmzwart rounded-bl-sm"
+          isOwn ? "bg-terracotta text-white rounded-br-sm" : "bg-white border border-lijn text-warmzwart rounded-bl-sm"
         }`}
       >
-        {bericht.photo_url && (
+        {message.photo_url && (
           <div className="w-48 max-w-full aspect-square rounded-lg mb-1.5 overflow-hidden bg-cream-dark">
             {fotoUrl ? (
               <img src={fotoUrl} alt="" className="w-full h-full object-cover" />
@@ -27,10 +27,10 @@ export function ChatBubble({ bericht, eigen, fotoUrl }: ChatBubbleProps) {
             )}
           </div>
         )}
-        {bericht.text && <p className="text-body-sm whitespace-pre-wrap break-words">{bericht.text}</p>}
-        <div className={`flex items-center gap-1 justify-end mt-1 text-body-xs ${eigen ? "text-white/70" : "text-warmgrijs"}`}>
+        {message.text && <p className="text-body-sm whitespace-pre-wrap break-words">{message.text}</p>}
+        <div className={`flex items-center gap-1 justify-end mt-1 text-body-xs ${isOwn ? "text-white/70" : "text-warmgrijs"}`}>
           {tijd}
-          {eigen && (bericht.read_at ? <Checks size={14} weight="bold" /> : <Check size={14} />)}
+          {isOwn && (message.read_at ? <Checks size={14} weight="bold" /> : <Check size={14} />)}
         </div>
       </div>
     </div>

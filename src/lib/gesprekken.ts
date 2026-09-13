@@ -6,7 +6,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  * conversation_participants voor de ANDERE partij niet via de RLS-gebonden
  * client kan (zie /berichten/nieuw en migratie 0006).
  */
-export async function getOrCreateGesprek(admin: SupabaseClient, userIdA: string, userIdB: string): Promise<string> {
+export async function getOrCreateConversation(admin: SupabaseClient, userIdA: string, userIdB: string): Promise<string> {
   const { data: mijnGesprekken } = await admin.from("conversation_participants").select("conversation_id").eq("user_id", userIdA);
   const gesprekIds = (mijnGesprekken ?? []).map((g) => g.conversation_id as string);
 

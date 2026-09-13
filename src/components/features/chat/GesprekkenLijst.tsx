@@ -15,25 +15,25 @@ export function GesprekkenLijst({ gesprekken }: { gesprekken: ConversationWithLa
           href={`/berichten/${g.id}`}
           className="flex items-center gap-3 px-6 py-4 border-b border-lijn hover:bg-sand/50 transition-colors no-underline min-h-11"
         >
-          <Avatar naam={g.andereDeelnemer?.naam ?? "?"} src={g.andereDeelnemer?.avatar_url} size="md" />
+          <Avatar naam={g.otherParticipant?.name ?? "?"} src={g.otherParticipant?.avatar_url} size="md" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
               <span className="font-semibold text-body-sm text-warmzwart truncate">
-                {g.andereDeelnemer?.naam ?? "Onbekend"}
+                {g.otherParticipant?.name ?? "Onbekend"}
               </span>
-              {g.laatsteBericht && (
+              {g.lastMessage && (
                 <span className="text-body-xs text-warmgrijs shrink-0">
-                  {new Date(g.laatsteBericht.created_at).toLocaleDateString("nl-NL", { day: "numeric", month: "short" })}
+                  {new Date(g.lastMessage.created_at).toLocaleDateString("nl-NL", { day: "numeric", month: "short" })}
                 </span>
               )}
             </div>
-            <p className={`text-body-sm truncate ${g.ongelezenAantal > 0 ? "text-warmzwart font-medium" : "text-warmgrijs"}`}>
-              {g.laatsteBericht ? g.laatsteBericht.tekst || "📷 Foto" : "Nog geen berichten"}
+            <p className={`text-body-sm truncate ${g.unreadCount > 0 ? "text-warmzwart font-medium" : "text-warmgrijs"}`}>
+              {g.lastMessage ? g.lastMessage.text || "📷 Foto" : "Nog geen berichten"}
             </p>
           </div>
-          {g.ongelezenAantal > 0 && (
+          {g.unreadCount > 0 && (
             <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-terracotta text-white text-body-xs font-bold flex items-center justify-center shrink-0">
-              {g.ongelezenAantal}
+              {g.unreadCount}
             </span>
           )}
         </Link>

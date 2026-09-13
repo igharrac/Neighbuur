@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
-import { getOrCreateGesprek } from "@/lib/gesprekken";
+import { getOrCreateConversation } from "@/lib/gesprekken";
 import { notifyUser } from "@/lib/notify";
 
 export async function POST(request: Request) {
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: boekingError?.message ?? "Aanvraag opslaan is niet gelukt" }, { status: 500 });
   }
 
-  const gesprekId = await getOrCreateGesprek(admin, user.id, vakman.user_id);
+  const gesprekId = await getOrCreateConversation(admin, user.id, vakman.user_id);
 
   const datumTekst = body?.datum
     ? ` voor ${new Date(body.datum as string).toLocaleDateString("nl-NL", { day: "numeric", month: "long" })}`

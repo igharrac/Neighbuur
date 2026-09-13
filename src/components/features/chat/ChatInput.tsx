@@ -5,16 +5,16 @@ import { PaperPlaneRight, Image as ImageIcon, Spinner } from "@phosphor-icons/re
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
 
 interface ChatInputProps {
-  gesprekId: string;
+  conversationId: string;
   onSend: (payload: { tekst: string; fotoPath: string | null }) => Promise<boolean>;
 }
 
-export function ChatInput({ gesprekId, onSend }: ChatInputProps) {
+export function ChatInput({ conversationId, onSend }: ChatInputProps) {
   const [tekst, setTekst] = useState("");
   const [sending, setSending] = useState(false);
   const { upload, uploading } = useImageUpload({
     bucket: "chat-fotos",
-    pathPrefix: `${gesprekId}/${crypto.randomUUID()}`,
+    pathPrefix: `${conversationId}/${crypto.randomUUID()}`,
     isPrivate: true,
   });
   const fileRef = useRef<HTMLInputElement>(null);

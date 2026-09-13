@@ -153,9 +153,9 @@ export interface Notification {
 
 export interface ConversationWithLastMessage {
   id: string;
-  andereDeelnemer: { user_id: string; naam: string; avatar_url: string | null } | null;
-  laatsteBericht: { tekst: string; foto_url: string | null; created_at: string; van_id: string } | null;
-  ongelezenAantal: number;
+  otherParticipant: { user_id: string; name: string; avatar_url: string | null } | null;
+  lastMessage: { text: string; foto_url: string | null; created_at: string; sender_id: string } | null;
+  unreadCount: number;
 }
 
 export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled";

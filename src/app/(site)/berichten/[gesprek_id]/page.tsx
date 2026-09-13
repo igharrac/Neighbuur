@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
-import { resolveGesprekPartner } from "@/lib/chat";
+import { resolveConversationPartner } from "@/lib/chat";
 import { GesprekDetail } from "@/components/features/chat/GesprekDetail";
 import type { Message } from "@/types";
 
@@ -30,7 +30,7 @@ export default async function GesprekPage({ params }: { params: { gesprek_id: st
     | { user_id: string; profiles: { name: string; avatar_url: string | null; role: string } | null }
     | undefined;
 
-  const andereDeelnemer = andere ? await resolveGesprekPartner(admin, andere) : null;
+  const otherParticipant = andere ? await resolveConversationPartner(admin, andere) : null;
 
   const { data: berichten } = await admin
     .from("messages")
@@ -40,9 +40,9 @@ export default async function GesprekPage({ params }: { params: { gesprek_id: st
 
   return (
     <GesprekDetail
-      gesprekId={params.gesprek_id}
+      conversationId={params.gesprek_id}
       currentUserId={user.id}
-      andereDeelnemer={andereDeelnemer}
+      otherParticipant={otherParticipant}
       initialBerichten={(berichten ?? []) as Message[]}
     />
   );

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
-import { resolveGesprekPartner } from "@/lib/chat";
+import { resolveConversationPartner } from "@/lib/chat";
 import { GesprekkenLijst } from "@/components/features/chat/GesprekkenLijst";
 import type { ConversationWithLastMessage } from "@/types";
 
@@ -91,11 +91,11 @@ export default async function BerichtenPage() {
 
         return {
           id: g.id,
-          andereDeelnemer: andere ? await resolveGesprekPartner(admin, andere) : null,
-          laatsteBericht: laatsteRaw
-            ? { tekst: laatsteRaw.text, foto_url: laatsteRaw.photo_url, created_at: laatsteRaw.created_at, van_id: laatsteRaw.sender_id }
+          otherParticipant: andere ? await resolveConversationPartner(admin, andere) : null,
+          lastMessage: laatsteRaw
+            ? { text: laatsteRaw.text, foto_url: laatsteRaw.photo_url, created_at: laatsteRaw.created_at, sender_id: laatsteRaw.sender_id }
             : null,
-          ongelezenAantal: ongelezenPerGesprek.get(g.id) ?? 0,
+          unreadCount: ongelezenPerGesprek.get(g.id) ?? 0,
         };
       })
   );

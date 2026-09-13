@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
-import { getOrCreateGesprek } from "@/lib/gesprekken";
+import { getOrCreateConversation } from "@/lib/gesprekken";
 
 export async function GET(request: Request) {
   const { origin, searchParams } = new URL(request.url);
@@ -27,6 +27,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/dashboard`);
   }
 
-  const gesprekId = await getOrCreateGesprek(admin, user.id, vakman.user_id);
+  const gesprekId = await getOrCreateConversation(admin, user.id, vakman.user_id);
   return NextResponse.redirect(`${origin}/berichten/${gesprekId}`);
 }
