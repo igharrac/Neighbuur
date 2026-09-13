@@ -18,7 +18,7 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
   const { showToast } = useToast();
   const [busy, setBusy] = useState(false);
 
-  async function wijzigStatus(status: Extract<BoekingStatus, "bevestigd" | "geannuleerd" | "afgerond">) {
+  async function wijzigStatus(status: Extract<BoekingStatus, "confirmed" | "cancelled" | "completed">) {
     setBusy(true);
     const res = await fetch(`/api/boekingen/${boeking.id}/status`, {
       method: "POST",
@@ -62,17 +62,17 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
       )}
 
       <div className="flex flex-wrap gap-2">
-        {boeking.status === "aangevraagd" && (
+        {boeking.status === "requested" && (
           <>
             <button
-              onClick={() => wijzigStatus("bevestigd")}
+              onClick={() => wijzigStatus("confirmed")}
               disabled={busy}
               className="btn-primary !py-2 !px-4 !text-body-sm disabled:opacity-40"
             >
               <CheckCircle size={16} weight="bold" /> Accepteren
             </button>
             <button
-              onClick={() => wijzigStatus("geannuleerd")}
+              onClick={() => wijzigStatus("cancelled")}
               disabled={busy}
               className="btn-secondary !py-2 !px-4 !text-body-sm disabled:opacity-40"
             >
@@ -80,9 +80,9 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
             </button>
           </>
         )}
-        {boeking.status === "bevestigd" && (
+        {boeking.status === "confirmed" && (
           <button
-            onClick={() => wijzigStatus("afgerond")}
+            onClick={() => wijzigStatus("completed")}
             disabled={busy}
             className="btn-primary !py-2 !px-4 !text-body-sm disabled:opacity-40"
           >

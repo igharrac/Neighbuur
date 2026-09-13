@@ -159,7 +159,7 @@ export interface GesprekMetLaatsteBericht {
   ongelezenAantal: number;
 }
 
-export type BoekingStatus = "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
+export type BoekingStatus = "requested" | "confirmed" | "completed" | "cancelled";
 
 export interface Boeking {
   id: string;

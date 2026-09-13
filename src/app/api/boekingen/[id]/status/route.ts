@@ -4,7 +4,7 @@ import { createAdminSupabase } from "@/lib/supabase-admin";
 import { notifyUser } from "@/lib/notify";
 import type { BoekingStatus } from "@/types";
 
-const GELDIGE_STATUSSEN: BoekingStatus[] = ["bevestigd", "geannuleerd", "afgerond"];
+const GELDIGE_STATUSSEN: BoekingStatus[] = ["confirmed", "cancelled", "completed"];
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const supabase = createServerSupabase();
@@ -37,10 +37,10 @@ export async function POST(request: Request, { params }: { params: { id: string 
   if (!isKlant && !isVakman) {
     return NextResponse.json({ error: "Geen toegang tot deze boeking" }, { status: 403 });
   }
-  if (status === "bevestigd" && !isVakman) {
+  if (status === "confirmed" && !isVakman) {
     return NextResponse.json({ error: "Alleen de vakman kan een aanvraag accepteren" }, { status: 403 });
   }
-  if (status === "afgerond" && boeking.status !== "bevestigd") {
+  if (status === "completed" && boeking.status !== "confirmed") {
     return NextResponse.json({ error: "Alleen bevestigde boekingen kunnen afgerond worden" }, { status: 400 });
   }
 
@@ -53,20 +53,20 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const { data: klantProfiel } = await admin.from("profiles").select("name").eq("id", boeking.customer_id).maybeSingle();
   const klantNaam = klantProfiel?.name ?? "De klant";
 
-  // "bevestigd" gaat altijd naar de klant; bij "geannuleerd"/"afgerond" is de
+  // "confirmed" gaat altijd naar de klant; bij "cancelled"/"completed" is de
   // ontvanger de partij die de actie niet zelf uitvoerde.
-  const ontvangerId = status === "bevestigd" ? boeking.customer_id : isVakman ? boeking.customer_id : vakmanUserId;
-  const ontvangerIsVakman = status !== "bevestigd" && isKlant;
+  const ontvangerId = status === "confirmed" ? boeking.customer_id : isVakman ? boeking.customer_id : vakmanUserId;
+  const ontvangerIsVakman = status !== "confirmed" && isKlant;
 
   if (ontvangerId) {
-    const teksten: Record<Exclude<BoekingStatus, "aangevraagd">, { titel_nl: string; titel_en: string; inhoud_nl: string; inhoud_en: string }> = {
-      bevestigd: {
+    const teksten: Record<Exclude<BoekingStatus, "requested">, { titel_nl: string; titel_en: string; inhoud_nl: string; inhoud_en: string }> = {
+      confirmed: {
         titel_nl: "Boeking bevestigd",
         titel_en: "Booking confirmed",
         inhoud_nl: `${bedrijfsnaam} heeft je boekingsaanvraag geaccepteerd.`,
         inhoud_en: `${bedrijfsnaam} accepted your booking request.`,
       },
-      geannuleerd: {
+      cancelled: {
         titel_nl: "Boeking geannuleerd",
         titel_en: "Booking cancelled",
         inhoud_nl: isVakman
@@ -74,7 +74,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
           : `${klantNaam} heeft de boeking geannuleerd.`,
         inhoud_en: isVakman ? `${bedrijfsnaam} declined your request.` : `${klantNaam} cancelled the booking.`,
       },
-      afgerond: {
+      completed: {
         titel_nl: "Klus afgerond",
         titel_en: "Job completed",
         inhoud_nl: `De klus met ${isVakman ? klantNaam : bedrijfsnaam} is gemarkeerd als afgerond.`,
@@ -82,7 +82,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       },
     };
 
-    const tekst = teksten[status as Exclude<BoekingStatus, "aangevraagd">];
+    const tekst = teksten[status as Exclude<BoekingStatus, "requested">];
     const link = ontvangerIsVakman ? "/dashboard" : "/plan";
     const datumTekst = boeking.date
       ? new Date(boeking.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long" })
@@ -97,7 +97,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       inhoudEn: tekst.inhoud_en,
       link,
       email:
-        status === "bevestigd"
+        status === "confirmed"
           ? { type: "boeking-bevestigd", data: { vakmanNaam: bedrijfsnaam, datumTekst, link } }
           : undefined,
     });

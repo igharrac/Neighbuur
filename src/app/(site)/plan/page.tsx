@@ -118,11 +118,11 @@ export default async function PlanPage() {
     categorieNaam: b.categories?.name_nl ?? null,
   }));
 
-  const inAfwachting = boekingen.filter((b) => b.status === "aangevraagd");
-  const bevestigd = boekingen.filter((b) => b.status === "bevestigd");
-  const afgesloten = boekingen.filter((b) => b.status === "afgerond" || b.status === "geannuleerd");
+  const inAfwachting = boekingen.filter((b) => b.status === "requested");
+  const bevestigd = boekingen.filter((b) => b.status === "confirmed");
+  const afgesloten = boekingen.filter((b) => b.status === "completed" || b.status === "cancelled");
   const totaal = boekingen.length;
-  const geregeld = bevestigd.length + boekingen.filter((b) => b.status === "afgerond").length;
+  const geregeld = bevestigd.length + boekingen.filter((b) => b.status === "completed").length;
   const leeg = totaal === 0;
 
   const groepskortingen: {

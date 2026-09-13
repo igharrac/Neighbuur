@@ -365,7 +365,7 @@ export interface Database {
           description: string | null;
           foto_urls: string[] | null;
           date: string | null;
-          status: Database["public"]["Enums"]["boeking_status"];
+          status: Database["public"]["Enums"]["booking_status"];
           price_cents: number | null;
           mollie_payment_id: string | null;
           customer_notes: string | null;
@@ -383,7 +383,7 @@ export interface Database {
           description?: string | null;
           foto_urls?: string[] | null;
           date?: string | null;
-          status?: Database["public"]["Enums"]["boeking_status"];
+          status?: Database["public"]["Enums"]["booking_status"];
           price_cents?: number | null;
           mollie_payment_id?: string | null;
           customer_notes?: string | null;
@@ -401,7 +401,7 @@ export interface Database {
           description?: string | null;
           foto_urls?: string[] | null;
           date?: string | null;
-          status?: Database["public"]["Enums"]["boeking_status"];
+          status?: Database["public"]["Enums"]["booking_status"];
           price_cents?: number | null;
           mollie_payment_id?: string | null;
           customer_notes?: string | null;
@@ -1011,7 +1011,7 @@ export interface Database {
       contact_preference: "phone" | "whatsapp" | "app";
       user_role: "resident" | "professional" | "community_admin" | "admin";
       notification_type: "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
-      boeking_status: "aangevraagd" | "bevestigd" | "afgerond" | "geannuleerd";
+      booking_status: "requested" | "confirmed" | "completed" | "cancelled";
       availability_status: "available" | "booked";
       category_type: "professional" | "compare";
     };

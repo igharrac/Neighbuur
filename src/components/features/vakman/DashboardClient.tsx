@@ -51,9 +51,9 @@ export function DashboardClient({
   }
 
   const limietBereikt = !vakman.is_premium && vakman.requests_this_month >= vakman.requests_limit;
-  const nieuweAanvragen = boekingen.filter((b) => b.status === "aangevraagd");
-  const lopendeKlussen = boekingen.filter((b) => b.status === "bevestigd");
-  const afgeslotenKlussen = boekingen.filter((b) => b.status === "afgerond" || b.status === "geannuleerd");
+  const nieuweAanvragen = boekingen.filter((b) => b.status === "requested");
+  const lopendeKlussen = boekingen.filter((b) => b.status === "confirmed");
+  const afgeslotenKlussen = boekingen.filter((b) => b.status === "completed" || b.status === "cancelled");
 
   async function handleLogoUploaded(url: string) {
     const supabase = createClient();

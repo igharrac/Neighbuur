@@ -14,7 +14,7 @@ export async function GET() {
   const { data: boekingen, error } = await admin
     .from("bookings")
     .select("id, customer_id, updated_at, professional_profiles(company_name, slug)")
-    .eq("status", "afgerond")
+    .eq("status", "completed")
     .is("review_request_sent_at", null)
     .lte("updated_at", grens);
 
