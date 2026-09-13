@@ -7,11 +7,11 @@ import type { Wijk } from "@/types";
 
 interface CommunityOverzichtRow {
   id: string;
-  naam: string;
+  name: string;
   slug: string;
   type: string;
-  aantal_leden: number;
-  aantal_reviews: number;
+  member_count: number;
+  review_count: number;
 }
 
 export default async function WijkPage({ params }: { params: { slug: string } }) {
@@ -23,17 +23,17 @@ export default async function WijkPage({ params }: { params: { slug: string } })
 
   const { data: communities } = await supabase
     .from("community_overzicht")
-    .select("id, naam, slug, type, aantal_leden, aantal_reviews")
-    .eq("wijk_id", w.id)
-    .order("naam");
+    .select("id, name, slug, type, member_count, review_count")
+    .eq("district_id", w.id)
+    .order("name");
 
   const rows: CommunityOverzichtRow[] = (communities ?? []).map((c) => ({
     id: c.id!,
-    naam: c.naam!,
+    name: c.name!,
     slug: c.slug!,
     type: c.type!,
-    aantal_leden: Number(c.aantal_leden ?? 0),
-    aantal_reviews: Number(c.aantal_reviews ?? 0),
+    member_count: Number(c.member_count ?? 0),
+    review_count: Number(c.review_count ?? 0),
   }));
 
   return (
@@ -60,11 +60,11 @@ export default async function WijkPage({ params }: { params: { slug: string } })
             {rows.map((c) => (
               <CommunityCard
                 key={c.id}
-                naam={c.naam}
+                naam={c.name}
                 type={c.type}
                 slug={c.slug}
-                aantalLeden={c.aantal_leden}
-                aantalReviews={c.aantal_reviews}
+                aantalLeden={c.member_count}
+                aantalReviews={c.review_count}
               />
             ))}
           </div>

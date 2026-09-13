@@ -10,14 +10,14 @@ import type { Lang } from "@/lib/i18n";
 
 interface CommunityOverzichtRow {
   id: string;
-  wijk_id: string;
-  naam: string;
+  district_id: string;
+  name: string;
   slug: string;
   type: string;
-  wijk_naam: string;
-  aantal_leden: number;
-  aantal_reviews: number;
-  lopende_acties: number;
+  district_name: string;
+  member_count: number;
+  review_count: number;
+  active_deals: number;
 }
 
 export default async function CommunityPage({ params }: { params: { slug: string } }) {
@@ -26,21 +26,21 @@ export default async function CommunityPage({ params }: { params: { slug: string
 
   const { data: community } = await supabase
     .from("community_overzicht")
-    .select("id, wijk_id, naam, slug, type, wijk_naam, aantal_leden, aantal_reviews, lopende_acties")
+    .select("id, district_id, name, slug, type, district_name, member_count, review_count, active_deals")
     .eq("slug", params.slug)
     .maybeSingle();
 
   if (!community) notFound();
   const c: CommunityOverzichtRow = {
     id: community.id!,
-    wijk_id: community.wijk_id!,
-    naam: community.naam!,
+    district_id: community.district_id!,
+    name: community.name!,
     slug: community.slug!,
     type: community.type!,
-    wijk_naam: community.wijk_naam!,
-    aantal_leden: Number(community.aantal_leden ?? 0),
-    aantal_reviews: Number(community.aantal_reviews ?? 0),
-    lopende_acties: Number(community.lopende_acties ?? 0),
+    district_name: community.district_name!,
+    member_count: Number(community.member_count ?? 0),
+    review_count: Number(community.review_count ?? 0),
+    active_deals: Number(community.active_deals ?? 0),
   };
 
   const { data: blokken } = await supabase
@@ -76,14 +76,14 @@ export default async function CommunityPage({ params }: { params: { slug: string
           {heroBlok && <div className="mb-6"><HeroBanner data={heroBlok.data} /></div>}
 
           <CommunityHeader
-            naam={c.naam}
+            naam={c.name}
             type={c.type}
-            wijkNaam={c.wijk_naam}
-            wijkId={c.wijk_id}
+            wijkNaam={c.district_name}
+            wijkId={c.district_id}
             communityId={c.id}
-            aantalLeden={c.aantal_leden}
-            aantalReviews={c.aantal_reviews}
-            lopendeActies={c.lopende_acties}
+            aantalLeden={c.member_count}
+            aantalReviews={c.review_count}
+            lopendeActies={c.active_deals}
             initialIsMember={isMember}
           />
 

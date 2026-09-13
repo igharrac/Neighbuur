@@ -3,10 +3,10 @@ import { fallbackCommunities } from "@/lib/communities-fallback";
 
 export interface CommunityOverzicht {
   id: string;
-  naam: string;
+  name: string;
   slug: string;
-  wijk_naam: string;
-  aantal_leden: number;
+  district_name: string;
+  member_count: number;
 }
 
 /** Haalt de meest actieve communities op (voor social proof op de homepage), met fallback. */
@@ -15,17 +15,17 @@ export async function getActiveCommunities(limit = 5): Promise<CommunityOverzich
     const supabase = createServerSupabase();
     const { data, error } = await supabase
       .from("community_overzicht")
-      .select("id, naam, slug, wijk_naam, aantal_leden")
-      .order("aantal_leden", { ascending: false })
+      .select("id, name, slug, district_name, member_count")
+      .order("member_count", { ascending: false })
       .limit(limit);
 
     if (error || !data || data.length === 0) return fallbackCommunities;
     return data.map((c) => ({
       id: c.id!,
-      naam: c.naam!,
+      name: c.name!,
       slug: c.slug!,
-      wijk_naam: c.wijk_naam!,
-      aantal_leden: Number(c.aantal_leden ?? 0),
+      district_name: c.district_name!,
+      member_count: Number(c.member_count ?? 0),
     }));
   } catch {
     return fallbackCommunities;

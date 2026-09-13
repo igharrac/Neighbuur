@@ -146,7 +146,7 @@ export function Hero({ communities }: HeroProps) {
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#2c694e]" />
                   <span className="font-body font-semibold text-[12px] tracking-[0.24px] text-[#1e1b19]">
-                    {c.naam} ({c.aantal_leden} {dict.hero.buren})
+                    {c.name} ({c.member_count} {dict.hero.buren})
                   </span>
                 </Link>
               ))}

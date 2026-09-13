@@ -961,22 +961,22 @@ export interface Database {
       community_overzicht: {
         Row: {
           id: string | null;
-          wijk_id: string | null;
-          naam: string | null;
+          district_id: string | null;
+          name: string | null;
           slug: string | null;
           type: string | null;
-          beschrijving: string | null;
+          description: string | null;
           banner_url: string | null;
-          actief: boolean | null;
+          active: boolean | null;
           created_at: string | null;
-          wijk_naam: string | null;
-          wijk_stad: string | null;
-          aantal_leden: string | null;
-          aantal_reviews: string | null;
-          lopende_acties: string | null;
+          district_name: string | null;
+          district_city: string | null;
+          member_count: string | null;
+          review_count: string | null;
+          active_deals: string | null;
         };
         Relationships: [
-          { foreignKeyName: "community_overzicht_wijk_id_fkey"; columns: ["wijk_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_overzicht_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
         ];
       };
     };

@@ -53,10 +53,10 @@ export default async function PlanPage() {
   if (bewonerProfiel?.community_id) {
     const { data: c } = await supabase
       .from("community_overzicht")
-      .select("naam, slug, aantal_leden, wijk_naam")
+      .select("name, slug, member_count, district_name")
       .eq("id", bewonerProfiel.community_id)
       .maybeSingle();
-    if (c) community = { naam: c.naam!, slug: c.slug!, aantal_leden: Number(c.aantal_leden ?? 0), wijk_naam: c.wijk_naam };
+    if (c) community = { naam: c.name!, slug: c.slug!, aantal_leden: Number(c.member_count ?? 0), wijk_naam: c.district_name };
   }
 
   // Geen community? Dan proberen we buren te detecteren (organische
