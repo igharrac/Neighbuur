@@ -8,15 +8,15 @@ import { ProfielSterkte } from "@/components/features/vakman/ProfielSterkte";
 import { LogoPrompt } from "@/components/features/vakman/LogoPrompt";
 import { BookingCard } from "@/components/features/booking/BookingCard";
 import { PremiumUpsell } from "@/components/features/premium/PremiumUpsell";
-import type { BoekingMetKlant, BoekingStatus, VakmanProfiel } from "@/types";
+import type { BookingWithCustomer, BookingStatus, ProfessionalProfile } from "@/types";
 
 const UPSELL_DISMISSED_KEY = "nt_premium_upsell_dismissed";
 
 interface DashboardClientProps {
-  vakman: VakmanProfiel;
+  vakman: ProfessionalProfile;
   werkFotoCount: number;
   heeftBeschikbaarheid: boolean;
-  boekingen: BoekingMetKlant[];
+  boekingen: BookingWithCustomer[];
   gesprekPerKlant: Record<string, string>;
 }
 
@@ -46,7 +46,7 @@ export function DashboardClient({
     } catch {}
   }
 
-  function handleStatusChange(id: string, status: BoekingStatus) {
+  function handleStatusChange(id: string, status: BookingStatus) {
     setBoekingen((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
   }
 

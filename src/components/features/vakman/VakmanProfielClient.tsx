@@ -20,11 +20,11 @@ import { ReviewForm } from "@/components/features/reviews/ReviewForm";
 import { ReviewCard } from "@/components/features/reviews/ReviewCard";
 import { BookingFlow } from "@/components/features/booking/BookingFlow";
 import { PremiumBadge } from "@/components/features/premium/PremiumBadge";
-import type { Categorie, ReviewCompleet, VakmanProfiel } from "@/types";
+import type { Category, ReviewComplete, ProfessionalProfile } from "@/types";
 
 type Tab = "beschikbaarheid" | "werk" | "reviews" | "over";
 
-const CONTACT_VOORKEUR_LABELS: Record<VakmanProfiel["contact_preference"], string> = {
+const CONTACT_VOORKEUR_LABELS: Record<ProfessionalProfile["contact_preference"], string> = {
   phone: "Telefoon",
   whatsapp: "WhatsApp",
   app: "Via de app",
@@ -57,15 +57,15 @@ function buildDagen(aantal: number): Date[] {
 }
 
 interface VakmanProfielClientProps {
-  vakman: VakmanProfiel;
-  reviews: ReviewCompleet[];
+  vakman: ProfessionalProfile;
+  reviews: ReviewComplete[];
   votedReviewIds: string[];
   isOwner: boolean;
   isLoggedIn: boolean;
   heeftAlGereviewed: boolean;
   communityId: string | null;
   beschikbaarheid: Record<string, "available" | "booked">;
-  categorieen: Categorie[];
+  categorieen: Category[];
 }
 
 export function VakmanProfielClient({

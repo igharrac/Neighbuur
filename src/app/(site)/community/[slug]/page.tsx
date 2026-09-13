@@ -5,7 +5,7 @@ import { HeroBanner } from "@/components/features/community/HeroBanner";
 import { CommunityHeader } from "@/components/features/community/CommunityHeader";
 import { ContentBlock } from "@/components/features/community/ContentBlock";
 import { PullToRefresh } from "@/components/ui/PullToRefresh";
-import type { CommunityContentBlok } from "@/types";
+import type { CommunityContentBlock } from "@/types";
 import type { Lang } from "@/lib/i18n";
 
 interface CommunityOverzichtRow {
@@ -50,7 +50,7 @@ export default async function CommunityPage({ params }: { params: { slug: string
     .eq("active", true)
     .order("position", { ascending: true });
 
-  const alleBlokken = (blokken ?? []) as CommunityContentBlok[];
+  const alleBlokken = (blokken ?? []) as CommunityContentBlock[];
   const heroBlok = alleBlokken.find((b) => b.type === "hero_banner");
   const overigeBlokken = alleBlokken.filter((b) => b.id !== heroBlok?.id);
 

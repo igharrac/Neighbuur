@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { DatumKiezer } from "./DatumKiezer";
 import { KlusOmschrijving } from "./KlusOmschrijving";
 import { BookingBevestiging } from "./BookingBevestiging";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 type Stap = 1 | 2 | 3;
 
@@ -20,7 +20,7 @@ interface BookingFlowProps {
   bedrijfsnaam: string;
   logoUrl: string | null;
   beschikbaarheid: Record<string, "available" | "booked">;
-  categorieen: Categorie[];
+  categorieen: Category[];
   communityId: string | null;
 }
 

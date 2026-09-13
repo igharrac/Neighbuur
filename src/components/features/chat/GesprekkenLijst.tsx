@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Avatar } from "@/components/ui/Avatar";
-import type { GesprekMetLaatsteBericht } from "@/types";
+import type { ConversationWithLastMessage } from "@/types";
 
-export function GesprekkenLijst({ gesprekken }: { gesprekken: GesprekMetLaatsteBericht[] }) {
+export function GesprekkenLijst({ gesprekken }: { gesprekken: ConversationWithLastMessage[] }) {
   if (gesprekken.length === 0) {
     return <p className="text-body-sm text-warmgrijs px-6 py-4">Je hebt nog geen gesprekken.</p>;
   }

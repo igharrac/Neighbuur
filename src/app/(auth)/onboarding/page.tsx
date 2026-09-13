@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase";
 import { useLang } from "@/lib/hooks/useLang";
 import { useToast } from "@/components/ui/Toast";
 import { generateUitnodigingscode } from "@/lib/utils";
-import type { UserRole, Wijk } from "@/types";
+import type { UserRole, District } from "@/types";
 
 type Step = "naam-rol" | "wijk" | "adres" | "detectie";
 
@@ -30,8 +30,8 @@ export default function OnboardingPage() {
   const [akkoord, setAkkoord] = useState(false);
 
   const [wijkQuery, setWijkQuery] = useState("");
-  const [wijken, setWijken] = useState<Wijk[]>([]);
-  const [gekozenWijk, setGekozenWijk] = useState<Wijk | null>(null);
+  const [wijken, setWijken] = useState<District[]>([]);
+  const [gekozenWijk, setGekozenWijk] = useState<District | null>(null);
 
   // Adres — gebruikt voor de buren-detectie, nooit zichtbaar voor anderen
   // zonder dat ze zelf lid worden van dezelfde community.
@@ -84,7 +84,7 @@ export default function OnboardingPage() {
     async function load() {
       const supabase = createClient();
       const { data } = await supabase.from("districts").select("*").eq("active", true).order("name");
-      setWijken((data ?? []) as Wijk[]);
+      setWijken((data ?? []) as District[]);
     }
     load();
   }, [step]);
@@ -136,7 +136,7 @@ export default function OnboardingPage() {
     setStep("wijk");
   }
 
-  function handleKiesWijk(wijk: Wijk) {
+  function handleKiesWijk(wijk: District) {
     setGekozenWijk(wijk);
     setStep("adres");
   }

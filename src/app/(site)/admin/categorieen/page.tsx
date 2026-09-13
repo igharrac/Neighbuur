@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { CategorieEditor } from "@/components/admin/CategorieEditor";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 export default async function AdminCategorieenPage() {
   const supabase = createServerSupabase();
@@ -19,5 +19,5 @@ export default async function AdminCategorieenPage() {
     .select("*")
     .order("sort_order", { ascending: true });
 
-  return <CategorieEditor initialCategorieen={(categorieen ?? []) as Categorie[]} />;
+  return <CategorieEditor initialCategorieen={(categorieen ?? []) as Category[]} />;
 }

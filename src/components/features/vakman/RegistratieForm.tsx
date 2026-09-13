@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useToast } from "@/components/ui/Toast";
 import { KvkInput, isValidKvK } from "@/components/features/vakman/KvkInput";
 import { slugify } from "@/lib/utils";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 type Step = 1 | 2 | 3;
 type Method = "phone" | "email";
@@ -19,7 +19,7 @@ const STRAAL_OPTIES = [5, 10, 15, 25];
 
 export function RegistratieForm({ refBron }: { refBron?: string }) {
   const router = useRouter();
-  const { user, loading: authLoading, refreshProfiel } = useAuth();
+  const { user, loading: authLoading, refreshProfile } = useAuth();
   const { showToast } = useToast();
 
   const [checking, setChecking] = useState(true);
@@ -37,7 +37,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   // Step 2 — basisprofiel
   const [bedrijfsnaam, setBedrijfsnaam] = useState("");
   const [kvkNummer, setKvkNummer] = useState("");
-  const [categorieen, setCategorieen] = useState<Categorie[]>([]);
+  const [categorieen, setCategorieen] = useState<Category[]>([]);
   const [hoofdcategorieId, setHoofdcategorieId] = useState("");
   const [postcode, setPostcode] = useState("");
   const [straal, setStraal] = useState(15);
@@ -64,10 +64,10 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       }
 
       const supabase = createClient();
-      const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+      const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
 
-      if (profiel) {
-        router.replace(profiel.role === "professional" ? "/dashboard" : "/plan");
+      if (profile) {
+        router.replace(profile.role === "professional" ? "/dashboard" : "/plan");
         return;
       }
 
@@ -89,7 +89,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
         .eq("type", "professional")
         .eq("active", true)
         .order("sort_order");
-      setCategorieen((data ?? []) as Categorie[]);
+      setCategorieen((data ?? []) as Category[]);
     }
     loadCategorieen();
   }, []);
@@ -154,7 +154,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       showToast(error.message, "error");
       return;
     }
-    await refreshProfiel();
+    await refreshProfile();
     setStep(2);
   }
 

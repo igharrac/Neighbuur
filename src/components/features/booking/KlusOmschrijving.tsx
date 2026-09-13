@@ -4,13 +4,13 @@
 import { useRef } from "react";
 import { Camera, X, Spinner } from "@phosphor-icons/react";
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 const MAX_FOTOS = 5;
 const MAX_TEKST = 500;
 
 interface KlusOmschrijvingProps {
-  categorieen: Categorie[];
+  categorieen: Category[];
   categorieId: string;
   onCategorieChange: (id: string) => void;
   omschrijving: string;

@@ -1,4 +1,4 @@
-import type { ContentBlokType } from "@/types";
+import type { ContentBlockType } from "@/types";
 import type { Lang } from "@/lib/i18n";
 import { TekstBlok } from "./TekstBlok";
 import { AfbeeldingBlok } from "./AfbeeldingBlok";
@@ -9,7 +9,7 @@ import { AankondigingBlok } from "./AankondigingBlok";
 import { VakmanSpotlight } from "./VakmanSpotlight";
 
 interface ContentBlockProps {
-  type: ContentBlokType;
+  type: ContentBlockType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>;
   community_id: string;

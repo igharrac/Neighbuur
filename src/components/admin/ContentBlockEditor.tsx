@@ -6,10 +6,10 @@ import { createClient } from "@/lib/supabase";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { Input, Textarea } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import type { ContentBlokType } from "@/types";
+import type { ContentBlockType } from "@/types";
 
 interface ContentBlockEditorProps {
-  type: ContentBlokType;
+  type: ContentBlockType;
   communityId: string;
   storagePathId: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

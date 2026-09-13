@@ -6,10 +6,10 @@ import { createClient } from "@/lib/supabase";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { ContentBlockEditor } from "@/components/admin/ContentBlockEditor";
-import type { CommunityContentBlok, ContentBlokType } from "@/types";
+import type { CommunityContentBlock, ContentBlockType } from "@/types";
 import type { Json } from "@/types/database.types";
 
-const TYPE_LABELS: Record<ContentBlokType, string> = {
+const TYPE_LABELS: Record<ContentBlockType, string> = {
   hero_banner: "Hero banner",
   text: "Tekst",
   image: "Afbeelding",
@@ -20,9 +20,9 @@ const TYPE_LABELS: Record<ContentBlokType, string> = {
   professional_spotlight: "Vakman spotlight",
 };
 
-const ALL_TYPES = Object.keys(TYPE_LABELS) as ContentBlokType[];
+const ALL_TYPES = Object.keys(TYPE_LABELS) as ContentBlockType[];
 
-function blockPreview(blok: CommunityContentBlok): string {
+function blockPreview(blok: CommunityContentBlock): string {
   if (blok.data.titel) return String(blok.data.titel);
   if (blok.data.bijschrift) return String(blok.data.bijschrift);
   if (blok.type === "professional_spotlight") return blok.data.vakman_id ? "Vakman geselecteerd" : "Geen vakman gekozen";
@@ -36,17 +36,17 @@ export function CommunityEditorClient({
 }: {
   communityId: string;
   communityNaam: string;
-  initialBlocks: CommunityContentBlok[];
+  initialBlocks: CommunityContentBlock[];
 }) {
   const { showToast } = useToast();
   const [blocks, setBlocks] = useState(
     [...initialBlocks].sort((a, b) => a.position - b.position)
   );
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [addingType, setAddingType] = useState<ContentBlokType | "">("");
+  const [addingType, setAddingType] = useState<ContentBlockType | "">("");
   const [saving, setSaving] = useState(false);
 
-  async function handleSaveNew(type: ContentBlokType, data: Record<string, unknown>) {
+  async function handleSaveNew(type: ContentBlockType, data: Record<string, unknown>) {
     setSaving(true);
     const supabase = createClient();
     const positie = blocks.length > 0 ? Math.max(...blocks.map((b) => b.position)) + 1 : 0;
@@ -61,7 +61,7 @@ export function CommunityEditorClient({
       showToast(error.message, "error");
       return;
     }
-    setBlocks((prev) => [...prev, inserted as CommunityContentBlok]);
+    setBlocks((prev) => [...prev, inserted as CommunityContentBlock]);
     setAddingType("");
     showToast("Blok toegevoegd", "success");
   }

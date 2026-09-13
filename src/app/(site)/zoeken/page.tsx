@@ -1,7 +1,7 @@
 import { createServerSupabase } from "@/lib/supabase-server";
 import { getCategorieen } from "@/lib/categorieen";
 import { SearchPage } from "@/components/features/search/SearchPage";
-import type { VakmanOverzicht } from "@/types";
+import type { ProfessionalOverview } from "@/types";
 
 interface ZoekenSearchParams {
   categorie?: string;
@@ -43,7 +43,7 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
     review_count: Number(v.review_count ?? 0),
     avg_score: Number(v.avg_score ?? 0),
     completed_jobs: Number(v.completed_jobs ?? 0),
-  })) as unknown as VakmanOverzicht[];
+  })) as unknown as ProfessionalOverview[];
 
   if (searchParams.beschikbaar === "1" && vakmen.length > 0) {
     const vandaag = new Date();

@@ -10,11 +10,11 @@ import { Button } from "@/components/ui/Button";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { WerkFotoGrid } from "@/components/features/vakman/WerkFotoGrid";
 import { BeschikbaarheidEditor } from "@/components/features/vakman/BeschikbaarheidEditor";
-import type { Categorie, VakmanProfiel } from "@/types";
+import type { Category, ProfessionalProfile } from "@/types";
 
 const STRAAL_OPTIES = [5, 10, 15, 25];
 
-const CONTACT_VOORKEUR_LABELS: Record<VakmanProfiel["contact_preference"], string> = {
+const CONTACT_VOORKEUR_LABELS: Record<ProfessionalProfile["contact_preference"], string> = {
   phone: "Telefoon",
   whatsapp: "WhatsApp",
   app: "Via de app",
@@ -27,7 +27,7 @@ interface WerkFoto {
 }
 
 interface ProfielFormProps {
-  vakman: VakmanProfiel;
+  vakman: ProfessionalProfile;
   werkFotos: WerkFoto[];
   beschikbaarheid: Record<string, "available" | "booked">;
 }
@@ -35,7 +35,7 @@ interface ProfielFormProps {
 export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid }: ProfielFormProps) {
   const { showToast } = useToast();
   const [vakman, setVakman] = useState(initialVakman);
-  const [categorieen, setCategorieen] = useState<Categorie[]>([]);
+  const [categorieen, setCategorieen] = useState<Category[]>([]);
   const [savingBasis, setSavingBasis] = useState(false);
   const [savingVerrijking, setSavingVerrijking] = useState(false);
 
@@ -59,7 +59,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     async function load() {
       const supabase = createClient();
       const { data } = await supabase.from("categories").select("*").eq("type", "professional").eq("active", true).order("sort_order");
-      setCategorieen((data ?? []) as Categorie[]);
+      setCategorieen((data ?? []) as Category[]);
     }
     load();
   }, []);

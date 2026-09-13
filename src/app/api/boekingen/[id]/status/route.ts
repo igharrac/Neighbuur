@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { notifyUser } from "@/lib/notify";
-import type { BoekingStatus } from "@/types";
+import type { BookingStatus } from "@/types";
 
-const GELDIGE_STATUSSEN: BoekingStatus[] = ["confirmed", "cancelled", "completed"];
+const GELDIGE_STATUSSEN: BookingStatus[] = ["confirmed", "cancelled", "completed"];
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const supabase = createServerSupabase();
@@ -14,7 +14,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   if (!user) return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
 
   const body = await request.json().catch(() => null);
-  const status = body?.status as BoekingStatus | undefined;
+  const status = body?.status as BookingStatus | undefined;
   if (!status || !GELDIGE_STATUSSEN.includes(status)) {
     return NextResponse.json({ error: "Ongeldige status" }, { status: 400 });
   }
@@ -59,7 +59,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const ontvangerIsVakman = status !== "confirmed" && isKlant;
 
   if (ontvangerId) {
-    const teksten: Record<Exclude<BoekingStatus, "requested">, { titel_nl: string; titel_en: string; inhoud_nl: string; inhoud_en: string }> = {
+    const teksten: Record<Exclude<BookingStatus, "requested">, { titel_nl: string; titel_en: string; inhoud_nl: string; inhoud_en: string }> = {
       confirmed: {
         titel_nl: "Boeking bevestigd",
         titel_en: "Booking confirmed",
@@ -82,7 +82,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       },
     };
 
-    const tekst = teksten[status as Exclude<BoekingStatus, "requested">];
+    const tekst = teksten[status as Exclude<BookingStatus, "requested">];
     const link = ontvangerIsVakman ? "/dashboard" : "/plan";
     const datumTekst = boeking.date
       ? new Date(boeking.date).toLocaleDateString("nl-NL", { day: "numeric", month: "long" })

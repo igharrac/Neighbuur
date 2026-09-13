@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { getCategorieen } from "@/lib/categorieen";
 import { VakmanProfielClient } from "@/components/features/vakman/VakmanProfielClient";
-import type { ReviewCompleet, VakmanProfiel } from "@/types";
+import type { ReviewComplete, ProfessionalProfile } from "@/types";
 
 export default async function VakmanPage({ params }: { params: { slug: string } }) {
   const supabase = createServerSupabase();
@@ -22,7 +22,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
     .order("upvote_score", { ascending: false })
     .order("created_at", { ascending: false });
 
-  const alleReviews = (reviews ?? []) as ReviewCompleet[];
+  const alleReviews = (reviews ?? []) as ReviewComplete[];
 
   const {
     data: { user },
@@ -68,7 +68,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
 
   return (
     <VakmanProfielClient
-      vakman={vakman as VakmanProfiel}
+      vakman={vakman as ProfessionalProfile}
       reviews={alleReviews}
       votedReviewIds={votedReviewIds}
       isOwner={isOwner}

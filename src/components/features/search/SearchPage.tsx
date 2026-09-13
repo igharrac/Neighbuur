@@ -5,11 +5,11 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { SearchFilters } from "./SearchFilters";
 import { VakmanCard } from "@/components/features/vakman/VakmanCard";
-import type { Categorie, VakmanOverzicht } from "@/types";
+import type { Category, ProfessionalOverview } from "@/types";
 
 interface SearchPageProps {
-  vakmen: VakmanOverzicht[];
-  categorieen: Categorie[];
+  vakmen: ProfessionalOverview[];
+  categorieen: Category[];
   categorieNaamPerSlug: Record<string, string>;
 }
 

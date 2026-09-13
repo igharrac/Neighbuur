@@ -9,7 +9,7 @@ import { useLang } from "@/lib/hooks/useLang";
 import { Avatar } from "@/components/ui/Avatar";
 
 export function UserMenu() {
-  const { profiel, signOut } = useAuth();
+  const { profile, signOut } = useAuth();
   const { dict } = useLang();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -36,7 +36,7 @@ export function UserMenu() {
     router.push("/");
   }
 
-  const naam = profiel?.name ?? "?";
+  const naam = profile?.name ?? "?";
 
   return (
     <div className="relative" ref={ref}>
@@ -45,7 +45,7 @@ export function UserMenu() {
         className="flex items-center gap-2 pr-1"
         aria-expanded={open}
       >
-        <Avatar naam={naam} src={profiel?.avatar_url} size="sm" />
+        <Avatar naam={naam} src={profile?.avatar_url} size="sm" />
         <span className="hidden lg:inline text-body-sm font-medium text-warmzwart max-w-[120px] truncate">
           {naam}
         </span>

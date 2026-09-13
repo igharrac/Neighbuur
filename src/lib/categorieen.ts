@@ -1,9 +1,9 @@
 import { createServerSupabase } from "@/lib/supabase-server";
 import { fallbackCategorieen } from "@/lib/categories-fallback";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 /** Haalt actieve categorieën op uit Supabase, met fallback naar seed-data. */
-export async function getCategorieen(): Promise<Categorie[]> {
+export async function getCategorieen(): Promise<Category[]> {
   try {
     const supabase = createServerSupabase();
     const { data, error } = await supabase
@@ -13,7 +13,7 @@ export async function getCategorieen(): Promise<Categorie[]> {
       .order("sort_order", { ascending: true });
 
     if (error || !data || data.length === 0) return fallbackCategorieen;
-    return data as Categorie[];
+    return data as Category[];
   } catch {
     return fallbackCategorieen;
   }

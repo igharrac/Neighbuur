@@ -3,7 +3,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { DashboardClient } from "@/components/features/vakman/DashboardClient";
 import { PullToRefresh } from "@/components/ui/PullToRefresh";
-import type { BoekingMetKlant, VakmanProfiel } from "@/types";
+import type { BookingWithCustomer, ProfessionalProfile } from "@/types";
 
 interface BoekingRow {
   id: string;
@@ -14,7 +14,7 @@ interface BoekingRow {
   description: string | null;
   foto_urls: string[];
   date: string | null;
-  status: BoekingMetKlant["status"];
+  status: BookingWithCustomer["status"];
   price_cents: number | null;
   customer_notes: string | null;
   professional_notes: string | null;
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
     .eq("professional_id", vakman.id)
     .order("created_at", { ascending: false });
 
-  const boekingen: BoekingMetKlant[] = ((boekingenData ?? []) as unknown as BoekingRow[]).map((b) => ({
+  const boekingen: BookingWithCustomer[] = ((boekingenData ?? []) as unknown as BoekingRow[]).map((b) => ({
     id: b.id,
     customer_id: b.customer_id,
     professional_id: b.professional_id,
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
   return (
     <PullToRefresh>
       <DashboardClient
-        vakman={vakman as VakmanProfiel}
+        vakman={vakman as ProfessionalProfile}
         werkFotoCount={werkFotoCount ?? 0}
         heeftBeschikbaarheid={(beschikbaarheidCount ?? 0) > 0}
         boekingen={boekingen}

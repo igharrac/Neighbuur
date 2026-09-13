@@ -1,11 +1,11 @@
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 /**
  * Fallback categorieën — identiek aan de seed-data in
  * supabase/migrations/0001_complete_schema.sql. Gebruikt zolang de
  * migratie nog niet op Supabase is uitgevoerd of de tabel leeg is.
  */
-export const fallbackCategorieen: Categorie[] = [
+export const fallbackCategorieen: Category[] = [
   { id: "fallback-stucwerk", slug: "stucwerk", type: "professional", name_nl: "Stucwerk", name_en: "Plastering", description_nl: "Strakke wanden, mooie basis", description_en: "Smooth walls, perfect base", image_url: "/images/stucken.png", icon: "Wall", sort_order: 1, active: true },
   { id: "fallback-schilderen", slug: "schilderen", type: "professional", name_nl: "Schilderen", name_en: "Painting", description_nl: "Jouw kleur, jouw sfeer", description_en: "Your colour, your vibe", image_url: "/images/verfen.png", icon: "PaintBrush", sort_order: 2, active: true },
   { id: "fallback-vloeren", slug: "vloeren", type: "professional", name_nl: "Vloeren", name_en: "Flooring", description_nl: "Van laminaat tot visgraat", description_en: "From laminate to herringbone", image_url: "/images/vloeren.png", icon: "SquaresFour", sort_order: 3, active: true },

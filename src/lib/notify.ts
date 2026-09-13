@@ -1,11 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { NotificatieType } from "@/types";
+import type { NotificationType } from "@/types";
 import { sendPushToUser } from "@/lib/push";
 import { sendEmail, type EmailTemplate } from "@/lib/email";
 
 interface NotifyInput {
   userId: string;
-  type: NotificatieType;
+  type: NotificationType;
   titelNl: string;
   titelEn: string;
   inhoudNl?: string;

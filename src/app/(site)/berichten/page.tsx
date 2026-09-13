@@ -3,7 +3,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { resolveGesprekPartner } from "@/lib/chat";
 import { GesprekkenLijst } from "@/components/features/chat/GesprekkenLijst";
-import type { GesprekMetLaatsteBericht } from "@/types";
+import type { ConversationWithLastMessage } from "@/types";
 
 interface DeelnemerRow {
   user_id: string;
@@ -82,7 +82,7 @@ export default async function BerichtenPage() {
     return new Date(laatsteRaw?.created_at ?? g.created_at).getTime();
   };
 
-  const gesprekken: GesprekMetLaatsteBericht[] = await Promise.all(
+  const gesprekken: ConversationWithLastMessage[] = await Promise.all(
     ((gesprekkenData ?? []) as unknown as GesprekRow[])
       .sort((a, b) => tijdVoorSortering(b) - tijdVoorSortering(a))
       .map(async (g) => {

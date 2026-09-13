@@ -16,11 +16,11 @@ import { createAdminSupabase } from "@/lib/supabase-admin";
 import { resolveGesprekPartner } from "@/lib/chat";
 import { BookingStatusBadge } from "@/components/features/booking/BookingStatusBadge";
 import { CommunityDetectieKaart, type DetectieResultaat } from "@/components/features/community/CommunityDetectieKaart";
-import type { BoekingStatus } from "@/types";
+import type { BookingStatus } from "@/types";
 
 interface BoekingRij {
   id: string;
-  status: BoekingStatus;
+  status: BookingStatus;
   omschrijving: string | null;
   datum: string | null;
   created_at: string;
@@ -102,7 +102,7 @@ export default async function PlanPage() {
 
   const boekingen: BoekingRij[] = ((boekingenData ?? []) as unknown as {
     id: string;
-    status: BoekingStatus;
+    status: BookingStatus;
     description: string | null;
     date: string | null;
     created_at: string;

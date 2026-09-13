@@ -4,9 +4,9 @@
 import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
-export function DienstenGrid({ categorieen }: { categorieen: Categorie[] }) {
+export function DienstenGrid({ categorieen }: { categorieen: Category[] }) {
   const { lang } = useLang();
 
   return (

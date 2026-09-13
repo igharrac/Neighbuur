@@ -8,7 +8,7 @@ import { WijkActivatie } from "@/components/features/home/WijkActivatie";
 import { WhatsappCommunityCta } from "@/components/features/home/WhatsappCommunityCta";
 import { VakmanBanner } from "@/components/features/home/VakmanBanner";
 import { useLang } from "@/lib/hooks/useLang";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 import type { CommunityOverzicht } from "@/lib/communities";
 
 const DEMO_REVIEWS = [
@@ -51,7 +51,7 @@ const DEMO_REVIEWS = [
 ];
 
 interface HomePageClientProps {
-  categorieen: Categorie[];
+  categorieen: Category[];
   communities: CommunityOverzicht[];
 }
 

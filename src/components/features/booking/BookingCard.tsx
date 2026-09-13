@@ -6,19 +6,19 @@ import { CheckCircle, XCircle, ChatCircle, SealCheck } from "@phosphor-icons/rea
 import { Avatar } from "@/components/ui/Avatar";
 import { useToast } from "@/components/ui/Toast";
 import { BookingStatusBadge } from "./BookingStatusBadge";
-import type { BoekingMetKlant, BoekingStatus } from "@/types";
+import type { BookingWithCustomer, BookingStatus } from "@/types";
 
 interface BookingCardProps {
-  boeking: BoekingMetKlant;
+  boeking: BookingWithCustomer;
   gesprekId: string | null;
-  onStatusChange: (id: string, status: BoekingStatus) => void;
+  onStatusChange: (id: string, status: BookingStatus) => void;
 }
 
 export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardProps) {
   const { showToast } = useToast();
   const [busy, setBusy] = useState(false);
 
-  async function wijzigStatus(status: Extract<BoekingStatus, "confirmed" | "cancelled" | "completed">) {
+  async function wijzigStatus(status: Extract<BookingStatus, "confirmed" | "cancelled" | "completed">) {
     setBusy(true);
     const res = await fetch(`/api/boekingen/${boeking.id}/status`, {
       method: "POST",

@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { CheckCircle, Circle } from "@phosphor-icons/react";
-import type { VakmanProfiel } from "@/types";
+import type { ProfessionalProfile } from "@/types";
 
 interface ProfielSterkteProps {
-  vakman: VakmanProfiel;
+  vakman: ProfessionalProfile;
   werkFotoCount: number;
   heeftBeschikbaarheid: boolean;
 }

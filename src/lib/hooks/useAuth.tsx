@@ -3,27 +3,27 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase";
-import type { Profiel } from "@/types";
+import type { Profile } from "@/types";
 
 interface AuthContextValue {
   user: User | null;
-  profiel: Profiel | null;
+  profile: Profile | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  refreshProfiel: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profiel, setProfiel] = useState<Profiel | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  async function loadProfiel(userId: string) {
+  async function loadProfile(userId: string) {
     const supabase = createClient();
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
-    setProfiel(data as Profiel | null);
+    setProfile(data as Profile | null);
   }
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (session?.user) loadProfiel(session.user.id);
+      if (session?.user) loadProfile(session.user.id);
       setLoading(false);
     });
 
@@ -40,9 +40,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        loadProfiel(session.user.id);
+        loadProfile(session.user.id);
       } else {
-        setProfiel(null);
+        setProfile(null);
       }
     });
 
@@ -53,15 +53,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const supabase = createClient();
     await supabase.auth.signOut();
     setUser(null);
-    setProfiel(null);
+    setProfile(null);
   }
 
-  async function refreshProfiel() {
-    if (user) await loadProfiel(user.id);
+  async function refreshProfile() {
+    if (user) await loadProfile(user.id);
   }
 
   return (
-    <AuthContext.Provider value={{ user, profiel, loading, signOut, refreshProfiel }}>
+    <AuthContext.Provider value={{ user, profile, loading, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

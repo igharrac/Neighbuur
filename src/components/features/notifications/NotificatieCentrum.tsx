@@ -6,16 +6,16 @@ import { Bell } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useLang } from "@/lib/hooks/useLang";
 import { NotificatieItem } from "@/components/features/notifications/NotificatieItem";
-import type { Notificatie } from "@/types";
+import type { Notification } from "@/types";
 
-export function NotificatieCentrum({ initialNotificaties }: { initialNotificaties: Notificatie[] }) {
+export function NotificatieCentrum({ initialNotificaties }: { initialNotificaties: Notification[] }) {
   const { dict } = useLang();
   const router = useRouter();
   const [notificaties, setNotificaties] = useState(initialNotificaties);
 
   const ongelezenAantal = notificaties.filter((n) => !n.read).length;
 
-  async function handleClick(notificatie: Notificatie) {
+  async function handleClick(notificatie: Notification) {
     if (!notificatie.read) {
       setNotificaties((prev) => prev.map((n) => (n.id === notificatie.id ? { ...n, read: true } : n)));
       const supabase = createClient();

@@ -2,10 +2,10 @@
 import Link from "next/link";
 import { Star, CheckCircle, SealCheck, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { PremiumBadge } from "@/components/features/premium/PremiumBadge";
-import type { VakmanOverzicht } from "@/types";
+import type { ProfessionalOverview } from "@/types";
 
 interface VakmanCardProps {
-  vakman: VakmanOverzicht;
+  vakman: ProfessionalOverview;
   categorieNamen: string[];
 }
 

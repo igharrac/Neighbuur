@@ -8,13 +8,13 @@ import { useToast } from "@/components/ui/Toast";
 import { Avatar } from "@/components/ui/Avatar";
 import { ChatBubble } from "./ChatBubble";
 import { ChatInput } from "./ChatInput";
-import type { Bericht } from "@/types";
+import type { Message } from "@/types";
 
 interface GesprekDetailProps {
   gesprekId: string;
   currentUserId: string;
   andereDeelnemer: { naam: string; avatar_url: string | null } | null;
-  initialBerichten: Bericht[];
+  initialBerichten: Message[];
 }
 
 function datumLabel(iso: string): string {
@@ -52,7 +52,7 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
           "postgres_changes",
           { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${gesprekId}` },
           (payload) => {
-            const nieuw = payload.new as Bericht;
+            const nieuw = payload.new as Message;
             setBerichten((prev) => (prev.some((b) => b.id === nieuw.id) ? prev : [...prev, nieuw]));
           }
         )
@@ -104,7 +104,7 @@ export function GesprekDetail({ gesprekId, currentUserId, andereDeelnemer, initi
       return false;
     }
 
-    setBerichten((prev) => (prev.some((b) => b.id === data.id) ? prev : [...prev, data as Bericht]));
+    setBerichten((prev) => (prev.some((b) => b.id === data.id) ? prev : [...prev, data as Message]));
     return true;
   }
 

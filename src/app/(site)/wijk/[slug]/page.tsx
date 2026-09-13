@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { CommunityCard } from "@/components/features/community/CommunityCard";
 import { formatDate } from "@/lib/utils";
-import type { Wijk } from "@/types";
+import type { District } from "@/types";
 
 interface CommunityOverzichtRow {
   id: string;
@@ -19,7 +19,7 @@ export default async function WijkPage({ params }: { params: { slug: string } })
 
   const { data: wijk } = await supabase.from("districts").select("*").eq("slug", params.slug).maybeSingle();
   if (!wijk) notFound();
-  const w = wijk as Wijk;
+  const w = wijk as District;
 
   const { data: communities } = await supabase
     .from("community_overzicht")

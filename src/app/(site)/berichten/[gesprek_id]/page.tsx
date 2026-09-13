@@ -3,7 +3,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { resolveGesprekPartner } from "@/lib/chat";
 import { GesprekDetail } from "@/components/features/chat/GesprekDetail";
-import type { Bericht } from "@/types";
+import type { Message } from "@/types";
 
 export default async function GesprekPage({ params }: { params: { gesprek_id: string } }) {
   const supabase = createServerSupabase();
@@ -43,7 +43,7 @@ export default async function GesprekPage({ params }: { params: { gesprek_id: st
       gesprekId={params.gesprek_id}
       currentUserId={user.id}
       andereDeelnemer={andereDeelnemer}
-      initialBerichten={(berichten ?? []) as Bericht[]}
+      initialBerichten={(berichten ?? []) as Message[]}
     />
   );
 }

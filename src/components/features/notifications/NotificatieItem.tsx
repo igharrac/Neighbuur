@@ -10,9 +10,9 @@ import {
 } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 import { timeAgo } from "@/lib/utils";
-import type { Notificatie } from "@/types";
+import type { Notification } from "@/types";
 
-const ICONS: Record<Notificatie["type"], React.ComponentType<IconProps>> = {
+const ICONS: Record<Notification["type"], React.ComponentType<IconProps>> = {
   review: Star,
   booking: Briefcase,
   message: ChatCircle,
@@ -22,7 +22,7 @@ const ICONS: Record<Notificatie["type"], React.ComponentType<IconProps>> = {
   premium: Crown,
 };
 
-const KLEUREN: Record<Notificatie["type"], string> = {
+const KLEUREN: Record<Notification["type"], string> = {
   review: "bg-oker-light text-oker",
   booking: "bg-blauw-light text-blauw",
   message: "bg-groen-light text-groen",
@@ -33,8 +33,8 @@ const KLEUREN: Record<Notificatie["type"], string> = {
 };
 
 interface NotificatieItemProps {
-  notificatie: Notificatie;
-  onClick: (notificatie: Notificatie) => void;
+  notificatie: Notification;
+  onClick: (notificatie: Notification) => void;
 }
 
 export function NotificatieItem({ notificatie, onClick }: NotificatieItemProps) {

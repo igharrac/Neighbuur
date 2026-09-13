@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { slugify } from "@/lib/utils";
-import type { Categorie, CategorieType } from "@/types";
+import type { Category, CategoryType } from "@/types";
 
-type FormState = Partial<Categorie>;
+type FormState = Partial<Category>;
 
 const emptyForm: FormState = {
   name_nl: "",
@@ -25,7 +25,7 @@ const emptyForm: FormState = {
   active: true,
 };
 
-export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Categorie[] }) {
+export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Category[] }) {
   const { showToast } = useToast();
   const [categorieen, setCategorieen] = useState(
     [...initialCategorieen].sort((a, b) => a.sort_order - b.sort_order)
@@ -35,7 +35,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
   const [slugTouched, setSlugTouched] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  function startEdit(cat: Categorie) {
+  function startEdit(cat: Category) {
     setForm(cat);
     setSlugTouched(true);
     setEditingId(cat.id);
@@ -74,7 +74,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       description_nl: form.description_nl || null,
       description_en: form.description_en || null,
       slug: form.slug,
-      type: form.type as CategorieType,
+      type: form.type as CategoryType,
       icon: form.icon || null,
       image_url: form.image_url || null,
       active: form.active ?? true,
@@ -93,7 +93,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
         showToast(error.message, "error");
         return;
       }
-      setCategorieen((prev) => [...prev, data as Categorie]);
+      setCategorieen((prev) => [...prev, data as Category]);
       showToast("Categorie toegevoegd", "success");
     } else if (editingId) {
       const { error } = await supabase.from("categories").update(payload).eq("id", editingId);
@@ -112,7 +112,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
     cancelEdit();
   }
 
-  async function handleDelete(cat: Categorie) {
+  async function handleDelete(cat: Category) {
     const supabase = createClient();
     const { data: gekoppeld } = await supabase
       .from("professional_profiles")
@@ -136,7 +136,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
     showToast("Categorie verwijderd", "success");
   }
 
-  async function toggleActief(cat: Categorie) {
+  async function toggleActief(cat: Category) {
     const supabase = createClient();
     const { error } = await supabase
       .from("categories")
@@ -242,7 +242,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
                 <label className="text-body-sm font-semibold block mb-1.5">Type</label>
                 <select
                   value={form.type ?? "professional"}
-                  onChange={(e) => setField("type", e.target.value as CategorieType)}
+                  onChange={(e) => setField("type", e.target.value as CategoryType)}
                   className="input"
                 >
                   <option value="professional">Vakman</option>

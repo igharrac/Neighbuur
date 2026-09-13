@@ -3,7 +3,7 @@ import { SealCheck } from "@phosphor-icons/react/dist/ssr";
 import { Avatar } from "@/components/ui/Avatar";
 import { UpvoteButton } from "./UpvoteButton";
 import { ReplyForm } from "./ReplyForm";
-import type { ReviewCompleet } from "@/types";
+import type { ReviewComplete } from "@/types";
 
 const SCORE_LABELS: Record<string, string> = {
   kwaliteit: "kwaliteit",
@@ -24,7 +24,7 @@ function relatief(datum: string): string {
 }
 
 interface ReviewCardProps {
-  review: ReviewCompleet;
+  review: ReviewComplete;
   vakmanId: string;
   bedrijfsnaam: string;
   isVakmanOwner: boolean;

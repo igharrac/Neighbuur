@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { Check, Checks } from "@phosphor-icons/react";
-import type { Bericht } from "@/types";
+import type { Message } from "@/types";
 
 interface ChatBubbleProps {
-  bericht: Bericht;
+  bericht: Message;
   eigen: boolean;
   fotoUrl?: string;
 }

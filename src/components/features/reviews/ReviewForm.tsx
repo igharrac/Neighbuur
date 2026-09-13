@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useToast } from "@/components/ui/Toast";
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
 import { createClient } from "@/lib/supabase";
-import type { ReviewCompleet, ReviewScores } from "@/types";
+import type { ReviewComplete, ReviewScores } from "@/types";
 
 const SCORE_LABELS: { key: keyof ReviewScores; label: string }[] = [
   { key: "kwaliteit", label: "Kwaliteit" },
@@ -50,7 +50,7 @@ interface ReviewFormProps {
   bedrijfsnaam: string;
   communityId?: string | null;
   boekingId?: string | null;
-  onSuccess: (review: ReviewCompleet) => void;
+  onSuccess: (review: ReviewComplete) => void;
 }
 
 export function ReviewForm({
@@ -62,7 +62,7 @@ export function ReviewForm({
   boekingId = null,
   onSuccess,
 }: ReviewFormProps) {
-  const { user, profiel } = useAuth();
+  const { user, profile } = useAuth();
   const { showToast } = useToast();
   const { upload, uploading } = useImageUpload({
     bucket: "review-fotos",
@@ -115,11 +115,11 @@ export function ReviewForm({
       return;
     }
 
-    // review_compleet (de view die ReviewCompleet typeert) heeft een paar
+    // review_compleet (de view die ReviewComplete typeert) heeft een paar
     // afgeleide/joined velden (author_name, community_name, reply_*) die
     // niet op de reviews-tabel zelf bestaan — die vullen we hier lokaal in
     // i.p.v. opnieuw op te halen.
-    const nieuweReview: ReviewCompleet = {
+    const nieuweReview: ReviewComplete = {
       id: data.id,
       author_id: data.author_id,
       professional_id: data.professional_id,
@@ -131,8 +131,8 @@ export function ReviewForm({
       upvote_score: data.upvote_score ?? 0,
       created_at: data.created_at ?? new Date().toISOString(),
       updated_at: data.updated_at ?? new Date().toISOString(),
-      author_name: profiel?.name ?? "Jij",
-      author_avatar: profiel?.avatar_url ?? null,
+      author_name: profile?.name ?? "Jij",
+      author_avatar: profile?.avatar_url ?? null,
       community_name: null,
       reply_text: null,
       reply_date: null,

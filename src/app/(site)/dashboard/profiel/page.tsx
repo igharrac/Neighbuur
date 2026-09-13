@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { ProfielForm } from "@/components/features/vakman/ProfielForm";
-import type { VakmanProfiel } from "@/types";
+import type { ProfessionalProfile } from "@/types";
 
 export default async function DashboardProfielPage() {
   const supabase = createServerSupabase();
@@ -37,7 +37,7 @@ export default async function DashboardProfielPage() {
 
   return (
     <ProfielForm
-      vakman={vakman as VakmanProfiel}
+      vakman={vakman as ProfessionalProfile}
       werkFotos={werkFotos ?? []}
       beschikbaarheid={beschikbaarheid}
     />

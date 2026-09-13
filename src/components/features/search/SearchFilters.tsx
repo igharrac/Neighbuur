@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import type { Categorie } from "@/types";
+import type { Category } from "@/types";
 
 const AFSTAND_OPTIES = [5, 10, 15, 25, 50];
 const RATING_OPTIES = [
@@ -10,7 +10,7 @@ const RATING_OPTIES = [
   { value: "5", label: "Alleen 5.0" },
 ];
 
-export function SearchFilters({ categorieen }: { categorieen: Categorie[] }) {
+export function SearchFilters({ categorieen }: { categorieen: Category[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { CommunityEditorClient } from "@/components/admin/CommunityEditorClient";
-import type { CommunityContentBlok } from "@/types";
+import type { CommunityContentBlock } from "@/types";
 
 export default async function AdminCommunityPage({ params }: { params: { slug: string } }) {
   const supabase = createServerSupabase();
@@ -44,7 +44,7 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
     <CommunityEditorClient
       communityId={community.id}
       communityNaam={community.name}
-      initialBlocks={(blokken ?? []) as CommunityContentBlok[]}
+      initialBlocks={(blokken ?? []) as CommunityContentBlock[]}
     />
   );
 }

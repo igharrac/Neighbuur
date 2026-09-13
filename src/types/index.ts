@@ -1,7 +1,7 @@
 export type UserRole = "resident" | "professional" | "community_admin" | "admin";
-export type CategorieType = "professional" | "compare";
+export type CategoryType = "professional" | "compare";
 
-export type ContentBlokType =
+export type ContentBlockType =
   | "hero_banner"
   | "text"
   | "image"
@@ -11,16 +11,16 @@ export type ContentBlokType =
   | "announcement"
   | "professional_spotlight";
 
-export interface CommunityContentBlok {
+export interface CommunityContentBlock {
   id: string;
   community_id: string;
-  type: ContentBlokType;
+  type: ContentBlockType;
   position: number;
   data: Record<string, unknown>;
   active: boolean;
 }
 
-export interface Profiel {
+export interface Profile {
   id: string;
   name: string;
   email: string | null;
@@ -32,10 +32,10 @@ export interface Profiel {
   updated_at: string;
 }
 
-export interface Categorie {
+export interface Category {
   id: string;
   slug: string;
-  type: CategorieType;
+  type: CategoryType;
   name_nl: string;
   name_en: string;
   description_nl: string | null;
@@ -46,7 +46,7 @@ export interface Categorie {
   active: boolean;
 }
 
-export interface Wijk {
+export interface District {
   id: string;
   name: string;
   city: string;
@@ -78,7 +78,7 @@ export type ReviewScores = {
 
 // Kolomnamen hier volgen de review_compleet-view (herbouwd in migratie
 // 0031 met expliciete Engelse kolommen i.p.v. de bevroren r.*-wildcard).
-export interface ReviewCompleet {
+export interface ReviewComplete {
   id: string;
   author_id: string;
   professional_id: string;
@@ -99,7 +99,7 @@ export interface ReviewCompleet {
   verified: boolean;
 }
 
-export interface VakmanProfiel {
+export interface ProfessionalProfile {
   id: string;
   user_id: string;
   company_name: string;
@@ -126,7 +126,7 @@ export interface VakmanProfiel {
   requests_limit: number;
 }
 
-export interface Bericht {
+export interface Message {
   id: string;
   conversation_id: string;
   sender_id: string;
@@ -136,12 +136,12 @@ export interface Bericht {
   created_at: string;
 }
 
-export type NotificatieType = "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
+export type NotificationType = "review" | "booking" | "message" | "invitation" | "group_discount" | "system" | "premium";
 
-export interface Notificatie {
+export interface Notification {
   id: string;
   user_id: string;
-  type: NotificatieType;
+  type: NotificationType;
   title_nl: string;
   title_en: string;
   content_nl: string | null;
@@ -151,16 +151,16 @@ export interface Notificatie {
   created_at: string;
 }
 
-export interface GesprekMetLaatsteBericht {
+export interface ConversationWithLastMessage {
   id: string;
   andereDeelnemer: { user_id: string; naam: string; avatar_url: string | null } | null;
   laatsteBericht: { tekst: string; foto_url: string | null; created_at: string; van_id: string } | null;
   ongelezenAantal: number;
 }
 
-export type BoekingStatus = "requested" | "confirmed" | "completed" | "cancelled";
+export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled";
 
-export interface Boeking {
+export interface Booking {
   id: string;
   customer_id: string;
   professional_id: string;
@@ -169,7 +169,7 @@ export interface Boeking {
   description: string | null;
   foto_urls: string[];
   date: string | null;
-  status: BoekingStatus;
+  status: BookingStatus;
   price_cents: number | null;
   customer_notes: string | null;
   professional_notes: string | null;
@@ -177,7 +177,7 @@ export interface Boeking {
   updated_at: string;
 }
 
-export interface BoekingMetKlant extends Boeking {
+export interface BookingWithCustomer extends Booking {
   klant_naam: string;
   klant_avatar: string | null;
   community_naam: string | null;
@@ -187,7 +187,7 @@ export interface BoekingMetKlant extends Boeking {
 // vakman_overzicht is herbouwd in migratie 0033 met expliciete Engelse
 // kolommen i.p.v. de bevroren vp.*-wildcard, en volgt nu 1-op-1 de
 // kolomnamen van professional_profiles — vandaar de extend.
-export interface VakmanOverzicht extends VakmanProfiel {
+export interface ProfessionalOverview extends ProfessionalProfile {
   owner_name: string;
   owner_avatar: string | null;
   completed_jobs: number;
