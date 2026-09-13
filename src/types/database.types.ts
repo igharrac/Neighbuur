@@ -754,6 +754,51 @@ export interface Database {
           { foreignKeyName: "community_members_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
+      platform_stats_daily: {
+        Row: {
+          id: string;
+          snapshot_date: string;
+          resident_count: number;
+          professional_count: number;
+          verified_professional_count: number;
+          active_community_count: number;
+          dormant_community_count: number;
+          avg_members_per_community: number;
+          bookings_total: number;
+          bookings_completed: number;
+          revenue_total_cents: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          snapshot_date: string;
+          resident_count?: number;
+          professional_count?: number;
+          verified_professional_count?: number;
+          active_community_count?: number;
+          dormant_community_count?: number;
+          avg_members_per_community?: number;
+          bookings_total?: number;
+          bookings_completed?: number;
+          revenue_total_cents?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          snapshot_date?: string;
+          resident_count?: number;
+          professional_count?: number;
+          verified_professional_count?: number;
+          active_community_count?: number;
+          dormant_community_count?: number;
+          avg_members_per_community?: number;
+          bookings_total?: number;
+          bookings_completed?: number;
+          revenue_total_cents?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       categories: {
         Row: {
           id: string;

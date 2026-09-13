@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/communities-status",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/platform-stats",
+      "schedule": "0 3 * * *"
     }
   ]
 }

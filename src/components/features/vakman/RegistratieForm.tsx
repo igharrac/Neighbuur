@@ -112,7 +112,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/magic?next=${encodeURIComponent(registreerNext)}`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(registreerNext)}`,
       },
     });
 
