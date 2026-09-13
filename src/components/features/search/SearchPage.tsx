@@ -57,7 +57,7 @@ export function SearchPage({ vakmen, categorieen, categorieNaamPerSlug }: Search
             <VakmanCard
               key={v.id}
               vakman={v}
-              categorieNamen={(v.categorie_slugs ?? [])
+              categorieNamen={(v.category_slugs ?? [])
                 .map((slug) => categorieNaamPerSlug[slug])
                 .filter((naam): naam is string => Boolean(naam))}
             />

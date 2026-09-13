@@ -10,7 +10,7 @@ interface VakmanCardProps {
 }
 
 export function VakmanCard({ vakman, categorieNamen }: VakmanCardProps) {
-  const initiaal = vakman.bedrijfsnaam.charAt(0).toUpperCase();
+  const initiaal = vakman.company_name.charAt(0).toUpperCase();
 
   return (
     <Link
@@ -27,27 +27,27 @@ export function VakmanCard({ vakman, categorieNamen }: VakmanCardProps) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-display font-bold text-body-lg text-warmzwart truncate min-w-0">{vakman.bedrijfsnaam}</h3>
-          {vakman.aantal_reviews > 0 && (
+          <h3 className="font-display font-bold text-body-lg text-warmzwart truncate min-w-0">{vakman.company_name}</h3>
+          {vakman.review_count > 0 && (
             <span className="flex items-center gap-1 text-body-sm font-semibold text-warmzwart shrink-0">
               <Star size={14} weight="fill" className="text-oker" />
-              {vakman.gem_score.toFixed(1)}
+              {vakman.avg_score.toFixed(1)}
             </span>
           )}
         </div>
         <p className="text-body-sm text-warmgrijs truncate">
           {categorieNamen.length > 0 && `${categorieNamen.join(", ")} · `}
-          {vakman.werkgebied_postcode && `${vakman.werkgebied_postcode} · `}
-          {vakman.aantal_reviews} {vakman.aantal_reviews === 1 ? "review" : "reviews"}
+          {vakman.service_area_postcode && `${vakman.service_area_postcode} · `}
+          {vakman.review_count} {vakman.review_count === 1 ? "review" : "reviews"}
         </p>
         <div className="flex flex-wrap gap-1.5 mt-1.5">
           {vakman.is_premium && <PremiumBadge />}
-          {vakman.geverifieerd && (
+          {vakman.verified && (
             <span className="badge badge-groen !text-[10px] !py-0.5 !px-2">
               <CheckCircle size={10} weight="fill" /> Geverifieerd
             </span>
           )}
-          {vakman.profiel_sterkte >= 80 && (
+          {vakman.profile_strength >= 80 && (
             <span className="badge badge-blauw !text-[10px] !py-0.5 !px-2">
               <SealCheck size={10} weight="fill" /> Profiel compleet
             </span>

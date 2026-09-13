@@ -20,29 +20,29 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   let query = supabase.from("vakman_overzicht").select("*");
 
   if (searchParams.categorie) {
-    query = query.contains("categorie_slugs", [searchParams.categorie]);
+    query = query.contains("category_slugs", [searchParams.categorie]);
   }
   if (searchParams.afstand) {
-    query = query.gte("werkgebied_km", Number(searchParams.afstand));
+    query = query.gte("service_area_km", Number(searchParams.afstand));
   }
   if (searchParams.rating) {
-    query = query.gte("gem_score", Number(searchParams.rating));
+    query = query.gte("avg_score", Number(searchParams.rating));
   }
   if (searchParams.geverifieerd === "1") {
-    query = query.eq("geverifieerd", true);
+    query = query.eq("verified", true);
   }
   if (searchParams.q) {
-    query = query.ilike("bedrijfsnaam", `%${searchParams.q}%`);
+    query = query.ilike("company_name", `%${searchParams.q}%`);
   }
 
-  query = query.order("is_premium", { ascending: false }).order("gem_score", { ascending: false });
+  query = query.order("is_premium", { ascending: false }).order("avg_score", { ascending: false });
 
   const { data } = await query;
   let vakmen = (data ?? []).map((v) => ({
     ...v,
     review_count: Number(v.review_count ?? 0),
-    score_kwaliteit: Number(v.score_kwaliteit ?? 0),
-    afgeronde_klussen: Number(v.afgeronde_klussen ?? 0),
+    avg_score: Number(v.avg_score ?? 0),
+    completed_jobs: Number(v.completed_jobs ?? 0),
   })) as unknown as VakmanOverzicht[];
 
   if (searchParams.beschikbaar === "1" && vakmen.length > 0) {

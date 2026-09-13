@@ -184,40 +184,12 @@ export interface BoekingMetKlant extends Boeking {
   categorie_naam: string | null;
 }
 
-// vakman_overzicht gebruikt vp.* (wildcard) en bevriest daardoor haar eigen
-// kolomnamen bij aanmaak — die volgen een onderliggende kolomrename niet
-// automatisch (zelfde mechanisme als ReviewCompleet, zie migratie 0019/0022).
-// Daarom hier een losstaande, bewust-Nederlandse vorm i.p.v. een extend van
-// het (inmiddels Engelse) VakmanProfiel. Wordt in Fase 4 herzien.
-export interface VakmanOverzicht {
-  id: string;
-  user_id: string;
-  bedrijfsnaam: string;
-  slug: string;
-  kvk_nummer: string | null;
-  kvk_geverifieerd: boolean;
-  bio: string | null;
-  website: string | null;
-  logo_url: string | null;
-  specialismes: string[];
-  contact_voorkeur: "phone" | "whatsapp" | "app";
-  werkgebied_postcode: string | null;
-  werkgebied_km: number;
-  verzekerd: boolean;
-  verzekering_url: string | null;
-  registratie_bron: string | null;
-  geverifieerd: boolean;
-  profiel_sterkte: number;
-  gem_score: number;
-  aantal_reviews: number;
-  is_premium: boolean;
-  premium_tot: string | null;
-  aanvragen_deze_maand: number;
-  aanvragen_limiet: number;
-  eigenaar_naam: string;
-  eigenaar_avatar: string | null;
-  review_count: number;
-  score_kwaliteit: number;
-  afgeronde_klussen: number;
-  categorie_slugs: string[] | null;
+// vakman_overzicht is herbouwd in migratie 0033 met expliciete Engelse
+// kolommen i.p.v. de bevroren vp.*-wildcard, en volgt nu 1-op-1 de
+// kolomnamen van professional_profiles — vandaar de extend.
+export interface VakmanOverzicht extends VakmanProfiel {
+  owner_name: string;
+  owner_avatar: string | null;
+  completed_jobs: number;
+  category_slugs: string[] | null;
 }
