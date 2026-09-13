@@ -10,7 +10,7 @@ const RATING_OPTIES = [
   { value: "5", label: "Alleen 5.0" },
 ];
 
-export function SearchFilters({ categorieen }: { categorieen: Category[] }) {
+export function SearchFilters({ categories }: { categories: Category[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -26,21 +26,21 @@ export function SearchFilters({ categorieen }: { categorieen: Category[] }) {
     setParam(key, searchParams.get(key) === "1" ? null : "1");
   }
 
-  const categorie = searchParams.get("categorie") ?? "";
-  const afstand = searchParams.get("afstand") ?? "";
+  const category = searchParams.get("categorie") ?? "";
+  const distance = searchParams.get("afstand") ?? "";
   const rating = searchParams.get("rating") ?? "";
-  const beschikbaar = searchParams.get("beschikbaar") === "1";
-  const geverifieerd = searchParams.get("geverifieerd") === "1";
+  const available = searchParams.get("beschikbaar") === "1";
+  const verified = searchParams.get("geverifieerd") === "1";
 
   return (
     <div className="flex items-center gap-2 min-w-max">
       <select
         className="input !w-auto !py-2.5 !text-body-sm min-h-11"
-        value={categorie}
+        value={category}
         onChange={(e) => setParam("categorie", e.target.value || null)}
       >
         <option value="">Categorie</option>
-        {categorieen.map((c) => (
+        {categories.map((c) => (
           <option key={c.slug} value={c.slug}>
             {c.name_nl}
           </option>
@@ -49,7 +49,7 @@ export function SearchFilters({ categorieen }: { categorieen: Category[] }) {
 
       <select
         className="input !w-auto !py-2.5 !text-body-sm min-h-11"
-        value={afstand}
+        value={distance}
         onChange={(e) => setParam("afstand", e.target.value || null)}
       >
         <option value="">Afstand</option>
@@ -77,7 +77,7 @@ export function SearchFilters({ categorieen }: { categorieen: Category[] }) {
         type="button"
         onClick={() => toggleParam("beschikbaar")}
         className={`min-h-11 px-4 rounded-sm text-body-sm font-semibold border whitespace-nowrap transition-colors ${
-          beschikbaar ? "bg-groen text-white border-groen" : "bg-white text-warmgrijs border-lijn hover:border-warmgrijs-dark"
+          available ? "bg-groen text-white border-groen" : "bg-white text-warmgrijs border-lijn hover:border-warmgrijs-dark"
         }`}
       >
         Beschikbaar deze week
@@ -87,7 +87,7 @@ export function SearchFilters({ categorieen }: { categorieen: Category[] }) {
         type="button"
         onClick={() => toggleParam("geverifieerd")}
         className={`min-h-11 px-4 rounded-sm text-body-sm font-semibold border whitespace-nowrap transition-colors ${
-          geverifieerd ? "bg-groen text-white border-groen" : "bg-white text-warmgrijs border-lijn hover:border-warmgrijs-dark"
+          verified ? "bg-groen text-white border-groen" : "bg-white text-warmgrijs border-lijn hover:border-warmgrijs-dark"
         }`}
       >
         Geverifieerd

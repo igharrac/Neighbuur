@@ -13,7 +13,7 @@ import type { BookingWithCustomer, BookingStatus, ProfessionalProfile } from "@/
 const UPSELL_DISMISSED_KEY = "nt_premium_upsell_dismissed";
 
 interface DashboardClientProps {
-  vakman: ProfessionalProfile;
+  professional: ProfessionalProfile;
   werkFotoCount: number;
   heeftBeschikbaarheid: boolean;
   boekingen: BookingWithCustomer[];
@@ -21,13 +21,13 @@ interface DashboardClientProps {
 }
 
 export function DashboardClient({
-  vakman: initialVakman,
+  professional: initialProfessional,
   werkFotoCount,
   heeftBeschikbaarheid,
   boekingen: initialBoekingen,
   gesprekPerKlant,
 }: DashboardClientProps) {
-  const [vakman, setVakman] = useState(initialVakman);
+  const [professional, setProfessional] = useState(initialProfessional);
   const [boekingen, setBoekingen] = useState(initialBoekingen);
   const [upsellZichtbaar, setUpsellZichtbaar] = useState(false);
 
@@ -50,48 +50,48 @@ export function DashboardClient({
     setBoekingen((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
   }
 
-  const limietBereikt = !vakman.is_premium && vakman.requests_this_month >= vakman.requests_limit;
+  const limietBereikt = !professional.is_premium && professional.requests_this_month >= professional.requests_limit;
   const nieuweAanvragen = boekingen.filter((b) => b.status === "requested");
   const lopendeKlussen = boekingen.filter((b) => b.status === "confirmed");
   const afgeslotenKlussen = boekingen.filter((b) => b.status === "completed" || b.status === "cancelled");
 
   async function handleLogoUploaded(url: string) {
     const supabase = createClient();
-    await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", vakman.id);
+    await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", professional.id);
 
-    const { data: sterkte } = await supabase.rpc("calculate_profile_strength", { v_id: vakman.id });
-    const nieuweSterkte = sterkte ?? vakman.profile_strength;
-    await supabase.from("professional_profiles").update({ profile_strength: nieuweSterkte }).eq("id", vakman.id);
+    const { data: sterkte } = await supabase.rpc("calculate_profile_strength", { v_id: professional.id });
+    const nieuweSterkte = sterkte ?? professional.profile_strength;
+    await supabase.from("professional_profiles").update({ profile_strength: nieuweSterkte }).eq("id", professional.id);
 
-    setVakman((v) => ({ ...v, logo_url: url, profile_strength: nieuweSterkte }));
+    setProfessional((v) => ({ ...v, logo_url: url, profile_strength: nieuweSterkte }));
   }
 
   return (
     <div className="max-w-[720px] mx-auto px-6 py-8 flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-display-md text-warmzwart">Welkom, {vakman.company_name}</h1>
-        <p className="text-body text-warmgrijs mt-1">Je profiel is {vakman.profile_strength}% compleet</p>
+        <h1 className="font-display text-display-md text-warmzwart">Welkom, {professional.company_name}</h1>
+        <p className="text-body text-warmgrijs mt-1">Je profiel is {professional.profile_strength}% compleet</p>
       </div>
 
-      {!vakman.logo_url && (
-        <LogoPrompt vakmanId={vakman.id} bedrijfsnaam={vakman.company_name} onUploaded={handleLogoUploaded} />
+      {!professional.logo_url && (
+        <LogoPrompt vakmanId={professional.id} bedrijfsnaam={professional.company_name} onUploaded={handleLogoUploaded} />
       )}
 
-      <ProfielSterkte vakman={vakman} werkFotoCount={werkFotoCount} heeftBeschikbaarheid={heeftBeschikbaarheid} />
+      <ProfielSterkte professional={professional} werkFotoCount={werkFotoCount} heeftBeschikbaarheid={heeftBeschikbaarheid} />
 
       <div className="flex flex-wrap gap-3">
         <Link href="/dashboard/profiel" className="btn-primary">
           Bewerk profiel
           <ArrowRight size={16} weight="bold" />
         </Link>
-        <Link href={`/vakman/${vakman.slug}`} className="btn-secondary">
+        <Link href={`/vakman/${professional.slug}`} className="btn-secondary">
           Bekijk mijn pagina
           <ArrowRight size={16} weight="bold" />
         </Link>
       </div>
 
-      {!vakman.is_premium && limietBereikt && <PremiumUpsell variant="limiet" />}
-      {!vakman.is_premium && !limietBereikt && upsellZichtbaar && (
+      {!professional.is_premium && limietBereikt && <PremiumUpsell variant="limiet" />}
+      {!professional.is_premium && !limietBereikt && upsellZichtbaar && (
         <PremiumUpsell variant="dashboard" onDismiss={handleDismissUpsell} />
       )}
 

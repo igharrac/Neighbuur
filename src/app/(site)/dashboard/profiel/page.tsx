@@ -11,24 +11,24 @@ export default async function DashboardProfielPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: vakman } = await supabase
+  const { data: professional } = await supabase
     .from("professional_profiles")
     .select("*")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!vakman) redirect("/registreer/vakman");
+  if (!professional) redirect("/registreer/vakman");
 
   const { data: werkFotos } = await supabase
     .from("work_photos")
     .select("id, photo_url, caption")
-    .eq("professional_id", vakman.id)
+    .eq("professional_id", professional.id)
     .order("created_at", { ascending: true });
 
   const { data: beschikbaarheidRows } = await supabase
     .from("availability")
     .select("date, status")
-    .eq("professional_id", vakman.id);
+    .eq("professional_id", professional.id);
 
   const beschikbaarheid: Record<string, "available" | "booked"> = {};
   (beschikbaarheidRows ?? []).forEach((r) => {
@@ -37,7 +37,7 @@ export default async function DashboardProfielPage() {
 
   return (
     <ProfielForm
-      vakman={vakman as ProfessionalProfile}
+      professional={professional as ProfessionalProfile}
       werkFotos={werkFotos ?? []}
       beschikbaarheid={beschikbaarheid}
     />

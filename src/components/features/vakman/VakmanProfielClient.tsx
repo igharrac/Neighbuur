@@ -57,7 +57,7 @@ function buildDagen(aantal: number): Date[] {
 }
 
 interface VakmanProfielClientProps {
-  vakman: ProfessionalProfile;
+  professional: ProfessionalProfile;
   reviews: ReviewComplete[];
   votedReviewIds: string[];
   isOwner: boolean;
@@ -65,11 +65,11 @@ interface VakmanProfielClientProps {
   heeftAlGereviewed: boolean;
   communityId: string | null;
   beschikbaarheid: Record<string, "available" | "booked">;
-  categorieen: Category[];
+  categories: Category[];
 }
 
 export function VakmanProfielClient({
-  vakman,
+  professional,
   reviews,
   votedReviewIds,
   isOwner,
@@ -77,7 +77,7 @@ export function VakmanProfielClient({
   heeftAlGereviewed,
   communityId,
   beschikbaarheid,
-  categorieen,
+  categories,
 }: VakmanProfielClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -88,7 +88,7 @@ export function VakmanProfielClient({
   const [bookingFlowOpen, setBookingFlowOpen] = useState(false);
   const votedSet = new Set(votedReviewIds);
 
-  const initiaal = vakman.company_name.charAt(0).toUpperCase();
+  const initiaal = professional.company_name.charAt(0).toUpperCase();
   const dagen = buildDagen(14);
 
   // Vanuit het review-verzoek (24u na afronding) komt de gebruiker binnen
@@ -123,11 +123,11 @@ export function VakmanProfielClient({
     <div className="max-w-[900px] mx-auto px-6 py-8">
       {/* ── Hero card ── */}
       <div className="card p-8 flex flex-col md:flex-row gap-7 mb-7">
-        {vakman.logo_url ? (
+        {professional.logo_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={vakman.logo_url}
-            alt={vakman.company_name}
+            src={professional.logo_url}
+            alt={professional.company_name}
             className="w-[100px] h-[100px] rounded-xl object-cover flex-shrink-0"
           />
         ) : (
@@ -136,25 +136,25 @@ export function VakmanProfielClient({
           </div>
         )}
         <div className="flex-1">
-          <h1 className="font-display text-display-md mb-1">{vakman.company_name}</h1>
-          <p className="text-body text-warmgrijs mb-3">{vakman.bio || "Vakman op Neighbuur"}</p>
+          <h1 className="font-display text-display-md mb-1">{professional.company_name}</h1>
+          <p className="text-body text-warmgrijs mb-3">{professional.bio || "Vakman op Neighbuur"}</p>
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {vakman.is_premium && <PremiumBadge size="md" />}
-            {vakman.verified && (
+            {professional.is_premium && <PremiumBadge size="md" />}
+            {professional.verified && (
               <span className="badge badge-groen">
                 <CheckCircle size={12} weight="fill" /> Geverifieerd
               </span>
             )}
-            {vakman.service_area_postcode && (
+            {professional.service_area_postcode && (
               <span className="badge badge-blauw">
-                <MapPin size={12} weight="fill" /> {vakman.service_area_postcode} · {vakman.service_area_km} km
+                <MapPin size={12} weight="fill" /> {professional.service_area_postcode} · {professional.service_area_km} km
               </span>
             )}
           </div>
           <div className="flex gap-6 flex-wrap">
             {[
-              { val: vakman.avg_score > 0 ? vakman.avg_score.toFixed(1) : "—", label: "Score" },
-              { val: String(vakman.review_count), label: "Reviews" },
+              { val: professional.avg_score > 0 ? professional.avg_score.toFixed(1) : "—", label: "Score" },
+              { val: String(professional.review_count), label: "Reviews" },
             ].map((s) => (
               <div key={s.label} className="text-center">
                 <span className="font-display font-bold text-[22px] block">{s.val}</span>
@@ -168,7 +168,7 @@ export function VakmanProfielClient({
             <Phone size={18} weight="fill" /> Bellen
           </button>
           <Link
-            href={isLoggedIn ? `/berichten/nieuw?vakman=${vakman.id}` : "/login"}
+            href={isLoggedIn ? `/berichten/nieuw?vakman=${professional.id}` : "/login"}
             className="btn-secondary"
           >
             <ChatCircle size={18} /> Bericht
@@ -273,14 +273,14 @@ export function VakmanProfielClient({
           )}
 
           {alleReviews.length === 0 ? (
-            <p className="text-body-sm text-warmgrijs">Nog geen reviews voor {vakman.company_name}.</p>
+            <p className="text-body-sm text-warmgrijs">Nog geen reviews voor {professional.company_name}.</p>
           ) : (
             alleReviews.map((review) => (
               <ReviewCard
                 key={review.id}
                 review={review}
-                vakmanId={vakman.id}
-                bedrijfsnaam={vakman.company_name}
+                vakmanId={professional.id}
+                bedrijfsnaam={professional.company_name}
                 isVakmanOwner={isOwner}
                 initialVoted={votedSet.has(review.id)}
               />
@@ -292,24 +292,24 @@ export function VakmanProfielClient({
       {/* ── Tab: Over ── */}
       {tab === "over" && (
         <div className="animate-fade-in max-w-[600px]">
-          <h3 className="font-display text-display-sm mb-3">Over {vakman.company_name}</h3>
+          <h3 className="font-display text-display-sm mb-3">Over {professional.company_name}</h3>
           <p className="text-body text-warmgrijs-dark leading-relaxed mb-6">
-            {vakman.bio || "Deze vakman heeft nog geen bio toegevoegd."}
+            {professional.bio || "Deze vakman heeft nog geen bio toegevoegd."}
           </p>
           <div className="grid grid-cols-2 gap-3">
             {[
               {
                 icon: MapPin,
                 label: "Werkgebied",
-                value: vakman.service_area_postcode ? `${vakman.service_area_postcode} (${vakman.service_area_km} km)` : "Onbekend",
+                value: professional.service_area_postcode ? `${professional.service_area_postcode} (${professional.service_area_km} km)` : "Onbekend",
               },
-              { icon: Clock, label: "Contactvoorkeur", value: CONTACT_VOORKEUR_LABELS[vakman.contact_preference] },
+              { icon: Clock, label: "Contactvoorkeur", value: CONTACT_VOORKEUR_LABELS[professional.contact_preference] },
               {
                 icon: Briefcase,
                 label: "KvK",
-                value: vakman.kvk_number ? `${vakman.kvk_number} · ${vakman.kvk_verified ? "Geverifieerd" : "Nog niet geverifieerd"}` : "Niet opgegeven",
+                value: professional.kvk_number ? `${professional.kvk_number} · ${professional.kvk_verified ? "Geverifieerd" : "Nog niet geverifieerd"}` : "Niet opgegeven",
               },
-              { icon: ShieldCheck, label: "Verzekerd", value: vakman.insured ? "Bedrijfsaansprakelijkheid ✓" : "Niet opgegeven" },
+              { icon: ShieldCheck, label: "Verzekerd", value: professional.insured ? "Bedrijfsaansprakelijkheid ✓" : "Niet opgegeven" },
             ].map((info) => (
               <div key={info.label} className="card-flat p-4">
                 <div className="flex items-center gap-2 mb-1">
@@ -329,7 +329,7 @@ export function VakmanProfielClient({
           <div className="fixed bottom-0 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:max-w-[900px] bg-white border-t border-lijn pt-4 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] z-40 flex items-center justify-between md:rounded-t-xl md:shadow-strong">
             <div>
               <span className="font-display font-bold text-[22px]">Neem contact op</span>
-              <span className="block text-body-xs text-warmgrijs">{vakman.service_area_km} km werkgebied</span>
+              <span className="block text-body-xs text-warmgrijs">{professional.service_area_km} km werkgebied</span>
             </div>
             <button onClick={handleBoekNu} className="btn-primary !py-3.5 !px-8 !text-base min-h-11">
               Boek nu
@@ -343,8 +343,8 @@ export function VakmanProfielClient({
       <ReviewForm
         open={reviewFormOpen}
         onClose={() => setReviewFormOpen(false)}
-        vakmanId={vakman.id}
-        bedrijfsnaam={vakman.company_name}
+        vakmanId={professional.id}
+        bedrijfsnaam={professional.company_name}
         communityId={communityId}
         boekingId={reviewBoekingId}
         onSuccess={(nieuweReview) => {
@@ -359,11 +359,11 @@ export function VakmanProfielClient({
       <BookingFlow
         open={bookingFlowOpen}
         onClose={() => setBookingFlowOpen(false)}
-        vakmanId={vakman.id}
-        bedrijfsnaam={vakman.company_name}
-        logoUrl={vakman.logo_url}
+        vakmanId={professional.id}
+        bedrijfsnaam={professional.company_name}
+        logoUrl={professional.logo_url}
         beschikbaarheid={beschikbaarheid}
-        categorieen={categorieen}
+        categorieen={categories}
         communityId={communityId}
       />
     </div>

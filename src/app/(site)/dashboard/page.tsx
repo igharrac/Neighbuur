@@ -33,23 +33,23 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: vakman } = await supabase
+  const { data: professional } = await supabase
     .from("professional_profiles")
     .select("*")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!vakman) redirect("/registreer/vakman");
+  if (!professional) redirect("/registreer/vakman");
 
   const { count: werkFotoCount } = await supabase
     .from("work_photos")
     .select("id", { count: "exact", head: true })
-    .eq("professional_id", vakman.id);
+    .eq("professional_id", professional.id);
 
   const { count: beschikbaarheidCount } = await supabase
     .from("availability")
     .select("id", { count: "exact", head: true })
-    .eq("professional_id", vakman.id);
+    .eq("professional_id", professional.id);
 
   const { data: boekingenData } = await supabase
     .from("bookings")
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
       categories(name_nl)
     `
     )
-    .eq("professional_id", vakman.id)
+    .eq("professional_id", professional.id)
     .order("created_at", { ascending: false });
 
   const boekingen: BookingWithCustomer[] = ((boekingenData ?? []) as unknown as BoekingRow[]).map((b) => ({
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
   return (
     <PullToRefresh>
       <DashboardClient
-        vakman={vakman as ProfessionalProfile}
+        professional={professional as ProfessionalProfile}
         werkFotoCount={werkFotoCount ?? 0}
         heeftBeschikbaarheid={(beschikbaarheidCount ?? 0) > 0}
         boekingen={boekingen}

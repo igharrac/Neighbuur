@@ -5,7 +5,7 @@ import { CheckCircle, Circle } from "@phosphor-icons/react";
 import type { ProfessionalProfile } from "@/types";
 
 interface ProfielSterkteProps {
-  vakman: ProfessionalProfile;
+  professional: ProfessionalProfile;
   werkFotoCount: number;
   heeftBeschikbaarheid: boolean;
 }
@@ -17,19 +17,19 @@ interface ChecklistItem {
   href: string;
 }
 
-export function ProfielSterkte({ vakman, werkFotoCount, heeftBeschikbaarheid }: ProfielSterkteProps) {
+export function ProfielSterkte({ professional, werkFotoCount, heeftBeschikbaarheid }: ProfielSterkteProps) {
   const items: ChecklistItem[] = [
-    { label: "Bedrijfsnaam", done: !!vakman.company_name, punten: 10, href: "/dashboard/profiel" },
-    { label: "KvK-nummer", done: !!vakman.kvk_number, punten: 10, href: "/dashboard/profiel" },
-    { label: "Logo uploaden", done: !!vakman.logo_url, punten: 20, href: "/dashboard/profiel#logo" },
-    { label: "Bio schrijven", done: !!vakman.bio, punten: 10, href: "/dashboard/profiel#bio" },
-    { label: "Website toevoegen", done: !!vakman.website, punten: 5, href: "/dashboard/profiel#website" },
+    { label: "Bedrijfsnaam", done: !!professional.company_name, punten: 10, href: "/dashboard/profiel" },
+    { label: "KvK-nummer", done: !!professional.kvk_number, punten: 10, href: "/dashboard/profiel" },
+    { label: "Logo uploaden", done: !!professional.logo_url, punten: 20, href: "/dashboard/profiel#logo" },
+    { label: "Bio schrijven", done: !!professional.bio, punten: 10, href: "/dashboard/profiel#bio" },
+    { label: "Website toevoegen", done: !!professional.website, punten: 5, href: "/dashboard/profiel#website" },
     { label: "3+ werkfoto's", done: werkFotoCount >= 3, punten: 15, href: "/dashboard/profiel#fotos" },
     { label: "Beschikbaarheid instellen", done: heeftBeschikbaarheid, punten: 10, href: "/dashboard/profiel#beschikbaarheid" },
-    { label: "Verzekeringsbewijs", done: !!vakman.insurance_url, punten: 15, href: "/dashboard/profiel#verzekering" },
+    { label: "Verzekeringsbewijs", done: !!professional.insurance_url, punten: 15, href: "/dashboard/profiel#verzekering" },
   ];
 
-  const pct = Math.min(100, Math.max(0, vakman.profile_strength));
+  const pct = Math.min(100, Math.max(0, professional.profile_strength));
 
   return (
     <div className="bg-white rounded-md shadow-soft p-6">

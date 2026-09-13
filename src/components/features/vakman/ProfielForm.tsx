@@ -27,30 +27,30 @@ interface WerkFoto {
 }
 
 interface ProfielFormProps {
-  vakman: ProfessionalProfile;
+  professional: ProfessionalProfile;
   werkFotos: WerkFoto[];
   beschikbaarheid: Record<string, "available" | "booked">;
 }
 
-export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid }: ProfielFormProps) {
+export function ProfielForm({ professional: initialProfessional, werkFotos, beschikbaarheid }: ProfielFormProps) {
   const { showToast } = useToast();
-  const [vakman, setVakman] = useState(initialVakman);
-  const [categorieen, setCategorieen] = useState<Category[]>([]);
+  const [professional, setProfessional] = useState(initialProfessional);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [savingBasis, setSavingBasis] = useState(false);
   const [savingVerrijking, setSavingVerrijking] = useState(false);
 
-  const [bedrijfsnaam, setBedrijfsnaam] = useState(vakman.company_name);
-  const [hoofdcategorieId, setHoofdcategorieId] = useState(vakman.specialties[0] ?? "");
-  const [postcode, setPostcode] = useState(vakman.service_area_postcode ?? "");
-  const [straal, setStraal] = useState(vakman.service_area_km);
-  const [contactVoorkeur, setContactVoorkeur] = useState(vakman.contact_preference);
+  const [bedrijfsnaam, setBedrijfsnaam] = useState(professional.company_name);
+  const [hoofdcategorieId, setHoofdcategorieId] = useState(professional.specialties[0] ?? "");
+  const [postcode, setPostcode] = useState(professional.service_area_postcode ?? "");
+  const [straal, setStraal] = useState(professional.service_area_km);
+  const [contactVoorkeur, setContactVoorkeur] = useState(professional.contact_preference);
 
-  const [website, setWebsite] = useState(vakman.website ?? "");
-  const [bio, setBio] = useState(vakman.bio ?? "");
+  const [website, setWebsite] = useState(professional.website ?? "");
+  const [bio, setBio] = useState(professional.bio ?? "");
 
   const { upload: uploadVerzekering, uploading: uploadingVerzekering } = useImageUpload({
     bucket: "vakman-documenten",
-    pathPrefix: `${vakman.id}/verzekering`,
+    pathPrefix: `${professional.id}/verzekering`,
     isPrivate: true,
     accept: ["image/jpeg", "image/png", "application/pdf"],
   });
@@ -59,17 +59,17 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     async function load() {
       const supabase = createClient();
       const { data } = await supabase.from("categories").select("*").eq("type", "professional").eq("active", true).order("sort_order");
-      setCategorieen((data ?? []) as Category[]);
+      setCategories((data ?? []) as Category[]);
     }
     load();
   }, []);
 
   async function recalcSterkte() {
     const supabase = createClient();
-    const { data: sterkte } = await supabase.rpc("calculate_profile_strength", { v_id: vakman.id });
+    const { data: sterkte } = await supabase.rpc("calculate_profile_strength", { v_id: professional.id });
     if (sterkte != null) {
-      await supabase.from("professional_profiles").update({ profile_strength: sterkte }).eq("id", vakman.id);
-      setVakman((v) => ({ ...v, profile_strength: sterkte }));
+      await supabase.from("professional_profiles").update({ profile_strength: sterkte }).eq("id", professional.id);
+      setProfessional((v) => ({ ...v, profile_strength: sterkte }));
     }
   }
 
@@ -85,21 +85,21 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
         service_area_km: straal,
         contact_preference: contactVoorkeur,
       })
-      .eq("id", vakman.id);
+      .eq("id", professional.id);
 
     setSavingBasis(false);
     if (error) {
       showToast(error.message, "error");
       return;
     }
-    setVakman((v) => ({ ...v, company_name: bedrijfsnaam, service_area_postcode: postcode, service_area_km: straal, contact_preference: contactVoorkeur }));
+    setProfessional((v) => ({ ...v, company_name: bedrijfsnaam, service_area_postcode: postcode, service_area_km: straal, contact_preference: contactVoorkeur }));
     showToast("Basisgegevens opgeslagen", "success");
   }
 
   async function handleLogoUploaded(url: string) {
     const supabase = createClient();
-    await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", vakman.id);
-    setVakman((v) => ({ ...v, logo_url: url }));
+    await supabase.from("professional_profiles").update({ logo_url: url }).eq("id", professional.id);
+    setProfessional((v) => ({ ...v, logo_url: url }));
     await recalcSterkte();
     showToast("Logo geüpload", "success");
   }
@@ -110,14 +110,14 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     const { error } = await supabase
       .from("professional_profiles")
       .update({ website: website || null, bio: bio || null })
-      .eq("id", vakman.id);
+      .eq("id", professional.id);
 
     setSavingVerrijking(false);
     if (error) {
       showToast(error.message, "error");
       return;
     }
-    setVakman((v) => ({ ...v, website, bio }));
+    setProfessional((v) => ({ ...v, website, bio }));
     await recalcSterkte();
     showToast("Opgeslagen", "success");
   }
@@ -128,8 +128,8 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     if (!path) return;
 
     const supabase = createClient();
-    await supabase.from("professional_profiles").update({ insurance_url: path, insured: true }).eq("id", vakman.id);
-    setVakman((v) => ({ ...v, insurance_url: path, insured: true }));
+    await supabase.from("professional_profiles").update({ insurance_url: path, insured: true }).eq("id", professional.id);
+    setProfessional((v) => ({ ...v, insurance_url: path, insured: true }));
     await recalcSterkte();
     showToast("Verzekeringsbewijs geüpload", "success");
   }
@@ -138,7 +138,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
     <div className="max-w-[680px] mx-auto px-6 py-8 flex flex-col gap-6">
       <div>
         <h1 className="font-display text-display-md text-warmzwart">Profiel bewerken</h1>
-        <p className="text-body text-warmgrijs mt-1">Profielsterkte: {vakman.profile_strength}%</p>
+        <p className="text-body text-warmgrijs mt-1">Profielsterkte: {professional.profile_strength}%</p>
       </div>
 
       {/* ── Basis ── */}
@@ -150,8 +150,8 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
           <div>
             <label className="text-body-sm font-semibold block mb-1.5">KvK-nummer</label>
             <div className="flex items-center gap-2">
-              <input className="input flex-1" value={vakman.kvk_number ?? ""} disabled />
-              {vakman.kvk_verified && (
+              <input className="input flex-1" value={professional.kvk_number ?? ""} disabled />
+              {professional.kvk_verified && (
                 <span className="flex items-center gap-1 text-body-xs font-semibold text-groen shrink-0">
                   <Check size={14} weight="bold" /> Geverifieerd
                 </span>
@@ -163,7 +163,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
             <label className="text-body-sm font-semibold block mb-1.5">Hoofdcategorie</label>
             <select className="input" value={hoofdcategorieId} onChange={(e) => setHoofdcategorieId(e.target.value)}>
               <option value="">Kies een categorie...</option>
-              {categorieen.map((c) => (
+              {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name_nl}
                 </option>
@@ -212,7 +212,7 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
       <section id="logo" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Logo</h2>
         <div className="max-w-[200px]">
-          <ImageUploader bucket="vakman-logos" pathPrefix={`${vakman.id}/logo`} value={vakman.logo_url} onUploaded={handleLogoUploaded} aspect="square" />
+          <ImageUploader bucket="vakman-logos" pathPrefix={`${professional.id}/logo`} value={professional.logo_url} onUploaded={handleLogoUploaded} aspect="square" />
         </div>
       </section>
 
@@ -243,19 +243,19 @@ export function ProfielForm({ vakman: initialVakman, werkFotos, beschikbaarheid 
       {/* ── Werkfoto's ── */}
       <section id="fotos" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Werkfoto&apos;s</h2>
-        <WerkFotoGrid vakmanId={vakman.id} initialFotos={werkFotos} isPremium={vakman.is_premium} />
+        <WerkFotoGrid vakmanId={professional.id} initialFotos={werkFotos} isPremium={professional.is_premium} />
       </section>
 
       {/* ── Beschikbaarheid ── */}
       <section id="beschikbaarheid" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Beschikbaarheid — komende 4 weken</h2>
-        <BeschikbaarheidEditor vakmanId={vakman.id} initialData={beschikbaarheid} />
+        <BeschikbaarheidEditor vakmanId={professional.id} initialData={beschikbaarheid} />
       </section>
 
       {/* ── Verzekeringsbewijs ── */}
       <section id="verzekering" className="bg-white rounded-md shadow-soft p-6">
         <h2 className="font-bold text-body mb-4">Verzekeringsbewijs</h2>
-        {vakman.insurance_url ? (
+        {professional.insurance_url ? (
           <p className="flex items-center gap-2 text-body-sm text-groen font-medium">
             <Check size={16} weight="bold" /> Bewijs geüpload
           </p>

@@ -7,18 +7,18 @@ import type { ReviewComplete, ProfessionalProfile } from "@/types";
 export default async function VakmanPage({ params }: { params: { slug: string } }) {
   const supabase = createServerSupabase();
 
-  const { data: vakman } = await supabase
+  const { data: professional } = await supabase
     .from("professional_profiles")
     .select("*")
     .eq("slug", params.slug)
     .maybeSingle();
 
-  if (!vakman) notFound();
+  if (!professional) notFound();
 
   const { data: reviews } = await supabase
     .from("review_compleet")
     .select("*")
-    .eq("professional_id", vakman.id)
+    .eq("professional_id", professional.id)
     .order("upvote_score", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -50,13 +50,13 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
     communityId = bewoner?.community_id ?? null;
   }
 
-  const isOwner = !!user && user.id === vakman.user_id;
+  const isOwner = !!user && user.id === professional.user_id;
   const heeftAlGereviewed = !!user && alleReviews.some((r) => r.author_id === user.id);
 
   const { data: beschikbaarheidRows } = await supabase
     .from("availability")
     .select("date, status")
-    .eq("professional_id", vakman.id);
+    .eq("professional_id", professional.id);
 
   const beschikbaarheid: Record<string, "available" | "booked"> = {};
   (beschikbaarheidRows ?? []).forEach((r) => {
@@ -68,7 +68,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
 
   return (
     <VakmanProfielClient
-      vakman={vakman as ProfessionalProfile}
+      professional={professional as ProfessionalProfile}
       reviews={alleReviews}
       votedReviewIds={votedReviewIds}
       isOwner={isOwner}
@@ -76,7 +76,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
       heeftAlGereviewed={heeftAlGereviewed}
       communityId={communityId}
       beschikbaarheid={beschikbaarheid}
-      categorieen={vakmanCategorieen}
+      categories={vakmanCategorieen}
     />
   );
 }

@@ -14,8 +14,8 @@ interface ZoekenSearchParams {
 
 export default async function ZoekenPage({ searchParams }: { searchParams: ZoekenSearchParams }) {
   const supabase = createServerSupabase();
-  const alleCategorieen = await getCategorieen();
-  const vakmanCategorieen = alleCategorieen.filter((c) => c.type === "professional");
+  const allCategories = await getCategorieen();
+  const professionalCategories = allCategories.filter((c) => c.type === "professional");
 
   let query = supabase.from("vakman_overzicht").select("*");
 
@@ -38,14 +38,14 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   query = query.order("is_premium", { ascending: false }).order("avg_score", { ascending: false });
 
   const { data } = await query;
-  let vakmen = (data ?? []).map((v) => ({
+  let professionals = (data ?? []).map((v) => ({
     ...v,
     review_count: Number(v.review_count ?? 0),
     avg_score: Number(v.avg_score ?? 0),
     completed_jobs: Number(v.completed_jobs ?? 0),
   })) as unknown as ProfessionalOverview[];
 
-  if (searchParams.beschikbaar === "1" && vakmen.length > 0) {
+  if (searchParams.beschikbaar === "1" && professionals.length > 0) {
     const vandaag = new Date();
     const over7Dagen = new Date(vandaag);
     over7Dagen.setDate(vandaag.getDate() + 7);
@@ -57,17 +57,17 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
       .eq("status", "available")
       .gte("date", toDateStr(vandaag))
       .lte("date", toDateStr(over7Dagen))
-      .in("professional_id", vakmen.map((v) => v.id));
+      .in("professional_id", professionals.map((v) => v.id));
 
     const beschikbareIds = new Set((beschikbaarheid ?? []).map((b) => b.professional_id as string));
-    vakmen = vakmen.filter((v) => beschikbareIds.has(v.id));
+    professionals = professionals.filter((v) => beschikbareIds.has(v.id));
   }
 
-  const categorieNaamPerSlug: Record<string, string> = Object.fromEntries(
-    alleCategorieen.map((c) => [c.slug, c.name_nl])
+  const categoryNamePerSlug: Record<string, string> = Object.fromEntries(
+    allCategories.map((c) => [c.slug, c.name_nl])
   );
 
   return (
-    <SearchPage vakmen={vakmen} categorieen={vakmanCategorieen} categorieNaamPerSlug={categorieNaamPerSlug} />
+    <SearchPage professionals={professionals} categories={professionalCategories} categoryNamePerSlug={categoryNamePerSlug} />
   );
 }

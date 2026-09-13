@@ -8,12 +8,12 @@ import { VakmanCard } from "@/components/features/vakman/VakmanCard";
 import type { Category, ProfessionalOverview } from "@/types";
 
 interface SearchPageProps {
-  vakmen: ProfessionalOverview[];
-  categorieen: Category[];
-  categorieNaamPerSlug: Record<string, string>;
+  professionals: ProfessionalOverview[];
+  categories: Category[];
+  categoryNamePerSlug: Record<string, string>;
 }
 
-export function SearchPage({ vakmen, categorieen, categorieNaamPerSlug }: SearchPageProps) {
+export function SearchPage({ professionals, categories, categoryNamePerSlug }: SearchPageProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,23 +42,23 @@ export function SearchPage({ vakmen, categorieen, categorieNaamPerSlug }: Search
       </form>
 
       <div className="mb-5 overflow-x-auto scrollbar-none -mx-6 px-6">
-        <SearchFilters categorieen={categorieen} />
+        <SearchFilters categories={categories} />
       </div>
 
       <p className="text-body-sm text-warmgrijs mb-4">
-        {vakmen.length} {vakmen.length === 1 ? "vakman" : "vakmensen"} gevonden
+        {professionals.length} {professionals.length === 1 ? "vakman" : "vakmensen"} gevonden
       </p>
 
-      {vakmen.length === 0 ? (
+      {professionals.length === 0 ? (
         <p className="text-body-sm text-warmgrijs">Geen vakmensen gevonden met deze filters.</p>
       ) : (
         <div className="flex flex-col gap-3">
-          {vakmen.map((v) => (
+          {professionals.map((v) => (
             <VakmanCard
               key={v.id}
-              vakman={v}
-              categorieNamen={(v.category_slugs ?? [])
-                .map((slug) => categorieNaamPerSlug[slug])
+              professional={v}
+              categoryNames={(v.category_slugs ?? [])
+                .map((slug) => categoryNamePerSlug[slug])
                 .filter((naam): naam is string => Boolean(naam))}
             />
           ))}
