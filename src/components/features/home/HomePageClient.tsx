@@ -51,11 +51,11 @@ const DEMO_REVIEWS = [
 ];
 
 interface HomePageClientProps {
-  categorieen: Category[];
+  categories: Category[];
   communities: CommunityOverzicht[];
 }
 
-export function HomePageClient({ categorieen, communities }: HomePageClientProps) {
+export function HomePageClient({ categories, communities }: HomePageClientProps) {
   const { dict } = useLang();
 
   return (
@@ -78,7 +78,7 @@ export function HomePageClient({ categorieen, communities }: HomePageClientProps
             </p>
           </div>
 
-          <CategoryGrid categorieen={categorieen} />
+          <CategoryGrid categories={categories} />
         </div>
       </section>
 

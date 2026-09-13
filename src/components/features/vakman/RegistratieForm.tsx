@@ -37,7 +37,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   // Step 2 — basisprofiel
   const [bedrijfsnaam, setBedrijfsnaam] = useState("");
   const [kvkNummer, setKvkNummer] = useState("");
-  const [categorieen, setCategorieen] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [hoofdcategorieId, setHoofdcategorieId] = useState("");
   const [postcode, setPostcode] = useState("");
   const [straal, setStraal] = useState(15);
@@ -89,7 +89,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
         .eq("type", "professional")
         .eq("active", true)
         .order("sort_order");
-      setCategorieen((data ?? []) as Category[]);
+      setCategories((data ?? []) as Category[]);
     }
     loadCategorieen();
   }, []);
@@ -427,7 +427,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                   onChange={(e) => setHoofdcategorieId(e.target.value)}
                 >
                   <option value="">Kies een categorie...</option>
-                  {categorieen.map((c) => (
+                  {categories.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name_nl}
                     </option>

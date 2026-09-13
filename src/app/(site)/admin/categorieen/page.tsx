@@ -19,5 +19,5 @@ export default async function AdminCategorieenPage() {
     .select("*")
     .order("sort_order", { ascending: true });
 
-  return <CategorieEditor initialCategorieen={(categorieen ?? []) as Category[]} />;
+  return <CategorieEditor initialCategories={(categorieen ?? []) as Category[]} />;
 }

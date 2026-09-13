@@ -363,7 +363,7 @@ export function VakmanProfielClient({
         companyName={professional.company_name}
         logoUrl={professional.logo_url}
         beschikbaarheid={beschikbaarheid}
-        categorieen={categories}
+        categories={categories}
         communityId={communityId}
       />
     </div>

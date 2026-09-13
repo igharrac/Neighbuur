@@ -25,10 +25,10 @@ const emptyForm: FormState = {
   active: true,
 };
 
-export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Category[] }) {
+export function CategorieEditor({ initialCategories }: { initialCategories: Category[] }) {
   const { showToast } = useToast();
-  const [categorieen, setCategorieen] = useState(
-    [...initialCategorieen].sort((a, b) => a.sort_order - b.sort_order)
+  const [categories, setCategories] = useState(
+    [...initialCategories].sort((a, b) => a.sort_order - b.sort_order)
   );
   const [editingId, setEditingId] = useState<string | "new" | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
@@ -81,7 +81,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
     };
 
     if (editingId === "new") {
-      const sortOrder = categorieen.length > 0 ? Math.max(...categorieen.map((c) => c.sort_order)) + 1 : 1;
+      const sortOrder = categories.length > 0 ? Math.max(...categories.map((c) => c.sort_order)) + 1 : 1;
       const { data, error } = await supabase
         .from("categories")
         .insert({ ...payload, sort_order: sortOrder })
@@ -93,7 +93,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
         showToast(error.message, "error");
         return;
       }
-      setCategorieen((prev) => [...prev, data as Category]);
+      setCategories((prev) => [...prev, data as Category]);
       showToast("Categorie toegevoegd", "success");
     } else if (editingId) {
       const { error } = await supabase.from("categories").update(payload).eq("id", editingId);
@@ -103,7 +103,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
         showToast(error.message, "error");
         return;
       }
-      setCategorieen((prev) =>
+      setCategories((prev) =>
         prev.map((c) => (c.id === editingId ? { ...c, ...payload } : c))
       );
       showToast("Categorie opgeslagen", "success");
@@ -132,7 +132,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       showToast(error.message, "error");
       return;
     }
-    setCategorieen((prev) => prev.filter((c) => c.id !== cat.id));
+    setCategories((prev) => prev.filter((c) => c.id !== cat.id));
     showToast("Categorie verwijderd", "success");
   }
 
@@ -146,20 +146,20 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       showToast(error.message, "error");
       return;
     }
-    setCategorieen((prev) => prev.map((c) => (c.id === cat.id ? { ...c, active: !c.active } : c)));
+    setCategories((prev) => prev.map((c) => (c.id === cat.id ? { ...c, active: !c.active } : c)));
   }
 
   async function handleMove(index: number, direction: -1 | 1) {
     const target = index + direction;
-    if (target < 0 || target >= categorieen.length) return;
+    if (target < 0 || target >= categories.length) return;
 
-    const a = categorieen[index];
-    const b = categorieen[target];
-    const next = [...categorieen];
+    const a = categories[index];
+    const b = categories[target];
+    const next = [...categories];
     next[index] = { ...b, sort_order: a.sort_order };
     next[target] = { ...a, sort_order: b.sort_order };
     next.sort((x, y) => x.sort_order - y.sort_order);
-    setCategorieen(next);
+    setCategories(next);
 
     const supabase = createClient();
     await Promise.all([
@@ -173,7 +173,7 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-display text-display-md text-warmzwart mb-1">Categorieën</h1>
-          <p className="text-body text-warmgrijs">{categorieen.length} categorieën</p>
+          <p className="text-body text-warmgrijs">{categories.length} categorieën</p>
         </div>
         {editingId === null && (
           <Button size="sm" onClick={startAdd}>
@@ -281,13 +281,13 @@ export function CategorieEditor({ initialCategorieen }: { initialCategorieen: Ca
       )}
 
       <div className="flex flex-col gap-2.5">
-        {categorieen.map((cat, i) => (
+        {categories.map((cat, i) => (
           <div key={cat.id} className="flex items-center gap-3 border border-lijn rounded-md px-4 py-3 bg-white">
             <div className="flex flex-col">
               <button onClick={() => handleMove(i, -1)} disabled={i === 0} className="text-warmgrijs hover:text-warmzwart disabled:opacity-20">
                 <CaretUp size={14} weight="bold" />
               </button>
-              <button onClick={() => handleMove(i, 1)} disabled={i === categorieen.length - 1} className="text-warmgrijs hover:text-warmzwart disabled:opacity-20">
+              <button onClick={() => handleMove(i, 1)} disabled={i === categories.length - 1} className="text-warmgrijs hover:text-warmzwart disabled:opacity-20">
                 <CaretDown size={14} weight="bold" />
               </button>
             </div>

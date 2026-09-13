@@ -6,25 +6,25 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 import type { Category } from "@/types";
 
-export function DienstenGrid({ categorieen }: { categorieen: Category[] }) {
+export function DienstenGrid({ categories }: { categories: Category[] }) {
   const { lang } = useLang();
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {categorieen.map((categorie) => {
-        const naam = lang === "nl" ? categorie.name_nl : categorie.name_en;
-        const beschrijving = lang === "nl" ? categorie.description_nl : categorie.description_en;
+      {categories.map((category) => {
+        const naam = lang === "nl" ? category.name_nl : category.name_en;
+        const beschrijving = lang === "nl" ? category.description_nl : category.description_en;
 
         return (
           <Link
-            key={categorie.id}
-            href={`/zoeken?categorie=${categorie.slug}`}
+            key={category.id}
+            href={`/zoeken?categorie=${category.slug}`}
             className="group no-underline bg-white rounded-2xl overflow-hidden shadow-[0px_4px_10px_rgba(92,64,40,0.04)] hover:-translate-y-1 hover:shadow-[0px_12px_24px_rgba(92,64,40,0.1)] transition-all duration-300"
           >
             <div className="w-full aspect-[4/3] overflow-hidden bg-sand-light">
-              {categorie.image_url ? (
+              {category.image_url ? (
                 <img
-                  src={categorie.image_url}
+                  src={category.image_url}
                   alt={naam}
                   className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />

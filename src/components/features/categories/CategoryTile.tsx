@@ -6,11 +6,11 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 import type { Category } from "@/types";
 
-export function CategoryTile({ categorie }: { categorie: Category }) {
+export function CategoryTile({ category }: { category: Category }) {
   const { lang } = useLang();
-  const naam = lang === "nl" ? categorie.name_nl : categorie.name_en;
-  const beschrijving = lang === "nl" ? categorie.description_nl : categorie.description_en;
-  const href = `/zoeken?categorie=${categorie.slug}`;
+  const naam = lang === "nl" ? category.name_nl : category.name_en;
+  const beschrijving = lang === "nl" ? category.description_nl : category.description_en;
+  const href = `/zoeken?categorie=${category.slug}`;
 
   return (
     <Link
@@ -18,9 +18,9 @@ export function CategoryTile({ categorie }: { categorie: Category }) {
       className="group no-underline flex flex-col bg-[#F5F0E8] rounded overflow-hidden transition-all duration-300 hover:-translate-y-[5px] hover:shadow-medium"
     >
       <div className="w-full aspect-square overflow-hidden">
-        {categorie.image_url ? (
+        {category.image_url ? (
           <img
-            src={categorie.image_url}
+            src={category.image_url}
             alt={naam}
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />

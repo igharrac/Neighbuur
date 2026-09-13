@@ -20,7 +20,7 @@ interface BookingFlowProps {
   companyName: string;
   logoUrl: string | null;
   beschikbaarheid: Record<string, "available" | "booked">;
-  categorieen: Category[];
+  categories: Category[];
   communityId: string | null;
 }
 
@@ -31,7 +31,7 @@ export function BookingFlow({
   companyName,
   logoUrl,
   beschikbaarheid,
-  categorieen,
+  categories,
   communityId,
 }: BookingFlowProps) {
   const { user } = useAuth();
@@ -92,7 +92,7 @@ export function BookingFlow({
     setVerstuurd(true);
   }
 
-  const categorieNaam = categorieen.find((c) => c.id === categorieId)?.name_nl ?? null;
+  const categorieNaam = categories.find((c) => c.id === categorieId)?.name_nl ?? null;
   const kanVerder = stap !== 2 || omschrijving.trim().length > 0;
 
   return (
@@ -132,7 +132,7 @@ export function BookingFlow({
           {stap === 1 && <DatumKiezer beschikbaarheid={beschikbaarheid} waarde={datum} onChange={setDatum} />}
           {stap === 2 && user && (
             <KlusOmschrijving
-              categorieen={categorieen}
+              categories={categories}
               categorieId={categorieId}
               onCategorieChange={setCategorieId}
               omschrijving={omschrijving}

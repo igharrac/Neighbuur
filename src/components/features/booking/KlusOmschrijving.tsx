@@ -10,7 +10,7 @@ const MAX_FOTOS = 5;
 const MAX_TEKST = 500;
 
 interface KlusOmschrijvingProps {
-  categorieen: Category[];
+  categories: Category[];
   categorieId: string;
   onCategorieChange: (id: string) => void;
   omschrijving: string;
@@ -21,7 +21,7 @@ interface KlusOmschrijvingProps {
 }
 
 export function KlusOmschrijving({
-  categorieen,
+  categories,
   categorieId,
   onCategorieChange,
   omschrijving,
@@ -50,7 +50,7 @@ export function KlusOmschrijving({
         <label className="text-body-sm font-semibold block mb-1.5">Categorie</label>
         <select className="input mb-4" value={categorieId} onChange={(e) => onCategorieChange(e.target.value)}>
           <option value="">Kies een categorie (optioneel)...</option>
-          {categorieen.map((c) => (
+          {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name_nl}
             </option>
