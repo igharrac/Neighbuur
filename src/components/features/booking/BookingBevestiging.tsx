@@ -1,20 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 interface BookingBevestigingProps {
-  bedrijfsnaam: string;
+  companyName: string;
   logoUrl: string | null;
   datum: string | null;
-  categorieNaam: string | null;
-  omschrijving: string;
-  fotoUrls: string[];
+  categoryName: string | null;
+  description: string;
+  photoUrls: string[];
 }
 
 export function BookingBevestiging({
-  bedrijfsnaam,
+  companyName,
   logoUrl,
   datum,
-  categorieNaam,
-  omschrijving,
-  fotoUrls,
+  categoryName,
+  description,
+  photoUrls,
 }: BookingBevestigingProps) {
   const datumLabel = datum
     ? new Date(datum).toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })
@@ -29,10 +29,10 @@ export function BookingBevestiging({
             <img src={logoUrl} alt="" className="w-11 h-11 rounded-sm object-cover" />
           ) : (
             <div className="w-11 h-11 rounded-sm bg-gradient-to-br from-terracotta to-terracotta-700 flex items-center justify-center text-white font-display font-bold">
-              {bedrijfsnaam.charAt(0).toUpperCase()}
+              {companyName.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="font-semibold text-body">{bedrijfsnaam}</span>
+          <span className="font-semibold text-body">{companyName}</span>
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-body-sm">
@@ -40,24 +40,24 @@ export function BookingBevestiging({
             <span className="block text-body-xs text-warmgrijs uppercase font-semibold">Datum</span>
             <span className={datum ? "capitalize" : ""}>{datumLabel}</span>
           </div>
-          {categorieNaam && (
+          {categoryName && (
             <div>
               <span className="block text-body-xs text-warmgrijs uppercase font-semibold">Categorie</span>
-              <span>{categorieNaam}</span>
+              <span>{categoryName}</span>
             </div>
           )}
         </div>
 
-        {omschrijving && (
+        {description && (
           <div>
             <span className="block text-body-xs text-warmgrijs uppercase font-semibold mb-1">Omschrijving</span>
-            <p className="text-body-sm text-warmgrijs-dark">{omschrijving}</p>
+            <p className="text-body-sm text-warmgrijs-dark">{description}</p>
           </div>
         )}
 
-        {fotoUrls.length > 0 && (
+        {photoUrls.length > 0 && (
           <div className="flex gap-2">
-            {fotoUrls.map((url) => (
+            {photoUrls.map((url) => (
               <img key={url} src={url} alt="" className="w-14 h-14 rounded-sm object-cover" />
             ))}
           </div>

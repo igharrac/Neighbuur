@@ -11,22 +11,22 @@ const MAX_TEKST = 500;
 
 interface KlusOmschrijvingProps {
   categories: Category[];
-  categorieId: string;
+  categoryId: string;
   onCategorieChange: (id: string) => void;
-  omschrijving: string;
+  description: string;
   onOmschrijvingChange: (tekst: string) => void;
-  fotoUrls: string[];
+  photoUrls: string[];
   onFotoUrlsChange: (urls: string[]) => void;
   klantId: string;
 }
 
 export function KlusOmschrijving({
   categories,
-  categorieId,
+  categoryId,
   onCategorieChange,
-  omschrijving,
+  description,
   onOmschrijvingChange,
-  fotoUrls,
+  photoUrls,
   onFotoUrlsChange,
   klantId,
 }: KlusOmschrijvingProps) {
@@ -37,9 +37,9 @@ export function KlusOmschrijving({
   const fileRef = useRef<HTMLInputElement>(null);
 
   async function handleFoto(file: File | undefined) {
-    if (!file || fotoUrls.length >= MAX_FOTOS) return;
+    if (!file || photoUrls.length >= MAX_FOTOS) return;
     const url = await upload(file);
-    if (url) onFotoUrlsChange([...fotoUrls, url]);
+    if (url) onFotoUrlsChange([...photoUrls, url]);
     if (fileRef.current) fileRef.current.value = "";
   }
 
@@ -48,7 +48,7 @@ export function KlusOmschrijving({
       <div>
         <h3 className="font-display text-display-sm mb-4">Beschrijf je klus</h3>
         <label className="text-body-sm font-semibold block mb-1.5">Categorie</label>
-        <select className="input mb-4" value={categorieId} onChange={(e) => onCategorieChange(e.target.value)}>
+        <select className="input mb-4" value={categoryId} onChange={(e) => onCategorieChange(e.target.value)}>
           <option value="">Kies een categorie (optioneel)...</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
@@ -61,23 +61,23 @@ export function KlusOmschrijving({
         <textarea
           className="input min-h-[120px] resize-y"
           placeholder="Bijv. Woonkamer + hal spackspuiten, ongeveer 40m²"
-          value={omschrijving}
+          value={description}
           onChange={(e) => onOmschrijvingChange(e.target.value.slice(0, MAX_TEKST))}
         />
         <p className="text-body-xs text-warmgrijs text-right mt-1">
-          {omschrijving.length}/{MAX_TEKST}
+          {description.length}/{MAX_TEKST}
         </p>
       </div>
 
       <div>
         <span className="text-body-sm font-semibold block mb-1.5">Foto&apos;s (optioneel)</span>
         <div className="flex flex-wrap gap-2">
-          {fotoUrls.map((url) => (
+          {photoUrls.map((url) => (
             <div key={url} className="relative w-16 h-16 rounded-sm overflow-hidden bg-cream">
               <img src={url} alt="" className="w-full h-full object-cover" />
               <button
                 type="button"
-                onClick={() => onFotoUrlsChange(fotoUrls.filter((u) => u !== url))}
+                onClick={() => onFotoUrlsChange(photoUrls.filter((u) => u !== url))}
                 className="absolute top-0.5 right-0.5 w-5 h-5 rounded-sm bg-warmzwart/70 text-white flex items-center justify-center"
                 aria-label="Verwijder foto"
               >
@@ -85,7 +85,7 @@ export function KlusOmschrijving({
               </button>
             </div>
           ))}
-          {fotoUrls.length < MAX_FOTOS && (
+          {photoUrls.length < MAX_FOTOS && (
             <label className="w-16 h-16 rounded-sm border-2 border-dashed border-lijn flex items-center justify-center text-warmgrijs cursor-pointer hover:border-warmgrijs-dark transition-colors">
               {uploading ? <Spinner size={18} className="animate-spin" /> : <Camera size={18} />}
               <input

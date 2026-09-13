@@ -76,8 +76,9 @@ export type ReviewScores = {
   prijs: number;
 };
 
-// Kolomnamen hier volgen de review_compleet-view (herbouwd in migratie
-// 0031 met expliciete Engelse kolommen i.p.v. de bevroren r.*-wildcard).
+// Kolomnamen hier volgen de review_complete-view (herbouwd in migratie
+// 0031 met expliciete Engelse kolommen i.p.v. de bevroren r.*-wildcard;
+// de view zelf werd pas in migratie 0037 hernoemd van review_compleet).
 export interface ReviewComplete {
   id: string;
   author_id: string;
@@ -178,15 +179,16 @@ export interface Booking {
 }
 
 export interface BookingWithCustomer extends Booking {
-  klant_naam: string;
-  klant_avatar: string | null;
-  community_naam: string | null;
-  categorie_naam: string | null;
+  customer_name: string;
+  customer_avatar: string | null;
+  community_name: string | null;
+  category_name: string | null;
 }
 
-// vakman_overzicht is herbouwd in migratie 0033 met expliciete Engelse
+// professional_overview is herbouwd in migratie 0033 met expliciete Engelse
 // kolommen i.p.v. de bevroren vp.*-wildcard, en volgt nu 1-op-1 de
-// kolomnamen van professional_profiles — vandaar de extend.
+// kolomnamen van professional_profiles — vandaar de extend. (De view
+// zelf heette toen nog vakman_overzicht, pas in migratie 0037 hernoemd.)
 export interface ProfessionalOverview extends ProfessionalProfile {
   owner_name: string;
   owner_avatar: string | null;

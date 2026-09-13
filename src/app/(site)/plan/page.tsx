@@ -52,7 +52,7 @@ export default async function PlanPage() {
   let community: { naam: string; slug: string; aantal_leden: number; wijk_naam: string | null } | null = null;
   if (bewonerProfiel?.community_id) {
     const { data: c } = await supabase
-      .from("community_overzicht")
+      .from("community_overview")
       .select("name, slug, member_count, district_name")
       .eq("id", bewonerProfiel.community_id)
       .maybeSingle();
@@ -169,7 +169,7 @@ export default async function PlanPage() {
   let buurtreviews: { id: string; tekst: string; auteur_naam: string; reactie_bedrijf: string | null }[] = [];
   if (bewonerProfiel?.community_id) {
     const { data: r } = await supabase
-      .from("review_compleet")
+      .from("review_complete")
       .select("id, text, author_name, reply_company, created_at")
       .eq("community_id", bewonerProfiel.community_id)
       .order("created_at", { ascending: false })

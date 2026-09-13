@@ -28,7 +28,7 @@ const KLEUR_CLASS: Record<(typeof KLEUR_OPTIONS)[number], string> = {
   oker: "bg-oker-light text-oker",
 };
 
-interface VakmanResult {
+interface ProfessionalResult {
   id: string;
   company_name: string;
 }
@@ -43,17 +43,17 @@ export function ContentBlockEditor({
   saving,
 }: ContentBlockEditorProps) {
   const [data, setData] = useState(initialData);
-  const [vakmanQuery, setVakmanQuery] = useState("");
-  const [vakmanResults, setVakmanResults] = useState<VakmanResult[]>([]);
-  const [vakmanNaam, setVakmanNaam] = useState<string | null>(null);
+  const [professionalQuery, setProfessionalQuery] = useState("");
+  const [professionalResults, setProfessionalResults] = useState<ProfessionalResult[]>([]);
+  const [professionalName, setProfessionalName] = useState<string | null>(null);
 
   function set(field: string, value: unknown) {
     setData((d) => ({ ...d, [field]: value }));
   }
 
   useEffect(() => {
-    if (type !== "professional_spotlight" || vakmanQuery.trim().length < 2) {
-      setVakmanResults([]);
+    if (type !== "professional_spotlight" || professionalQuery.trim().length < 2) {
+      setProfessionalResults([]);
       return;
     }
     const timeout = setTimeout(async () => {
@@ -61,12 +61,12 @@ export function ContentBlockEditor({
       const { data: results } = await supabase
         .from("professional_profiles")
         .select("id, company_name")
-        .ilike("company_name", `%${vakmanQuery}%`)
+        .ilike("company_name", `%${professionalQuery}%`)
         .limit(6);
-      setVakmanResults((results ?? []) as VakmanResult[]);
+      setProfessionalResults((results ?? []) as ProfessionalResult[]);
     }, 300);
     return () => clearTimeout(timeout);
-  }, [vakmanQuery, type]);
+  }, [professionalQuery, type]);
 
   return (
     <div className="border border-lijn rounded-md p-5 bg-cream">
@@ -175,15 +175,15 @@ export function ContentBlockEditor({
         {type === "professional_spotlight" && (
           <div>
             <label className="text-body-sm font-semibold block mb-1.5">Vakman</label>
-            {vakmanNaam || data.vakman_id ? (
+            {professionalName || data.vakman_id ? (
               <div className="flex items-center justify-between gap-2 border-2 border-lijn rounded-md px-4 py-3">
-                <span className="text-body-sm font-medium">{vakmanNaam ?? "Geselecteerd"}</span>
+                <span className="text-body-sm font-medium">{professionalName ?? "Geselecteerd"}</span>
                 <button
                   type="button"
                   className="text-body-xs text-terracotta font-semibold"
                   onClick={() => {
                     set("vakman_id", undefined);
-                    setVakmanNaam(null);
+                    setProfessionalName(null);
                   }}
                 >
                   Wijzig
@@ -195,20 +195,20 @@ export function ContentBlockEditor({
                 <input
                   className="input !pl-10"
                   placeholder="Zoek op bedrijfsnaam..."
-                  value={vakmanQuery}
-                  onChange={(e) => setVakmanQuery(e.target.value)}
+                  value={professionalQuery}
+                  onChange={(e) => setProfessionalQuery(e.target.value)}
                 />
-                {vakmanResults.length > 0 && (
+                {professionalResults.length > 0 && (
                   <div className="mt-1.5 border border-lijn rounded-md bg-white shadow-soft overflow-hidden">
-                    {vakmanResults.map((v) => (
+                    {professionalResults.map((v) => (
                       <button
                         key={v.id}
                         type="button"
                         className="w-full text-left px-4 py-2.5 text-body-sm hover:bg-cream transition-colors"
                         onClick={() => {
                           set("vakman_id", v.id);
-                          setVakmanNaam(v.company_name);
-                          setVakmanResults([]);
+                          setProfessionalName(v.company_name);
+                          setProfessionalResults([]);
                         }}
                       >
                         {v.company_name}

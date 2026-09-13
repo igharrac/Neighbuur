@@ -80,10 +80,10 @@ export default async function DashboardPage() {
     professional_notes: b.professional_notes,
     created_at: b.created_at,
     updated_at: b.updated_at,
-    klant_naam: b.profiles?.name ?? "Onbekend",
-    klant_avatar: b.profiles?.avatar_url ?? null,
-    community_naam: b.communities?.name ?? null,
-    categorie_naam: b.categories?.name_nl ?? null,
+    customer_name: b.profiles?.name ?? "Onbekend",
+    customer_avatar: b.profiles?.avatar_url ?? null,
+    community_name: b.communities?.name ?? null,
+    category_name: b.categories?.name_nl ?? null,
   }));
 
   // Gesprek-id per klant opzoeken, zodat de "Bericht"-knop op elke

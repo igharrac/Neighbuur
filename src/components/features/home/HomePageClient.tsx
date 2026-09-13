@@ -9,7 +9,7 @@ import { WhatsappCommunityCta } from "@/components/features/home/WhatsappCommuni
 import { VakmanBanner } from "@/components/features/home/VakmanBanner";
 import { useLang } from "@/lib/hooks/useLang";
 import type { Category } from "@/types";
-import type { CommunityOverzicht } from "@/lib/communities";
+import type { CommunityOverview } from "@/lib/communities";
 
 const DEMO_REVIEWS = [
   {
@@ -52,7 +52,7 @@ const DEMO_REVIEWS = [
 
 interface HomePageClientProps {
   categories: Category[];
-  communities: CommunityOverzicht[];
+  communities: CommunityOverview[];
 }
 
 export function HomePageClient({ categories, communities }: HomePageClientProps) {

@@ -1,7 +1,7 @@
-import type { CommunityOverzicht } from "@/lib/communities";
+import type { CommunityOverview } from "@/lib/communities";
 
 /** Fallback-communities zolang wijken/communities nog niet zijn ingevoerd in Supabase. */
-export const fallbackCommunities: CommunityOverzicht[] = [
+export const fallbackCommunities: CommunityOverview[] = [
   { id: "fallback-1", name: "Blok C", slug: "vathorst-blok-c", district_name: "Vathorst", member_count: 47 },
   { id: "fallback-2", name: "Blok A", slug: "vathorst-blok-a", district_name: "Vathorst", member_count: 31 },
   { id: "fallback-3", name: "Blok 7", slug: "de-hoef-blok-7", district_name: "De Hoef", member_count: 24 },

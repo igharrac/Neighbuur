@@ -16,7 +16,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   if (!professional) notFound();
 
   const { data: reviews } = await supabase
-    .from("review_compleet")
+    .from("review_complete")
     .select("*")
     .eq("professional_id", professional.id)
     .order("upvote_score", { ascending: false })

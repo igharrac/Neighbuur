@@ -115,7 +115,7 @@ export function ReviewForm({
       return;
     }
 
-    // review_compleet (de view die ReviewComplete typeert) heeft een paar
+    // review_complete (de view die ReviewComplete typeert) heeft een paar
     // afgeleide/joined velden (author_name, community_name, reply_*) die
     // niet op de reviews-tabel zelf bestaan — die vullen we hier lokaal in
     // i.p.v. opnieuw op te halen.

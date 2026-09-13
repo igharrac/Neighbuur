@@ -1,7 +1,7 @@
 import { createServerSupabase } from "@/lib/supabase-server";
 import { fallbackCommunities } from "@/lib/communities-fallback";
 
-export interface CommunityOverzicht {
+export interface CommunityOverview {
   id: string;
   name: string;
   slug: string;
@@ -10,11 +10,11 @@ export interface CommunityOverzicht {
 }
 
 /** Haalt de meest actieve communities op (voor social proof op de homepage), met fallback. */
-export async function getActiveCommunities(limit = 5): Promise<CommunityOverzicht[]> {
+export async function getActiveCommunities(limit = 5): Promise<CommunityOverview[]> {
   try {
     const supabase = createServerSupabase();
     const { data, error } = await supabase
-      .from("community_overzicht")
+      .from("community_overview")
       .select("id, name, slug, district_name, member_count")
       .order("member_count", { ascending: false })
       .limit(limit);

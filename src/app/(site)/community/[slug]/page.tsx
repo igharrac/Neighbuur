@@ -8,7 +8,7 @@ import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import type { CommunityContentBlock } from "@/types";
 import type { Lang } from "@/lib/i18n";
 
-interface CommunityOverzichtRow {
+interface CommunityOverviewRow {
   id: string;
   district_id: string;
   name: string;
@@ -25,13 +25,13 @@ export default async function CommunityPage({ params }: { params: { slug: string
   const supabase = createServerSupabase();
 
   const { data: community } = await supabase
-    .from("community_overzicht")
+    .from("community_overview")
     .select("id, district_id, name, slug, type, district_name, member_count, review_count, active_deals")
     .eq("slug", params.slug)
     .maybeSingle();
 
   if (!community) notFound();
-  const c: CommunityOverzichtRow = {
+  const c: CommunityOverviewRow = {
     id: community.id!,
     district_id: community.district_id!,
     name: community.name!,

@@ -5,9 +5,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MagnifyingGlass, ArrowRight, Medal } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
-import type { CommunityOverzicht } from "@/lib/communities";
+import type { CommunityOverview } from "@/lib/communities";
 
-export function WijkActivatie({ communities }: { communities: CommunityOverzicht[] }) {
+export function WijkActivatie({ communities }: { communities: CommunityOverview[] }) {
   const { dict } = useLang();
   const router = useRouter();
   const [query, setQuery] = useState("");

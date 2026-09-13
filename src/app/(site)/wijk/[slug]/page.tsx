@@ -5,7 +5,7 @@ import { CommunityCard } from "@/components/features/community/CommunityCard";
 import { formatDate } from "@/lib/utils";
 import type { District } from "@/types";
 
-interface CommunityOverzichtRow {
+interface CommunityOverviewRow {
   id: string;
   name: string;
   slug: string;
@@ -22,12 +22,12 @@ export default async function WijkPage({ params }: { params: { slug: string } })
   const w = wijk as District;
 
   const { data: communities } = await supabase
-    .from("community_overzicht")
+    .from("community_overview")
     .select("id, name, slug, type, member_count, review_count")
     .eq("district_id", w.id)
     .order("name");
 
-  const rows: CommunityOverzichtRow[] = (communities ?? []).map((c) => ({
+  const rows: CommunityOverviewRow[] = (communities ?? []).map((c) => ({
     id: c.id!,
     name: c.name!,
     slug: c.slug!,

@@ -40,21 +40,21 @@ export function BookingFlow({
 
   const [stap, setStap] = useState<Stap>(1);
   const [datum, setDatum] = useState<string | null>(null);
-  const [categorieId, setCategorieId] = useState("");
-  const [omschrijving, setOmschrijving] = useState("");
-  const [fotoUrls, setFotoUrls] = useState<string[]>([]);
+  const [categoryId, setCategoryId] = useState("");
+  const [description, setDescription] = useState("");
+  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [verstuurd, setVerstuurd] = useState(false);
-  const [gesprekId, setGesprekId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
 
   function reset() {
     setStap(1);
     setDatum(null);
-    setCategorieId("");
-    setOmschrijving("");
-    setFotoUrls([]);
+    setCategoryId("");
+    setDescription("");
+    setPhotoUrls([]);
     setVerstuurd(false);
-    setGesprekId(null);
+    setConversationId(null);
   }
 
   function handleClose() {
@@ -72,9 +72,9 @@ export function BookingFlow({
       body: JSON.stringify({
         vakmanId: professionalId,
         datum,
-        categorieId: categorieId || null,
-        omschrijving,
-        fotoUrls,
+        categorieId: categoryId || null,
+        omschrijving: description,
+        fotoUrls: photoUrls,
         communityId,
       }),
     });
@@ -88,12 +88,12 @@ export function BookingFlow({
     }
 
     const body = await res.json();
-    setGesprekId(body.gesprekId ?? null);
+    setConversationId(body.gesprekId ?? null);
     setVerstuurd(true);
   }
 
-  const categorieNaam = categories.find((c) => c.id === categorieId)?.name_nl ?? null;
-  const kanVerder = stap !== 2 || omschrijving.trim().length > 0;
+  const categoryName = categories.find((c) => c.id === categoryId)?.name_nl ?? null;
+  const kanVerder = stap !== 2 || description.trim().length > 0;
 
   return (
     <Modal open={open} onClose={handleClose} title={verstuurd ? undefined : `Boek ${companyName}`}>
@@ -110,7 +110,7 @@ export function BookingFlow({
             <button
               onClick={() => {
                 handleClose();
-                if (gesprekId) router.push(`/berichten/${gesprekId}`);
+                if (conversationId) router.push(`/berichten/${conversationId}`);
               }}
               className="btn-primary justify-center"
             >
@@ -133,23 +133,23 @@ export function BookingFlow({
           {stap === 2 && user && (
             <KlusOmschrijving
               categories={categories}
-              categorieId={categorieId}
-              onCategorieChange={setCategorieId}
-              omschrijving={omschrijving}
-              onOmschrijvingChange={setOmschrijving}
-              fotoUrls={fotoUrls}
-              onFotoUrlsChange={setFotoUrls}
+              categoryId={categoryId}
+              onCategorieChange={setCategoryId}
+              description={description}
+              onOmschrijvingChange={setDescription}
+              photoUrls={photoUrls}
+              onFotoUrlsChange={setPhotoUrls}
               klantId={user.id}
             />
           )}
           {stap === 3 && (
             <BookingBevestiging
-              bedrijfsnaam={companyName}
+              companyName={companyName}
               logoUrl={logoUrl}
               datum={datum}
-              categorieNaam={categorieNaam}
-              omschrijving={omschrijving}
-              fotoUrls={fotoUrls}
+              categoryName={categoryName}
+              description={description}
+              photoUrls={photoUrls}
             />
           )}
 

@@ -888,35 +888,28 @@ export interface Database {
       };
     };
     Views: {
-      review_compleet: {
+      community_overview: {
         Row: {
           id: string | null;
-          author_id: string | null;
-          professional_id: string | null;
-          booking_id: string | null;
-          community_id: string | null;
-          text: string | null;
-          scores: Json | null;
-          foto_urls: string[] | null;
-          upvote_score: number | null;
+          district_id: string | null;
+          name: string | null;
+          slug: string | null;
+          type: string | null;
+          description: string | null;
+          banner_url: string | null;
+          active: boolean | null;
           created_at: string | null;
-          updated_at: string | null;
-          author_name: string | null;
-          author_avatar: string | null;
-          community_name: string | null;
-          reply_text: string | null;
-          reply_date: string | null;
-          reply_company: string | null;
-          verified: boolean | null;
+          district_name: string | null;
+          district_city: string | null;
+          member_count: string | null;
+          review_count: string | null;
+          active_deals: string | null;
         };
         Relationships: [
-          { foreignKeyName: "review_compleet_author_id_fkey"; columns: ["author_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
-          { foreignKeyName: "review_compleet_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_overview_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
         ];
       };
-      vakman_overzicht: {
+      professional_overview: {
         Row: {
           id: string | null;
           user_id: string | null;
@@ -948,28 +941,35 @@ export interface Database {
           category_slugs: string[] | null;
         };
         Relationships: [
-          { foreignKeyName: "vakman_overzicht_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "professional_overview_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
-      community_overzicht: {
+      review_complete: {
         Row: {
           id: string | null;
-          district_id: string | null;
-          name: string | null;
-          slug: string | null;
-          type: string | null;
-          description: string | null;
-          banner_url: string | null;
-          active: boolean | null;
+          author_id: string | null;
+          professional_id: string | null;
+          booking_id: string | null;
+          community_id: string | null;
+          text: string | null;
+          scores: Json | null;
+          foto_urls: string[] | null;
+          upvote_score: number | null;
           created_at: string | null;
-          district_name: string | null;
-          district_city: string | null;
-          member_count: string | null;
-          review_count: string | null;
-          active_deals: string | null;
+          updated_at: string | null;
+          author_name: string | null;
+          author_avatar: string | null;
+          community_name: string | null;
+          reply_text: string | null;
+          reply_date: string | null;
+          reply_company: string | null;
+          verified: boolean | null;
         };
         Relationships: [
-          { foreignKeyName: "community_overzicht_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_complete_author_id_fkey"; columns: ["author_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_complete_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_complete_booking_id_fkey"; columns: ["booking_id"]; isOneToOne: false; referencedRelation: "bookings"; referencedColumns: ["id"] },
+          { foreignKeyName: "review_complete_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
     };

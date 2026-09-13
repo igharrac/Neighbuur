@@ -23,7 +23,7 @@ export async function VakmanSpotlight({ data }: { data: VakmanSpotlightData }) {
 
   const supabase = createServerSupabase();
   const { data: vakman } = await supabase
-    .from("vakman_overzicht")
+    .from("professional_overview")
     .select("id, company_name, slug, logo_url, bio, verified, avg_score, review_count")
     .eq("id", data.vakman_id)
     .maybeSingle();

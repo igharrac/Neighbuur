@@ -10,11 +10,11 @@ import type { BookingWithCustomer, BookingStatus } from "@/types";
 
 interface BookingCardProps {
   boeking: BookingWithCustomer;
-  gesprekId: string | null;
+  conversationId: string | null;
   onStatusChange: (id: string, status: BookingStatus) => void;
 }
 
-export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardProps) {
+export function BookingCard({ boeking, conversationId, onStatusChange }: BookingCardProps) {
   const { showToast } = useToast();
   const [busy, setBusy] = useState(false);
 
@@ -42,14 +42,14 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
     <div className="card-flat p-5">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-3 min-w-0">
-          <Avatar naam={boeking.klant_naam} src={boeking.klant_avatar} size="md" />
+          <Avatar naam={boeking.customer_name} src={boeking.customer_avatar} size="md" />
           <div className="min-w-0">
             <div className="font-semibold text-body-sm truncate">
-              {boeking.klant_naam}
-              {boeking.community_naam && <span className="text-warmgrijs font-normal"> · {boeking.community_naam}</span>}
+              {boeking.customer_name}
+              {boeking.community_name && <span className="text-warmgrijs font-normal"> · {boeking.community_name}</span>}
             </div>
             <div className="text-body-xs text-warmgrijs truncate">
-              {boeking.categorie_naam ? `${boeking.categorie_naam} · ` : ""}
+              {boeking.category_name ? `${boeking.category_name} · ` : ""}
               {datumLabel}
             </div>
           </div>
@@ -89,8 +89,8 @@ export function BookingCard({ boeking, gesprekId, onStatusChange }: BookingCardP
             <SealCheck size={16} weight="bold" /> Markeer als afgerond
           </button>
         )}
-        {gesprekId && (
-          <Link href={`/berichten/${gesprekId}`} className="btn-ghost !py-2 !px-4 !text-body-sm">
+        {conversationId && (
+          <Link href={`/berichten/${conversationId}`} className="btn-ghost !py-2 !px-4 !text-body-sm">
             <ChatCircle size={16} /> Bericht
           </Link>
         )}

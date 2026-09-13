@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MagnifyingGlass, MapPin, ArrowRight, Star, Tag } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
-import type { CommunityOverzicht } from "@/lib/communities";
+import type { CommunityOverview } from "@/lib/communities";
 
 const AVATARS = [
   { init: "MB", bg: "#cb4914", color: "#fffbff" },
@@ -16,7 +16,7 @@ const AVATARS = [
 ];
 
 interface HeroProps {
-  communities: CommunityOverzicht[];
+  communities: CommunityOverview[];
 }
 
 export function Hero({ communities }: HeroProps) {

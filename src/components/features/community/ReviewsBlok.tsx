@@ -22,7 +22,7 @@ export async function ReviewsBlok({ data, community_id }: { data: ReviewsBlokDat
   const aantal = data.aantal ?? 5;
   const supabase = createServerSupabase();
   const { data: reviews } = await supabase
-    .from("review_compleet")
+    .from("review_complete")
     .select("id, text, scores, upvote_score, author_name, author_avatar, verified, created_at")
     .eq("community_id", community_id)
     .order("upvote_score", { ascending: false })

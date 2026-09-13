@@ -32,7 +32,7 @@ const defs = spec.definitions;
 
 // Views hebben geen PK/FK-constraints in de swagger-required-array op
 // dezelfde manier — behandel ze als "alles optioneel" (kan niet insert/update).
-const VIEWS = new Set(["vakman_overzicht", "review_compleet", "community_overzicht"]);
+const VIEWS = new Set(["professional_overview", "review_complete", "community_overview"]);
 
 function pgToTs(prop) {
   if (prop.enum) return `Database["public"]["Enums"]["${prop.format.replace("public.", "")}"]`;
