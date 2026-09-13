@@ -214,6 +214,30 @@ export interface Database {
           { foreignKeyName: "community_content_blocks_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
+      auth_photos: {
+        Row: {
+          id: string;
+          url: string;
+          category: string;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          url: string;
+          category: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          url?: string;
+          category?: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           id: string;

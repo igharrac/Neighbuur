@@ -19,6 +19,7 @@ export default function OnboardingPage() {
   const searchParams = useSearchParams();
   const invite = searchParams.get("invite");
   const next = searchParams.get("next");
+  const roleParam = searchParams.get("role") as Extract<UserRole, "resident" | "professional"> | null;
   const { dict, lang } = useLang();
   const { showToast } = useToast();
 
@@ -26,7 +27,9 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<Step>("naam-rol");
 
   const [naam, setNaam] = useState("");
-  const [rol, setRol] = useState<Extract<UserRole, "resident" | "professional"> | null>(null);
+  const [rol, setRol] = useState<Extract<UserRole, "resident" | "professional"> | null>(
+    roleParam === "resident" ? "resident" : null
+  );
   const [akkoord, setAkkoord] = useState(false);
 
   const [wijkQuery, setWijkQuery] = useState("");
@@ -69,6 +72,13 @@ export default function OnboardingPage() {
         } else {
           router.replace(next || (profiel.role === "professional" ? "/dashboard" : "/plan"));
         }
+        return;
+      }
+
+      // Nieuwe gebruiker die al via /login als vakman aangaf verder te
+      // willen — meteen door, geen rolvraag nogmaals tonen.
+      if (roleParam === "professional") {
+        router.replace("/registreer/vakman");
         return;
       }
 
@@ -309,31 +319,35 @@ export default function OnboardingPage() {
                 onChange={(e) => setNaam(e.target.value)}
               />
 
-              <label className="text-body-sm font-semibold block mb-2">{dict.login.whatDescribes}</label>
-              <div className="flex flex-col gap-2.5 mb-6">
-                {(
-                  [
-                    { value: "resident" as const, icon: "🏠", title: dict.login.resident, sub: dict.login.residentSub },
-                    { value: "professional" as const, icon: "🔧", title: dict.login.professional, sub: dict.login.professionalSub },
-                  ]
-                ).map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => setRol(option.value)}
-                    className={`flex items-center gap-3.5 p-4 rounded-sm border-2 text-left transition-all ${
-                      rol === option.value
-                        ? "border-terracotta bg-terracotta-50"
-                        : "border-lijn hover:border-terracotta hover:bg-terracotta-50/50"
-                    }`}
-                  >
-                    <span className="text-[22px]">{option.icon}</span>
-                    <div>
-                      <div className="font-semibold text-body-sm">{option.title}</div>
-                      <div className="text-body-xs text-warmgrijs">{option.sub}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {!roleParam && (
+                <>
+                  <label className="text-body-sm font-semibold block mb-2">{dict.login.whatDescribes}</label>
+                  <div className="flex flex-col gap-2.5 mb-6">
+                    {(
+                      [
+                        { value: "resident" as const, icon: "🏠", title: dict.login.resident, sub: dict.login.residentSub },
+                        { value: "professional" as const, icon: "🔧", title: dict.login.professional, sub: dict.login.professionalSub },
+                      ]
+                    ).map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setRol(option.value)}
+                        className={`flex items-center gap-3.5 p-4 rounded-sm border-2 text-left transition-all ${
+                          rol === option.value
+                            ? "border-terracotta bg-terracotta-50"
+                            : "border-lijn hover:border-terracotta hover:bg-terracotta-50/50"
+                        }`}
+                      >
+                        <span className="text-[22px]">{option.icon}</span>
+                        <div>
+                          <div className="font-semibold text-body-sm">{option.title}</div>
+                          <div className="text-body-xs text-warmgrijs">{option.sub}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {rol === "resident" && (
                 <label className="flex items-start gap-2.5 mb-6 cursor-pointer">
