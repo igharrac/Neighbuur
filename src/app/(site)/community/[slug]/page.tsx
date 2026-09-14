@@ -10,11 +10,11 @@ import type { Lang } from "@/lib/i18n";
 
 interface CommunityOverviewRow {
   id: string;
-  district_id: string;
+  development_id: string | null;
   name: string;
   slug: string;
   type: string;
-  district_name: string;
+  development_name: string | null;
   member_count: number;
   review_count: number;
   active_deals: number;
@@ -26,18 +26,18 @@ export default async function CommunityPage({ params }: { params: { slug: string
 
   const { data: community } = await supabase
     .from("community_overview")
-    .select("id, district_id, name, slug, type, district_name, member_count, review_count, active_deals")
+    .select("id, development_id, name, slug, type, development_name, member_count, review_count, active_deals")
     .eq("slug", params.slug)
     .maybeSingle();
 
   if (!community) notFound();
   const c: CommunityOverviewRow = {
     id: community.id!,
-    district_id: community.district_id!,
+    development_id: community.development_id,
     name: community.name!,
     slug: community.slug!,
     type: community.type!,
-    district_name: community.district_name!,
+    development_name: community.development_name,
     member_count: Number(community.member_count ?? 0),
     review_count: Number(community.review_count ?? 0),
     active_deals: Number(community.active_deals ?? 0),
@@ -78,8 +78,8 @@ export default async function CommunityPage({ params }: { params: { slug: string
           <CommunityHeader
             name={c.name}
             type={c.type}
-            districtName={c.district_name}
-            districtId={c.district_id}
+            developmentName={c.development_name}
+            developmentId={c.development_id}
             communityId={c.id}
             memberCount={c.member_count}
             reviewCount={c.review_count}

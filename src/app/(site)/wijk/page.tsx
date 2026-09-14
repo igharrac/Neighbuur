@@ -15,24 +15,30 @@ interface WijkRow {
 interface CommunityRow {
   name: string;
   slug: string;
-  district_id: string;
+  development_id: string | null;
 }
 
 export default async function WijkIndexPage() {
   const supabase = createServerSupabase();
 
   const { data: wijkenData } = await supabase
-    .from("districts")
+    .from("developments")
     .select("id, name, slug, city, postal_code, home_count")
     .eq("active", true)
     .order("name");
   const wijken = (wijkenData ?? []) as WijkRow[];
 
-  const { data: communitiesData } = await supabase.from("communities").select("name, slug, district_id").eq("active", true);
+  const { data: communitiesData } = await supabase
+    .from("communities")
+    .select("name, slug, development_id")
+    .eq("active", true);
   const communities = (communitiesData ?? []) as CommunityRow[];
 
   const communitiesPerWijk = new Map<string, number>();
-  communities.forEach((c) => communitiesPerWijk.set(c.district_id, (communitiesPerWijk.get(c.district_id) ?? 0) + 1));
+  communities.forEach((c) => {
+    if (!c.development_id) return;
+    communitiesPerWijk.set(c.development_id, (communitiesPerWijk.get(c.development_id) ?? 0) + 1);
+  });
 
   return (
     <div className="bg-cream-warm min-h-screen">
@@ -60,7 +66,7 @@ export default async function WijkIndexPage() {
             communities={communities.map((c) => ({
               name: c.name,
               slug: c.slug,
-              districtName: wijken.find((w) => w.id === c.district_id)?.name ?? "",
+              districtName: wijken.find((w) => w.id === c.development_id)?.name ?? "",
             }))}
           />
         </div>

@@ -46,7 +46,7 @@ export interface Category {
   active: boolean;
 }
 
-export interface District {
+export interface Development {
   id: string;
   name: string;
   city: string;
@@ -60,7 +60,7 @@ export interface District {
 
 export interface Community {
   id: string;
-  district_id: string;
+  development_id: string | null;
   name: string;
   slug: string;
   type: string;

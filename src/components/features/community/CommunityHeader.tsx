@@ -10,8 +10,8 @@ import { useToast } from "@/components/ui/Toast";
 interface CommunityHeaderProps {
   name: string;
   type: string;
-  districtName: string;
-  districtId: string;
+  developmentName: string | null;
+  developmentId: string | null;
   communityId: string;
   memberCount: number;
   reviewCount: number;
@@ -22,8 +22,8 @@ interface CommunityHeaderProps {
 export function CommunityHeader({
   name,
   type,
-  districtName,
-  districtId,
+  developmentName,
+  developmentId,
   communityId,
   memberCount,
   reviewCount,
@@ -58,7 +58,7 @@ export function CommunityHeader({
 
     await supabase
       .from("resident_profiles")
-      .upsert({ user_id: user.id, community_id: communityId, district_id: districtId }, { onConflict: "user_id" });
+      .upsert({ user_id: user.id, community_id: communityId, development_id: developmentId }, { onConflict: "user_id" });
 
     setJoining(false);
     setIsMember(true);
@@ -71,7 +71,8 @@ export function CommunityHeader({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-body-xs font-semibold uppercase tracking-wider text-terracotta mb-1">
-            {type} · {districtName}
+            {type}
+            {developmentName && ` · ${developmentName}`}
           </p>
           <h1 className="font-display text-display-md text-warmzwart">{name}</h1>
         </div>

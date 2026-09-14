@@ -45,7 +45,7 @@ export default async function PlanPage() {
 
   const { data: bewonerProfiel } = await supabase
     .from("resident_profiles")
-    .select("community_id, district_id, postal_code, show_community_suggestions")
+    .select("community_id, development_id, postal_code, show_community_suggestions")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -53,21 +53,21 @@ export default async function PlanPage() {
   if (bewonerProfiel?.community_id) {
     const { data: c } = await supabase
       .from("community_overview")
-      .select("name, slug, member_count, district_name")
+      .select("name, slug, member_count, development_name")
       .eq("id", bewonerProfiel.community_id)
       .maybeSingle();
-    if (c) community = { naam: c.name!, slug: c.slug!, aantal_leden: Number(c.member_count ?? 0), wijk_naam: c.district_name };
+    if (c) community = { naam: c.name!, slug: c.slug!, aantal_leden: Number(c.member_count ?? 0), wijk_naam: c.development_name };
   }
 
   // Geen community? Dan proberen we buren te detecteren (organische
   // communityvorming) — alleen mogelijk als er een postcode bekend is
   // (oudere/demo-accounts zonder adres slaan dit gewoon over).
   let detectie: DetectieResultaat | null = null;
-  if (!community && bewonerProfiel?.district_id && bewonerProfiel?.postal_code && bewonerProfiel.show_community_suggestions !== false) {
+  if (!community && bewonerProfiel?.development_id && bewonerProfiel?.postal_code && bewonerProfiel.show_community_suggestions !== false) {
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, name, slug")
-      .eq("district_id", bewonerProfiel.district_id)
+      .eq("development_id", bewonerProfiel.development_id)
       .eq("postcode_cluster", bewonerProfiel.postal_code)
       .neq("status", "slapend")
       .maybeSingle();
@@ -76,12 +76,12 @@ export default async function PlanPage() {
       detectie = { type: "bestaande", name: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
     } else {
       const { data: wijkRow } = await supabase
-        .from("districts")
+        .from("developments")
         .select("community_threshold")
-        .eq("id", bewonerProfiel.district_id)
+        .eq("id", bewonerProfiel.development_id)
         .maybeSingle();
       const { data: telling } = await supabase.rpc("count_residents_in_cluster", {
-        p_wijk_id: bewonerProfiel.district_id,
+        p_development_id: bewonerProfiel.development_id,
         p_postcode: bewonerProfiel.postal_code,
         p_gebouw_label: null,
       });
@@ -89,7 +89,7 @@ export default async function PlanPage() {
       const count = typeof telling === "number" ? telling : 1;
       detectie =
         count >= threshold
-          ? { type: "drempel", postcode: bewonerProfiel.postal_code, telling: count, threshold, districtId: bewonerProfiel.district_id }
+          ? { type: "drempel", postcode: bewonerProfiel.postal_code, telling: count, threshold, developmentId: bewonerProfiel.development_id }
           : { type: "vroeg", threshold };
     }
   }

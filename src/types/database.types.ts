@@ -131,6 +131,45 @@ export interface Database {
           { foreignKeyName: "professional_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
+      developments: {
+        Row: {
+          id: string;
+          name: string;
+          city: string;
+          postal_code: string | null;
+          completion_date: string | null;
+          home_count: number | null;
+          slug: string;
+          active: boolean | null;
+          created_at: string | null;
+          community_threshold: number | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          city: string;
+          postal_code?: string | null;
+          completion_date?: string | null;
+          home_count?: number | null;
+          slug: string;
+          active?: boolean | null;
+          created_at?: string | null;
+          community_threshold?: number | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          city?: string;
+          postal_code?: string | null;
+          completion_date?: string | null;
+          home_count?: number | null;
+          slug?: string;
+          active?: boolean | null;
+          created_at?: string | null;
+          community_threshold?: number | null;
+        };
+        Relationships: [];
+      };
       review_replies: {
         Row: {
           id: string;
@@ -410,51 +449,12 @@ export interface Database {
           { foreignKeyName: "invitations_used_by_fkey"; columns: ["used_by"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
-      districts: {
-        Row: {
-          id: string;
-          name: string;
-          city: string;
-          postal_code: string | null;
-          completion_date: string | null;
-          home_count: number | null;
-          slug: string;
-          active: boolean | null;
-          created_at: string | null;
-          community_threshold: number | null;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          city: string;
-          postal_code?: string | null;
-          completion_date?: string | null;
-          home_count?: number | null;
-          slug: string;
-          active?: boolean | null;
-          created_at?: string | null;
-          community_threshold?: number | null;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          city?: string;
-          postal_code?: string | null;
-          completion_date?: string | null;
-          home_count?: number | null;
-          slug?: string;
-          active?: boolean | null;
-          created_at?: string | null;
-          community_threshold?: number | null;
-        };
-        Relationships: [];
-      };
       resident_profiles: {
         Row: {
           id: string;
           user_id: string;
           community_id: string | null;
-          district_id: string | null;
+          development_id: string | null;
           completion_date: string | null;
           address: string | null;
           invite_code: string | null;
@@ -469,7 +469,7 @@ export interface Database {
           id?: string;
           user_id: string;
           community_id?: string | null;
-          district_id?: string | null;
+          development_id?: string | null;
           completion_date?: string | null;
           address?: string | null;
           invite_code?: string | null;
@@ -484,7 +484,7 @@ export interface Database {
           id?: string;
           user_id?: string;
           community_id?: string | null;
-          district_id?: string | null;
+          development_id?: string | null;
           completion_date?: string | null;
           address?: string | null;
           invite_code?: string | null;
@@ -498,7 +498,7 @@ export interface Database {
         Relationships: [
           { foreignKeyName: "resident_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "resident_profiles_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
-          { foreignKeyName: "resident_profiles_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
+          { foreignKeyName: "resident_profiles_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
         ];
       };
       availability: {
@@ -527,7 +527,7 @@ export interface Database {
       communities: {
         Row: {
           id: string;
-          district_id: string;
+          development_id: string | null;
           name: string;
           slug: string;
           type: string;
@@ -540,7 +540,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          district_id: string;
+          development_id?: string | null;
           name: string;
           slug: string;
           type?: string;
@@ -553,7 +553,7 @@ export interface Database {
         };
         Update: {
           id?: string;
-          district_id?: string;
+          development_id?: string | null;
           name?: string;
           slug?: string;
           type?: string;
@@ -565,7 +565,7 @@ export interface Database {
           postcode_cluster?: string | null;
         };
         Relationships: [
-          { foreignKeyName: "communities_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
+          { foreignKeyName: "communities_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
         ];
       };
       review_votes: {
@@ -960,7 +960,7 @@ export interface Database {
       community_overview: {
         Row: {
           id: string | null;
-          district_id: string | null;
+          development_id: string | null;
           name: string | null;
           slug: string | null;
           type: string | null;
@@ -968,14 +968,14 @@ export interface Database {
           banner_url: string | null;
           active: boolean | null;
           created_at: string | null;
-          district_name: string | null;
-          district_city: string | null;
+          development_name: string | null;
+          development_city: string | null;
           member_count: string | null;
           review_count: string | null;
           active_deals: string | null;
         };
         Relationships: [
-          { foreignKeyName: "community_overview_district_id_fkey"; columns: ["district_id"]; isOneToOne: false; referencedRelation: "districts"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_overview_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
         ];
       };
       professional_overview: {
@@ -1060,11 +1060,11 @@ export interface Database {
         Returns: boolean;
       };
       count_residents_in_cluster: {
-        Args: { p_wijk_id: string; p_postcode: string; p_gebouw_label?: string | null };
+        Args: { p_development_id: string; p_postcode: string; p_gebouw_label?: string | null };
         Returns: number;
       };
       start_community: {
-        Args: { p_wijk_id: string; p_postcode: string; p_titel_nl: string | null };
+        Args: { p_development_id: string; p_postcode: string; p_titel_nl: string | null };
         Returns: { id: string; slug: string; aangemaakt: boolean }[];
       };
       reset_monthly_requests: {

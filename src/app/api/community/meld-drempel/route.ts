@@ -10,20 +10,24 @@ import { notifyUser } from "@/lib/notify";
  * die al boven de drempel zit en roept dit dus niet nogmaals aan.
  */
 export async function POST(request: Request) {
-  const { wijkId, postcode } = await request.json();
-  if (!wijkId || !postcode) {
-    return NextResponse.json({ error: "wijkId en postcode zijn verplicht" }, { status: 400 });
+  const { developmentId, postcode } = await request.json();
+  if (!developmentId || !postcode) {
+    return NextResponse.json({ error: "developmentId en postcode zijn verplicht" }, { status: 400 });
   }
 
   const admin = createAdminSupabase();
 
-  const { data: wijk } = await admin.from("districts").select("community_threshold").eq("id", wijkId).maybeSingle();
-  const threshold = wijk?.community_threshold ?? 3;
+  const { data: development } = await admin
+    .from("developments")
+    .select("community_threshold")
+    .eq("id", developmentId)
+    .maybeSingle();
+  const threshold = development?.community_threshold ?? 3;
 
   const { data: leden } = await admin
     .from("resident_profiles")
     .select("user_id, show_community_suggestions")
-    .eq("district_id", wijkId)
+    .eq("development_id", developmentId)
     .eq("postal_code", postcode)
     .is("community_id", null);
 

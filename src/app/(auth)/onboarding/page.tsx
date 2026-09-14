@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase";
 import { useLang } from "@/lib/hooks/useLang";
 import { useToast } from "@/components/ui/Toast";
 import { generateUitnodigingscode } from "@/lib/utils";
-import type { UserRole, District } from "@/types";
+import type { UserRole, Development } from "@/types";
 
 type Step = "naam-rol" | "wijk" | "adres" | "detectie";
 
@@ -33,8 +33,8 @@ export default function OnboardingPage() {
   const [akkoord, setAkkoord] = useState(false);
 
   const [wijkQuery, setWijkQuery] = useState("");
-  const [wijken, setWijken] = useState<District[]>([]);
-  const [gekozenWijk, setGekozenWijk] = useState<District | null>(null);
+  const [wijken, setWijken] = useState<Development[]>([]);
+  const [gekozenWijk, setGekozenWijk] = useState<Development | null>(null);
 
   // Adres — gebruikt voor de buren-detectie, nooit zichtbaar voor anderen
   // zonder dat ze zelf lid worden van dezelfde community.
@@ -93,8 +93,8 @@ export default function OnboardingPage() {
     if (step !== "wijk") return;
     async function load() {
       const supabase = createClient();
-      const { data } = await supabase.from("districts").select("*").eq("active", true).order("name");
-      setWijken((data ?? []) as District[]);
+      const { data } = await supabase.from("developments").select("*").eq("active", true).order("name");
+      setWijken((data ?? []) as Development[]);
     }
     load();
   }, [step]);
@@ -146,7 +146,7 @@ export default function OnboardingPage() {
     setStep("wijk");
   }
 
-  function handleKiesWijk(wijk: District) {
+  function handleKiesWijk(wijk: Development) {
     setGekozenWijk(wijk);
     setStep("adres");
   }
@@ -191,7 +191,7 @@ export default function OnboardingPage() {
 
     const { error: bewonerError } = await supabase.from("resident_profiles").insert({
       user_id: user.id,
-      district_id: gekozenWijk.id,
+      development_id: gekozenWijk.id,
       postal_code: postcodeNorm,
       house_number: huisnummer.trim(),
       house_number_suffix: huisnummerToevoeging.trim() || null,
@@ -208,7 +208,7 @@ export default function OnboardingPage() {
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, name, slug")
-      .eq("district_id", gekozenWijk.id)
+      .eq("development_id", gekozenWijk.id)
       .eq("postcode_cluster", postcodeNorm)
       .neq("status", "slapend")
       .maybeSingle();
@@ -217,7 +217,7 @@ export default function OnboardingPage() {
       setBestaandeCommunity(bestaande);
     } else {
       const { data: telling } = await supabase.rpc("count_residents_in_cluster", {
-        p_wijk_id: gekozenWijk.id,
+        p_development_id: gekozenWijk.id,
         p_postcode: postcodeNorm,
         p_gebouw_label: gebouwNorm,
       });
@@ -232,7 +232,7 @@ export default function OnboardingPage() {
         fetch("/api/community/meld-drempel", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ wijkId: gekozenWijk.id, postcode: postcodeNorm }),
+          body: JSON.stringify({ developmentId: gekozenWijk.id, postcode: postcodeNorm }),
         }).catch(() => {});
       }
     }
@@ -264,7 +264,7 @@ export default function OnboardingPage() {
     const postcodeNorm = postcode.trim().toUpperCase().replace(/\s+/g, "");
 
     const { data, error } = await supabase.rpc("start_community", {
-      p_wijk_id: gekozenWijk.id,
+      p_development_id: gekozenWijk.id,
       p_postcode: postcodeNorm,
       p_titel_nl: nieuweTitel.trim() || null,
     });

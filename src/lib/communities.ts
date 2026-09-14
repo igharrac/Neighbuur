@@ -5,7 +5,7 @@ export interface CommunityOverview {
   id: string;
   name: string;
   slug: string;
-  district_name: string;
+  development_name: string | null;
   member_count: number;
 }
 
@@ -15,7 +15,7 @@ export async function getActiveCommunities(limit = 5): Promise<CommunityOverview
     const supabase = createServerSupabase();
     const { data, error } = await supabase
       .from("community_overview")
-      .select("id, name, slug, district_name, member_count")
+      .select("id, name, slug, development_name, member_count")
       .order("member_count", { ascending: false })
       .limit(limit);
 
@@ -24,7 +24,7 @@ export async function getActiveCommunities(limit = 5): Promise<CommunityOverview
       id: c.id!,
       name: c.name!,
       slug: c.slug!,
-      district_name: c.district_name!,
+      development_name: c.development_name,
       member_count: Number(c.member_count ?? 0),
     }));
   } catch {

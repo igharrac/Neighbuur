@@ -12,7 +12,7 @@ export async function GET(request: Request, { params }: { params: { code: string
   // Zoek de uitnodiger via zijn persoonlijke code
   const { data: uitnodigerProfiel } = await admin
     .from("resident_profiles")
-    .select("user_id, community_id, district_id, communities(slug)")
+    .select("user_id, community_id, development_id, communities(slug)")
     .eq("invite_code", code)
     .maybeSingle();
 
@@ -72,7 +72,7 @@ export async function GET(request: Request, { params }: { params: { code: string
     await admin.from("resident_profiles").insert({
       user_id: user.id,
       community_id: uitnodigerProfiel.community_id,
-      district_id: uitnodigerProfiel.district_id,
+      development_id: uitnodigerProfiel.development_id,
       invite_code: eigenCode,
     });
   }

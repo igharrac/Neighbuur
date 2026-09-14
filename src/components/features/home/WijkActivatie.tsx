@@ -17,7 +17,7 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
     const trimmed = query.trim().toLowerCase();
     const match = trimmed
       ? communities.find(
-          (c) => c.name.toLowerCase().includes(trimmed) || c.district_name.toLowerCase().includes(trimmed)
+          (c) => c.name.toLowerCase().includes(trimmed) || (c.development_name ?? "").toLowerCase().includes(trimmed)
         )
       : undefined;
     router.push(match ? `/wijk/${match.slug}` : "/login");

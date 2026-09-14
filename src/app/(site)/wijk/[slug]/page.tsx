@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { CommunityCard } from "@/components/features/community/CommunityCard";
 import { formatDate } from "@/lib/utils";
-import type { District } from "@/types";
+import type { Development } from "@/types";
 
 interface CommunityOverviewRow {
   id: string;
@@ -17,14 +17,14 @@ interface CommunityOverviewRow {
 export default async function WijkPage({ params }: { params: { slug: string } }) {
   const supabase = createServerSupabase();
 
-  const { data: wijk } = await supabase.from("districts").select("*").eq("slug", params.slug).maybeSingle();
+  const { data: wijk } = await supabase.from("developments").select("*").eq("slug", params.slug).maybeSingle();
   if (!wijk) notFound();
-  const w = wijk as District;
+  const w = wijk as Development;
 
   const { data: communities } = await supabase
     .from("community_overview")
     .select("id, name, slug, type, member_count, review_count")
-    .eq("district_id", w.id)
+    .eq("development_id", w.id)
     .order("name");
 
   const rows: CommunityOverviewRow[] = (communities ?? []).map((c) => ({

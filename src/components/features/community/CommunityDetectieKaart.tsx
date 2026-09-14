@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase";
 
 export type DetectieResultaat =
   | { type: "bestaande"; name: string; slug: string; communityId: string }
-  | { type: "drempel"; postcode: string; telling: number; threshold: number; districtId: string }
+  | { type: "drempel"; postcode: string; telling: number; threshold: number; developmentId: string }
   | { type: "vroeg"; threshold: number };
 
 export function CommunityDetectieKaart(props: DetectieResultaat) {
@@ -47,7 +47,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
     setSaving(true);
     const supabase = createClient();
     const { data, error } = await supabase.rpc("start_community", {
-      p_wijk_id: props.districtId,
+      p_development_id: props.developmentId,
       p_postcode: props.postcode,
       p_titel_nl: titel.trim() || null,
     });
