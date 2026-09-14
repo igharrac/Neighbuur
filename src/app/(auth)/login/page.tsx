@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { EnvelopeSimple } from "@phosphor-icons/react";
-import { createClient } from "@/lib/supabase";
+import { createClient, createImplicitClient } from "@/lib/supabase";
 import { useLang } from "@/lib/hooks/useLang";
 import { useToast } from "@/components/ui/Toast";
 import { useAuthPhoto } from "@/lib/hooks/useAuthPhoto";
@@ -51,11 +51,11 @@ export default function LoginPage() {
 
   async function handleSendLink() {
     setLoading(true);
-    const supabase = createClient();
+    const supabase = createImplicitClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(onboardingUrl())}`,
+        emailRedirectTo: `${window.location.origin}/auth/magic?next=${encodeURIComponent(onboardingUrl())}`,
       },
     });
 

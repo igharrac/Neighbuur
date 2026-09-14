@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, EnvelopeSimple } from "@phosphor-icons/react";
-import { createClient } from "@/lib/supabase";
+import { createClient, createImplicitClient } from "@/lib/supabase";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useToast } from "@/components/ui/Toast";
 import { useLang } from "@/lib/hooks/useLang";
@@ -108,11 +108,11 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
 
   async function handleSendLink() {
     setAuthLoadingLocal(true);
-    const supabase = createClient();
+    const supabase = createImplicitClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(registreerNext)}`,
+        emailRedirectTo: `${window.location.origin}/auth/magic?next=${encodeURIComponent(registreerNext)}`,
       },
     });
 
