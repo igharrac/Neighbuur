@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { WerkFotoGrid } from "@/components/features/vakman/WerkFotoGrid";
 import { BeschikbaarheidEditor } from "@/components/features/vakman/BeschikbaarheidEditor";
+import { AccountActions } from "@/components/features/profiel/AccountActions";
 import type { Category, ProfessionalProfile } from "@/types";
 
 const STRAAL_OPTIES = [5, 10, 15, 25];
@@ -272,6 +273,8 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
           </label>
         )}
       </section>
+
+      <AccountActions />
     </div>
   );
 }

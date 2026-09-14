@@ -15,6 +15,28 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
 
   if (!professional) notFound();
 
+  const { data: eigenaarProfiel } = await supabase
+    .from("profiles")
+    .select("deactivated_at, deleted_at")
+    .eq("id", professional.user_id)
+    .maybeSingle();
+
+  if (eigenaarProfiel?.deleted_at) notFound();
+
+  const {
+    data: { user: viewer },
+  } = await supabase.auth.getUser();
+  const bekijktEigenProfiel = !!viewer && viewer.id === professional.user_id;
+
+  if (eigenaarProfiel?.deactivated_at && !bekijktEigenProfiel) {
+    return (
+      <div className="max-w-[480px] mx-auto px-6 py-24 text-center">
+        <h1 className="font-display text-display-sm text-warmzwart mb-2">Dit profiel is tijdelijk niet actief</h1>
+        <p className="text-body text-warmgrijs">Deze vakman heeft zijn profiel gepauzeerd. Kom later nog eens terug.</p>
+      </div>
+    );
+  }
+
   const { data: reviews } = await supabase
     .from("review_complete")
     .select("*")
@@ -23,10 +45,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
     .order("created_at", { ascending: false });
 
   const alleReviews = (reviews ?? []) as ReviewComplete[];
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = viewer;
 
   let votedReviewIds: string[] = [];
   let communityId: string | null = null;

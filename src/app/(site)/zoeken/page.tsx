@@ -17,7 +17,7 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   const allCategories = await getCategorieen();
   const professionalCategories = allCategories.filter((c) => c.type === "professional");
 
-  let query = supabase.from("professional_overview").select("*");
+  let query = supabase.from("professional_overview").select("*").is("deactivated_at", null).is("deleted_at", null);
 
   if (searchParams.categorie) {
     query = query.contains("category_slugs", [searchParams.categorie]);

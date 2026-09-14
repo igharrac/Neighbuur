@@ -156,6 +156,58 @@ export function uitnodigingGeaccepteerdEmail(lang: Lang, data: { naam: string; c
   };
 }
 
+export function accountGedeactiveerdEmail(lang: Lang, data: { naam: string; link: string }): EmailContent {
+  const url = `${APP_URL}${data.link}`;
+  if (lang === "en") {
+    return {
+      subject: "Your Neighbuur account has been paused",
+      html: layout(
+        "en",
+        "Account paused",
+        `<p>Hi ${data.naam}, your account has been paused. It's not visible to others in the meantime. Simply log in again whenever you'd like — your account reactivates automatically, no extra steps needed.</p>`,
+        "Log in",
+        url
+      ),
+    };
+  }
+  return {
+    subject: "Je Neighbuur-account is gepauzeerd",
+    html: layout(
+      "nl",
+      "Account gepauzeerd",
+      `<p>Hoi ${data.naam}, je account is gepauzeerd. Het is in de tussentijd niet zichtbaar voor anderen. Log op elk moment weer in — je account wordt dan automatisch heractiveerd, geen extra stappen nodig.</p>`,
+      "Inloggen",
+      url
+    ),
+  };
+}
+
+export function accountVerwijderdEmail(lang: Lang, data: { naam: string }): EmailContent {
+  const url = APP_URL;
+  if (lang === "en") {
+    return {
+      subject: "Your Neighbuur account has been deleted",
+      html: layout(
+        "en",
+        "Account deleted",
+        `<p>Hi ${data.naam}, your account has been permanently deleted. Your personal data (name, email, phone number, address) has been removed and you will no longer be able to log in.</p><p>Any reviews or bookings you were part of remain visible to other users, for their own history — they now show "Deleted user" instead of your name.</p><p>This action cannot be undone.</p>`,
+        "Neighbuur",
+        url
+      ),
+    };
+  }
+  return {
+    subject: "Je Neighbuur-account is verwijderd",
+    html: layout(
+      "nl",
+      "Account verwijderd",
+      `<p>Hoi ${data.naam}, je account is permanent verwijderd. Je persoonsgegevens (naam, e-mail, telefoonnummer, adres) zijn verwijderd en je kunt niet meer inloggen.</p><p>Reviews of boekingen waar je onderdeel van was, blijven zichtbaar voor andere gebruikers, voor hun eigen geschiedenis — daar staat nu "Verwijderde gebruiker" in plaats van je naam.</p><p>Deze actie kan niet ongedaan gemaakt worden.</p>`,
+      "Neighbuur",
+      url
+    ),
+  };
+}
+
 export function premiumLimietEmail(lang: Lang, data: { limiet: number; link: string }): EmailContent {
   const url = `${APP_URL}${data.link}`;
   if (lang === "en") {

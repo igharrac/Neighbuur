@@ -196,4 +196,6 @@ export interface ProfessionalOverview extends ProfessionalProfile {
   owner_avatar: string | null;
   completed_jobs: number;
   category_slugs: string[] | null;
+  deactivated_at: string | null;
+  deleted_at: string | null;
 }
