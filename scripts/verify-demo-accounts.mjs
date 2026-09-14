@@ -3,7 +3,7 @@
  *
  * 1. Bestaan alle accounts, en zijn auth-user en profiel correct gekoppeld?
  * 2. Werkt inloggen via de normale auth-flow (anon client + wachtwoord)?
- * 3. Komt elk account terecht in de juiste rol (bewoner -> /plan, vakman -> /dashboard)?
+ * 3. Komt elk account terecht in de juiste rol (resident -> /plan, professional -> /dashboard)?
  * 4. RLS: kan een bewoner een vakmanprofiel van iemand anders muteren? (moet falen)
  * 5. RLS: kan een vakman boekingen/berichten van een bewoner zien die niet van hem is? (moet leeg/gefilterd zijn)
  *
@@ -74,9 +74,9 @@ console.log("── 1-3. Accounts, koppeling en login ──");
 const sessies = {}; // email -> { client, user, profiel }
 
 for (const email of [...BEWONERS, ...VAKMEN]) {
-  const verwachteRol = BEWONERS.includes(email) ? "bewoner" : "vakman";
+  const verwachteRol = BEWONERS.includes(email) ? "resident" : "professional";
 
-  const { data: profiel } = await admin.from("profielen").select("id, naam, email, rol").eq("email", email).maybeSingle();
+  const { data: profiel } = await admin.from("profiles").select("id, name, email, role").eq("email", email).maybeSingle();
   if (!profiel) {
     fail(`${email}: geen profiel gevonden`);
     continue;
@@ -91,8 +91,8 @@ for (const email of [...BEWONERS, ...VAKMEN]) {
     fail(`${email}: auth-email (${authUser.user.email}) komt niet overeen met profiel-email`);
     continue;
   }
-  if (profiel.rol !== verwachteRol) {
-    fail(`${email}: rol is '${profiel.rol}', verwacht '${verwachteRol}'`);
+  if (profiel.role !== verwachteRol) {
+    fail(`${email}: rol is '${profiel.role}', verwacht '${verwachteRol}'`);
     continue;
   }
 
@@ -103,22 +103,22 @@ for (const email of [...BEWONERS, ...VAKMEN]) {
     continue;
   }
 
-  if (verwachteRol === "vakman") {
-    const { data: vp } = await admin.from("vakman_profielen").select("id").eq("user_id", profiel.id).maybeSingle();
+  if (verwachteRol === "professional") {
+    const { data: vp } = await admin.from("professional_profiles").select("id").eq("user_id", profiel.id).maybeSingle();
     if (!vp) {
-      fail(`${email}: rol vakman maar geen vakman_profielen-rij — zou op /registreer/vakman belanden i.p.v. /dashboard`);
+      fail(`${email}: rol professional maar geen professional_profiles-rij — zou op /registreer/vakman belanden i.p.v. /dashboard`);
       continue;
     }
   } else {
-    const { data: bp } = await admin.from("bewoner_profielen").select("id").eq("user_id", profiel.id).maybeSingle();
+    const { data: bp } = await admin.from("resident_profiles").select("id").eq("user_id", profiel.id).maybeSingle();
     if (!bp) {
-      fail(`${email}: rol bewoner maar geen bewoner_profielen-rij — zou vastlopen op /plan`);
+      fail(`${email}: rol resident maar geen resident_profiles-rij — zou vastlopen op /plan`);
       continue;
     }
   }
 
   sessies[email] = { client, userId: profiel.id, rol: verwachteRol };
-  pass(`${email} — login ok, rol '${verwachteRol}' correct, landt op ${verwachteRol === "vakman" ? "/dashboard" : "/plan"}`);
+  pass(`${email} — login ok, rol '${verwachteRol}' correct, landt op ${verwachteRol === "professional" ? "/dashboard" : "/plan"}`);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -127,38 +127,42 @@ for (const email of [...BEWONERS, ...VAKMEN]) {
 console.log("\n── 4. RLS: bewoner kan geen vakmanprofiel muteren ──");
 
 const bewonerSessie = sessies["demo.bewoner.actief@neighbuur.test"];
-const { data: eenVakman } = await admin.from("vakman_profielen").select("id, bedrijfsnaam").eq("user_id", sessies["demo.vakman.top@neighbuur.test"]?.userId).maybeSingle();
+const { data: eenVakman } = await admin
+  .from("professional_profiles")
+  .select("id, company_name")
+  .eq("user_id", sessies["demo.vakman.top@neighbuur.test"]?.userId)
+  .maybeSingle();
 
 if (bewonerSessie && eenVakman) {
   const { data: updateResult, error: updateErr } = await bewonerSessie.client
-    .from("vakman_profielen")
-    .update({ bedrijfsnaam: "GEHACKT" })
+    .from("professional_profiles")
+    .update({ company_name: "GEHACKT" })
     .eq("id", eenVakman.id)
     .select();
 
   if (updateErr) {
-    pass(`bewoner-update op vakman_profielen geweigerd door RLS (${updateErr.message})`);
+    pass(`bewoner-update op professional_profiles geweigerd door RLS (${updateErr.message})`);
   } else if (!updateResult || updateResult.length === 0) {
-    pass("bewoner-update op vakman_profielen: RLS liet 0 rijen toe (policy 'own_manage' filtert stil, geen wijziging)");
+    pass("bewoner-update op professional_profiles: RLS liet 0 rijen toe (policy 'own_manage' filtert stil, geen wijziging)");
   } else {
-    fail(`bewoner kon vakman_profielen van iemand anders wijzigen! (${eenVakman.bedrijfsnaam} -> GEHACKT)`);
+    fail(`bewoner kon professional_profiles van iemand anders wijzigen! (${eenVakman.company_name} -> GEHACKT)`);
     // direct herstellen
-    await admin.from("vakman_profielen").update({ bedrijfsnaam: eenVakman.bedrijfsnaam }).eq("id", eenVakman.id);
+    await admin.from("professional_profiles").update({ company_name: eenVakman.company_name }).eq("id", eenVakman.id);
   }
 } else {
   warn("kon RLS-check 'bewoner muteert vakman' niet uitvoeren (sessie of testdata ontbreekt)");
 }
 
-// Ter vergelijking: bewoner mag WEL zijn eigen bewoner_profielen updaten
+// Ter vergelijking: bewoner mag WEL zijn eigen resident_profiles updaten
 if (bewonerSessie) {
   const { error: ownUpdateErr } = await bewonerSessie.client
-    .from("bewoner_profielen")
-    .update({ adres: "Testlaan 1" })
+    .from("resident_profiles")
+    .update({ address: "Testlaan 1" })
     .eq("user_id", bewonerSessie.userId);
   if (ownUpdateErr) {
-    warn(`bewoner kon eigen bewoner_profielen niet updaten (${ownUpdateErr.message}) — mogelijk te streng`);
+    warn(`bewoner kon eigen resident_profiles niet updaten (${ownUpdateErr.message}) — mogelijk te streng`);
   } else {
-    pass("bewoner kan (zoals verwacht) wel zijn eigen bewoner_profielen updaten");
+    pass("bewoner kan (zoals verwacht) wel zijn eigen resident_profiles updaten");
   }
 }
 
@@ -169,18 +173,18 @@ console.log("\n── 5. RLS: vakman ziet geen privédata van andere bewoners �
 
 const vakmanSessie = sessies["demo.vakman.geenleads@neighbuur.test"]; // heeft bewust 0 eigen boekingen
 if (vakmanSessie) {
-  const { data: zichtbareBoekingen, error: boekingErr } = await vakmanSessie.client.from("boekingen").select("id, klant_id, vakman_id");
+  const { data: zichtbareBoekingen, error: boekingErr } = await vakmanSessie.client.from("bookings").select("id, customer_id, professional_id");
   if (boekingErr) {
-    warn(`vakman-select op boekingen gaf een fout (${boekingErr.message}) i.p.v. gefilterde lege lijst`);
+    warn(`vakman-select op bookings gaf een fout (${boekingErr.message}) i.p.v. gefilterde lege lijst`);
   } else if ((zichtbareBoekingen ?? []).length === 0) {
     pass("vakman zonder eigen boekingen ziet 0 boekingen via RLS (policy 'own_read' filtert correct)");
   } else {
     fail(`vakman zonder eigen boekingen ziet toch ${zichtbareBoekingen.length} boeking(en) van anderen!`);
   }
 
-  const { data: zichtbareBerichten, error: berichtErr } = await vakmanSessie.client.from("berichten").select("id, gesprek_id, van_id, tekst");
+  const { data: zichtbareBerichten, error: berichtErr } = await vakmanSessie.client.from("messages").select("id, conversation_id, sender_id, text");
   if (berichtErr) {
-    warn(`vakman-select op berichten gaf een fout (${berichtErr.message}) i.p.v. gefilterde lege lijst`);
+    warn(`vakman-select op messages gaf een fout (${berichtErr.message}) i.p.v. gefilterde lege lijst`);
   } else if ((zichtbareBerichten ?? []).length === 0) {
     pass("vakman zonder eigen gesprekken ziet 0 berichten via RLS (policy 'own_read' filtert correct)");
   } else {
@@ -193,7 +197,7 @@ if (vakmanSessie) {
 // Ter vergelijking: de "actief"-bewoner moet wél haar eigen gesprek zien
 const actiefSessie = sessies["demo.bewoner.actief@neighbuur.test"];
 if (actiefSessie) {
-  const { data: eigenBerichten, error } = await actiefSessie.client.from("berichten").select("id, tekst");
+  const { data: eigenBerichten, error } = await actiefSessie.client.from("messages").select("id, text");
   if (error) {
     warn(`bewoner 'actief' kon eigen berichten niet lezen (${error.message})`);
   } else if ((eigenBerichten ?? []).length > 0) {

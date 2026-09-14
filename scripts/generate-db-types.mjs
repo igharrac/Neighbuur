@@ -146,16 +146,28 @@ const functionsBlock = `      calculate_profile_strength: {
         Returns: boolean;
       };
       count_residents_in_cluster: {
-        Args: { p_wijk_id: string; p_postcode: string; p_gebouw_label?: string | null };
+        Args: { p_development_id: string; p_postcode: string; p_gebouw_label?: string | null };
         Returns: number;
       };
       start_community: {
-        Args: { p_wijk_id: string; p_postcode: string; p_titel_nl: string | null };
+        Args: { p_development_id: string; p_postcode: string; p_titel_nl: string | null };
         Returns: { id: string; slug: string; aangemaakt: boolean }[];
       };
       reset_monthly_requests: {
         Args: Record<string, never>;
         Returns: void;
+      };
+      find_or_create_residential_cluster: {
+        Args: { p_bag_pand_ids: string[]; p_type?: string };
+        Returns: string;
+      };
+      count_residences_in_cluster: {
+        Args: { p_cluster_id: string };
+        Returns: number;
+      };
+      get_invite_context: {
+        Args: { p_code: string };
+        Returns: { postal_code: string | null; city: string | null }[];
       };`;
 
 const output = `/**

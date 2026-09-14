@@ -4,7 +4,7 @@
  * storage-bucket.
  *
  * Het icoon komt uit dezelfde Phosphor-iconset die de rest van de app al
- * gebruikt (categorieen.icoon, bv. "PaintBrush" voor schilderen) — dus
+ * gebruikt (categories.icon, bv. "PaintBrush" voor schilderen) — dus
  * visueel consistent met de rest van Neighbuur, en geen bestaand merklogo,
  * dus geen impersonatie-risico.
  *
@@ -39,7 +39,7 @@ const PALET = [
 ];
 
 // Phosphor-iconpaden (weight "fill", viewBox 0 0 256 256) — dezelfde set als
-// categorieen.icoon in supabase/migrations/0001_complete_schema.sql.
+// categories.icon in supabase/migrations/0001_complete_schema.sql.
 const ICOON_PAD = {
   stucwerk:
     "M232,56V88a4,4,0,0,1-4,4H136V52a4,4,0,0,1,4-4h84A8,8,0,0,1,232,56Zm-4,52H184v44h44a4,4,0,0,0,4-4V112A4,4,0,0,0,228,108ZM88,152h80V108H88Zm-60,0H72V108H28a4,4,0,0,0-4,4v36A4,4,0,0,0,28,152Zm200,16H136v36a4,4,0,0,0,4,4h84a8,8,0,0,0,8-8V172A4,4,0,0,0,228,168ZM28,92h92V52a4,4,0,0,0-4-4H32a8,8,0,0,0-8,8V88A4,4,0,0,0,28,92Zm-4,80v28a8,8,0,0,0,8,8h84a4,4,0,0,0,4-4V168H28A4,4,0,0,0,24,172Z",
@@ -89,16 +89,16 @@ function svgLogo(iconPad, id) {
 }
 
 console.log("── Categorieën en demo-vakmensen ophalen ──");
-const { data: catRows } = await admin.from("categorieen").select("id, slug");
+const { data: catRows } = await admin.from("categories").select("id, slug");
 const catSlugById = Object.fromEntries((catRows ?? []).map((c) => [c.id, c.slug]));
 
 const { data: alle, error } = await admin
-  .from("vakman_profielen")
-  .select("id, bedrijfsnaam, specialismes, logo_url, profiel_sterkte, user_id, profielen:user_id(email)")
-  .in("registratie_bron", ["demo-seed", "demo-seed-bulk", "demo-seed-scenario"]);
+  .from("professional_profiles")
+  .select("id, company_name, specialties, logo_url, profile_strength, user_id, profiles:user_id(email)")
+  .in("registration_source", ["demo-seed", "demo-seed-bulk", "demo-seed-scenario"]);
 if (error) throw new Error(error.message);
 
-const teDoen = (alle ?? []).filter((v) => v.profielen?.email !== "demo.vakman.nieuw@neighbuur.test");
+const teDoen = (alle ?? []).filter((v) => v.profiles?.email !== "demo.vakman.nieuw@neighbuur.test");
 const overgeslagen = (alle ?? []).length - teDoen.length;
 console.log(`Demo-vakmensen: ${alle?.length ?? 0} (${overgeslagen} bewust overgeslagen: nieuw/incompleet-scenario)`);
 
@@ -106,7 +106,7 @@ let gelukt = 0;
 let mislukt = 0;
 
 for (const v of teDoen) {
-  const eersteCategorieSlug = catSlugById[v.specialismes?.[0]];
+  const eersteCategorieSlug = catSlugById[v.specialties?.[0]];
   const iconPad = ICOON_PAD[eersteCategorieSlug] ?? ICOON_PAD.stucwerk;
   const svg = svgLogo(iconPad, v.id);
   const path = `${v.id}/logo.svg`;
@@ -115,21 +115,21 @@ for (const v of teDoen) {
     .from("vakman-logos")
     .upload(path, new Blob([svg], { type: "image/svg+xml" }), { contentType: "image/svg+xml", upsert: true });
   if (uploadError) {
-    console.error(`  ✗ ${v.bedrijfsnaam}: upload-fout — ${uploadError.message}`);
+    console.error(`  ✗ ${v.company_name}: upload-fout — ${uploadError.message}`);
     mislukt++;
     continue;
   }
 
   const { data: publicUrlData } = admin.storage.from("vakman-logos").getPublicUrl(path);
   const urlMetCacheBust = `${publicUrlData.publicUrl}?v=2`;
-  const nieuweSterkte = Math.min((v.profiel_sterkte ?? 0) + (v.logo_url ? 0 : 20), 100);
+  const nieuweSterkte = Math.min((v.profile_strength ?? 0) + (v.logo_url ? 0 : 20), 100);
 
   const { error: updateError } = await admin
-    .from("vakman_profielen")
-    .update({ logo_url: urlMetCacheBust, profiel_sterkte: nieuweSterkte })
+    .from("professional_profiles")
+    .update({ logo_url: urlMetCacheBust, profile_strength: nieuweSterkte })
     .eq("id", v.id);
   if (updateError) {
-    console.error(`  ✗ ${v.bedrijfsnaam}: db-update-fout — ${updateError.message}`);
+    console.error(`  ✗ ${v.company_name}: db-update-fout — ${updateError.message}`);
     mislukt++;
     continue;
   }

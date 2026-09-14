@@ -187,7 +187,7 @@ function pad4(n) {
 }
 
 async function ensureUser(email, naam, rol) {
-  const { data: existing } = await admin.from("profielen").select("id").eq("email", email).maybeSingle();
+  const { data: existing } = await admin.from("profiles").select("id").eq("email", email).maybeSingle();
   if (existing) return { id: existing.id, bestondAl: true };
 
   const { data: created, error } = await admin.auth.admin.createUser({
@@ -198,13 +198,13 @@ async function ensureUser(email, naam, rol) {
   if (error) throw new Error(`createUser(${email}): ${error.message}`);
 
   const userId = created.user.id;
-  const { error: profielError } = await admin.from("profielen").insert({ id: userId, naam, email, rol });
-  if (profielError) throw new Error(`profielen insert (${email}): ${profielError.message}`);
+  const { error: profielError } = await admin.from("profiles").insert({ id: userId, name: naam, email, role: rol });
+  if (profielError) throw new Error(`profiles insert (${email}): ${profielError.message}`);
   return { id: userId, bestondAl: false };
 }
 
 console.log("── Categorieën ophalen ──");
-const { data: catRows } = await admin.from("categorieen").select("id, slug").eq("type", "vakman");
+const { data: catRows } = await admin.from("categories").select("id, slug").eq("type", "professional");
 const catIdBySlug = Object.fromEntries((catRows ?? []).map((c) => [c.slug, c.id]));
 const CATEGORIE_SLUGS = Object.keys(CATEGORIE_WORDS).filter((s) => catIdBySlug[s]);
 if (CATEGORIE_SLUGS.length !== Object.keys(CATEGORIE_WORDS).length) {
@@ -233,9 +233,9 @@ for (const catSlug of CATEGORIE_SLUGS) {
     const slug = slugify(bedrijfsnaam);
     const email = `${slug}@neighbuur.test`;
 
-    const { id: userId, bestondAl } = await ensureUser(email, persoon, "vakman");
+    const { id: userId, bestondAl } = await ensureUser(email, persoon, "professional");
 
-    const { data: existingVakman } = await admin.from("vakman_profielen").select("id").eq("user_id", userId).maybeSingle();
+    const { data: existingVakman } = await admin.from("professional_profiles").select("id").eq("user_id", userId).maybeSingle();
     if (existingVakman) {
       oversloegen++;
       perCategorieTeller[catSlug]++;
@@ -245,7 +245,7 @@ for (const catSlug of CATEGORIE_SLUGS) {
     let vakmanSlug = slug;
     let poging = 1;
     while (true) {
-      const { data: slugBotsing } = await admin.from("vakman_profielen").select("id").eq("slug", vakmanSlug).maybeSingle();
+      const { data: slugBotsing } = await admin.from("professional_profiles").select("id").eq("slug", vakmanSlug).maybeSingle();
       if (!slugBotsing) break;
       poging++;
       vakmanSlug = `${slug}-${poging}`;
@@ -254,21 +254,21 @@ for (const catSlug of CATEGORIE_SLUGS) {
     const profielSterkte =
       40 + (bio ? 10 : 0) + (verzekerd ? 15 : 0) + (kvkGeverifieerd ? 10 : 0) + randInt(0, 15);
 
-    const { error } = await admin.from("vakman_profielen").insert({
+    const { error } = await admin.from("professional_profiles").insert({
       user_id: userId,
-      bedrijfsnaam,
+      company_name: bedrijfsnaam,
       slug: vakmanSlug,
-      kvk_nummer: "69" + Math.floor(1000000 + rng() * 8999999),
-      kvk_geverifieerd: kvkGeverifieerd,
+      kvk_number: "69" + Math.floor(1000000 + rng() * 8999999),
+      kvk_verified: kvkGeverifieerd,
       bio,
-      specialismes: [catIdBySlug[catSlug]],
-      contact_voorkeur: pick(["app", "app", "app", "whatsapp", "telefoon"]),
-      werkgebied_postcode: postcode,
-      werkgebied_km: randInt(15, 40),
-      verzekerd,
-      geverifieerd: kvkGeverifieerd && verzekerd,
-      registratie_bron: "demo-seed-bulk",
-      profiel_sterkte: Math.min(profielSterkte, 100),
+      specialties: [catIdBySlug[catSlug]],
+      contact_preference: pick(["app", "app", "app", "whatsapp", "phone"]),
+      service_area_postcode: postcode,
+      service_area_km: randInt(15, 40),
+      insured: verzekerd,
+      verified: kvkGeverifieerd && verzekerd,
+      registration_source: "demo-seed-bulk",
+      profile_strength: Math.min(profielSterkte, 100),
     });
     if (error) {
       console.error(`  ✗ ${bedrijfsnaam}: ${error.message}`);

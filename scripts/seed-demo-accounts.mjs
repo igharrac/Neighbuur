@@ -9,12 +9,12 @@
  *
  * Draai dit NA scripts/seed-demo-data.mjs (hergebruikt test-bewoner en de
  * "Demo buur"-accounts van dat script voor kruisverwijzingen als klant bij
- * een paar van de vakman-scenario's) en bij voorkeur ook na
- * scripts/seed-companies.mjs. Alles is idempotent.
+ * een paar van de vakman-scenario's, en de community/development-fixture)
+ * en bij voorkeur ook na scripts/seed-companies.mjs. Alles is idempotent.
  *
- * Bekende schema-beperking: boekingen.vakman_id is NOT NULL, dus een
- * "geen passende vakman gevonden"-aanvraag kan niet zonder vakman_id bestaan.
- * Scenario 6 (demo.bewoner.nomatch) simuleert dit daarom als een
+ * Bekende schema-beperking: bookings.professional_id is NOT NULL, dus een
+ * "geen passende vakman gevonden"-aanvraag kan niet zonder professional_id
+ * bestaan. Scenario 6 (demo.bewoner.nomatch) simuleert dit daarom als een
  * geannuleerde boeking met een uitleg-tekst, niet als een boeking zonder
  * vakman — zie de toelichting onderaan het script.
  *
@@ -52,7 +52,7 @@ function slugify(input) {
 }
 
 async function ensureUser(email, naam, rol) {
-  const { data: existing } = await admin.from("profielen").select("id").eq("email", email).maybeSingle();
+  const { data: existing } = await admin.from("profiles").select("id").eq("email", email).maybeSingle();
   if (existing) return existing.id;
   const { data: created, error } = await admin.auth.admin.createUser({
     email,
@@ -61,25 +61,25 @@ async function ensureUser(email, naam, rol) {
   });
   if (error) throw new Error(`createUser(${email}): ${error.message}`);
   const userId = created.user.id;
-  const { error: profielError } = await admin.from("profielen").insert({ id: userId, naam, email, rol });
-  if (profielError) throw new Error(`profielen insert (${email}): ${profielError.message}`);
+  const { error: profielError } = await admin.from("profiles").insert({ id: userId, name: naam, email, role: rol });
+  if (profielError) throw new Error(`profiles insert (${email}): ${profielError.message}`);
   return userId;
 }
 
 async function ensureBewoner(email, naam) {
-  const userId = await ensureUser(email, naam, "bewoner");
-  const { data: bp } = await admin.from("bewoner_profielen").select("id").eq("user_id", userId).maybeSingle();
+  const userId = await ensureUser(email, naam, "resident");
+  const { data: bp } = await admin.from("resident_profiles").select("id").eq("user_id", userId).maybeSingle();
   if (!bp) {
-    await admin.from("bewoner_profielen").insert({ user_id: userId, community_id: community.id, wijk_id: wijk.id });
+    await admin.from("resident_profiles").insert({ user_id: userId, community_id: community.id, development_id: development.id });
   }
   const { data: lid } = await admin
-    .from("community_leden")
+    .from("community_members")
     .select("user_id")
     .eq("community_id", community.id)
     .eq("user_id", userId)
     .maybeSingle();
   if (!lid) {
-    await admin.from("community_leden").insert({ community_id: community.id, user_id: userId, rol: "lid" });
+    await admin.from("community_members").insert({ community_id: community.id, user_id: userId, role: "member" });
   }
   return userId;
 }
@@ -88,75 +88,75 @@ async function ensureVakman({ email, naam, bedrijfsnaam, categorieSlugs, bio, po
   const cats = categorieSlugs.map((s) => catIdBySlug[s]).filter(Boolean);
   if (cats.length === 0) throw new Error(`geen categorieën gevonden voor ${bedrijfsnaam} (${categorieSlugs})`);
 
-  const userId = await ensureUser(email, naam, "vakman");
-  const { data: existing } = await admin.from("vakman_profielen").select("id").eq("user_id", userId).maybeSingle();
+  const userId = await ensureUser(email, naam, "professional");
+  const { data: existing } = await admin.from("professional_profiles").select("id").eq("user_id", userId).maybeSingle();
   if (existing) return { id: existing.id, userId, categorieId: cats[0] };
 
   let slug = slugify(bedrijfsnaam);
   let poging = 1;
   while (true) {
-    const { data: botsing } = await admin.from("vakman_profielen").select("id").eq("slug", slug).maybeSingle();
+    const { data: botsing } = await admin.from("professional_profiles").select("id").eq("slug", slug).maybeSingle();
     if (!botsing) break;
     poging++;
     slug = `${slugify(bedrijfsnaam)}-${poging}`;
   }
 
   const { data: vakman, error } = await admin
-    .from("vakman_profielen")
+    .from("professional_profiles")
     .insert({
       user_id: userId,
-      bedrijfsnaam,
+      company_name: bedrijfsnaam,
       slug,
-      kvk_nummer: kvkGeverifieerd ? "69" + Math.floor(1000000 + Math.random() * 8999999) : null,
-      kvk_geverifieerd: kvkGeverifieerd,
+      kvk_number: kvkGeverifieerd ? "69" + Math.floor(1000000 + Math.random() * 8999999) : null,
+      kvk_verified: kvkGeverifieerd,
       bio,
-      specialismes: cats,
-      contact_voorkeur: "app",
-      werkgebied_postcode: postcode,
-      werkgebied_km: km,
-      verzekerd,
-      geverifieerd: kvkGeverifieerd && verzekerd,
-      registratie_bron: "demo-seed-scenario",
-      profiel_sterkte: profielSterkte,
+      specialties: cats,
+      contact_preference: "app",
+      service_area_postcode: postcode,
+      service_area_km: km,
+      insured: verzekerd,
+      verified: kvkGeverifieerd && verzekerd,
+      registration_source: "demo-seed-scenario",
+      profile_strength: profielSterkte,
     })
     .select("id")
     .single();
-  if (error) throw new Error(`vakman_profielen insert (${bedrijfsnaam}): ${error.message}`);
+  if (error) throw new Error(`professional_profiles insert (${bedrijfsnaam}): ${error.message}`);
   return { id: vakman.id, userId, categorieId: cats[0] };
 }
 
 async function ensureBoeking({ klantId, vakmanId, categorieId, omschrijving, datum, status }) {
   const { data: existing } = await admin
-    .from("boekingen")
+    .from("bookings")
     .select("id")
-    .eq("klant_id", klantId)
-    .eq("vakman_id", vakmanId)
-    .eq("omschrijving", omschrijving)
+    .eq("customer_id", klantId)
+    .eq("professional_id", vakmanId)
+    .eq("description", omschrijving)
     .maybeSingle();
   if (existing) return existing.id;
   const { data, error } = await admin
-    .from("boekingen")
+    .from("bookings")
     .insert({
-      klant_id: klantId,
-      vakman_id: vakmanId,
-      categorie_id: categorieId,
+      customer_id: klantId,
+      professional_id: vakmanId,
+      category_id: categorieId,
       community_id: community.id,
-      omschrijving,
-      datum,
+      description: omschrijving,
+      date: datum,
       status,
     })
     .select("id")
     .single();
-  if (error) throw new Error(`boeking insert (${omschrijving}): ${error.message}`);
+  if (error) throw new Error(`booking insert (${omschrijving}): ${error.message}`);
   return data.id;
 }
 
 async function ensureReview({ auteurId, vakmanId, boekingId, tekst, scores }) {
-  const { data: existing } = await admin.from("reviews").select("id").eq("auteur_id", auteurId).eq("vakman_id", vakmanId).maybeSingle();
+  const { data: existing } = await admin.from("reviews").select("id").eq("author_id", auteurId).eq("professional_id", vakmanId).maybeSingle();
   if (existing) return existing.id;
   const { data, error } = await admin
     .from("reviews")
-    .insert({ auteur_id: auteurId, vakman_id: vakmanId, boeking_id: boekingId, community_id: community.id, tekst, scores })
+    .insert({ author_id: auteurId, professional_id: vakmanId, booking_id: boekingId, community_id: community.id, text: tekst, scores })
     .select("id")
     .single();
   if (error) throw new Error(`review insert: ${error.message}`);
@@ -164,32 +164,32 @@ async function ensureReview({ auteurId, vakmanId, boekingId, tekst, scores }) {
 }
 
 async function ensureGesprekMetBerichten({ boekingId, klantId, vakmanUserId, berichten }) {
-  const { data: bestaand } = await admin.from("gesprekken").select("id").eq("boeking_id", boekingId).maybeSingle();
+  const { data: bestaand } = await admin.from("conversations").select("id").eq("booking_id", boekingId).maybeSingle();
   if (bestaand) return bestaand.id;
-  const { data: gesprek, error } = await admin.from("gesprekken").insert({ boeking_id: boekingId }).select("id").single();
-  if (error) throw new Error(`gesprek insert: ${error.message}`);
-  await admin.from("gesprek_deelnemers").insert([
-    { gesprek_id: gesprek.id, user_id: klantId },
-    { gesprek_id: gesprek.id, user_id: vakmanUserId },
+  const { data: gesprek, error } = await admin.from("conversations").insert({ booking_id: boekingId }).select("id").single();
+  if (error) throw new Error(`conversation insert: ${error.message}`);
+  await admin.from("conversation_participants").insert([
+    { conversation_id: gesprek.id, user_id: klantId },
+    { conversation_id: gesprek.id, user_id: vakmanUserId },
   ]);
   for (const b of berichten) {
-    await admin.from("berichten").insert({
-      gesprek_id: gesprek.id,
-      van_id: b.van === "klant" ? klantId : vakmanUserId,
-      tekst: b.tekst,
-      gelezen_op: b.gelezen === false ? null : new Date().toISOString(),
+    await admin.from("messages").insert({
+      conversation_id: gesprek.id,
+      sender_id: b.van === "klant" ? klantId : vakmanUserId,
+      text: b.tekst,
+      read_at: b.gelezen === false ? null : new Date().toISOString(),
     });
   }
   return gesprek.id;
 }
 
-// ── Community & categorieën ophalen ──
-console.log("── Community, wijk en categorieën ophalen ──");
-const { data: community } = await admin.from("communities").select("id, naam, slug").eq("slug", "vathorst-blok-c").maybeSingle();
-const { data: wijk } = await admin.from("wijken").select("id, naam, slug").eq("slug", "vathorst").maybeSingle();
-if (!community || !wijk) throw new Error("Community/wijk 'vathorst-blok-c' niet gevonden — draai eerst scripts/seed-demo-data.mjs.");
+// ── Development, community en categorieën ophalen ──
+console.log("── Development, community en categorieën ophalen ──");
+const { data: development } = await admin.from("developments").select("id, name, slug").eq("slug", "vathorst").maybeSingle();
+const { data: community } = await admin.from("communities").select("id, name, slug").eq("slug", "vathorst-blok-c").maybeSingle();
+if (!community || !development) throw new Error("Community/development 'vathorst-blok-c' niet gevonden — draai eerst scripts/seed-demo-data.mjs.");
 
-const { data: catRows } = await admin.from("categorieen").select("id, slug");
+const { data: catRows } = await admin.from("categories").select("id, slug");
 const catIdBySlug = Object.fromEntries((catRows ?? []).map((c) => [c.slug, c.id]));
 
 // Bestaande pool van klanten uit scripts/seed-demo-data.mjs, hergebruikt voor
@@ -197,7 +197,7 @@ const catIdBySlug = Object.fromEntries((catRows ?? []).map((c) => [c.slug, c.id]
 // bewoners zelf niet worden "vervuild" met activiteit die niet bij hun eigen
 // scenario hoort.
 async function bestaandeKlant(email) {
-  const { data } = await admin.from("profielen").select("id, naam").eq("email", email).maybeSingle();
+  const { data } = await admin.from("profiles").select("id, name").eq("email", email).maybeSingle();
   if (!data) console.warn(`  (let op: ${email} niet gevonden — draai scripts/seed-demo-data.mjs eerst voor volle kruisverwijzingen)`);
   return data?.id ?? null;
 }
@@ -360,7 +360,7 @@ const bLeadsVoorActief = await ensureBoeking({
   categorieId: leads.categorieId,
   omschrijving: "Badkamer volledig renoveren, inclusief nieuw sanitair en vloerverwarming.",
   datum: null,
-  status: "aangevraagd",
+  status: "requested",
 });
 const bNormaalVoorActief = await ensureBoeking({
   klantId: actief,
@@ -368,7 +368,7 @@ const bNormaalVoorActief = await ensureBoeking({
   categorieId: normaal.categorieId,
   omschrijving: "PVC visgraat in woonkamer en hal, ca. 42m².",
   datum: dagen(12),
-  status: "bevestigd",
+  status: "confirmed",
 });
 await ensureGesprekMetBerichten({
   boekingId: bNormaalVoorActief,
@@ -389,7 +389,7 @@ const bTopVoorVol = await ensureBoeking({
   categorieId: top.categorieId,
   omschrijving: "Complete keukenmontage inclusief inbouwapparatuur en aansluiting.",
   datum: dagen(-20),
-  status: "afgerond",
+  status: "completed",
 });
 await ensureReview({
   auteurId: vol,
@@ -404,7 +404,7 @@ const bDealVoorVol = await ensureBoeking({
   categorieId: deal.categorieId,
   omschrijving: "Achtertuin volledig aanleggen inclusief nieuwe schutting.",
   datum: dagen(-8),
-  status: "afgerond",
+  status: "completed",
 });
 await ensureReview({
   auteurId: vol,
@@ -419,7 +419,7 @@ await ensureBoeking({
   categorieId: druk.categorieId,
   omschrijving: "Laadpaal plaatsen op de oprit en extra groep in meterkast.",
   datum: dagen(16),
-  status: "bevestigd",
+  status: "confirmed",
 });
 console.log("  ✓ demo.bewoner.vol: 2 afgerond + reviews, 1 bevestigd");
 
@@ -430,7 +430,7 @@ await ensureBoeking({
   categorieId: multidienst.categorieId,
   omschrijving: "Plafonds en kozijnen sausklaar maken in drie slaapkamers.",
   datum: dagen(-5),
-  status: "afgerond",
+  status: "completed",
 });
 console.log("  ✓ demo.bewoner.review: afgerond, nog geen review (open reviewverzoek)");
 
@@ -441,7 +441,7 @@ await ensureBoeking({
   categorieId: nieuw.categorieId,
   omschrijving: "Buitengevel schilderen — geen geschikte vakman binnen het werkgebied gevonden, aanvraag automatisch geannuleerd.",
   datum: null,
-  status: "geannuleerd",
+  status: "cancelled",
 });
 console.log("  ✓ demo.bewoner.nomatch: geannuleerde aanvraag (geen match gevonden)");
 
@@ -453,7 +453,7 @@ if (testBewonerId) {
     categorieId: leads.categorieId,
     omschrijving: "Badkamer op de eerste verdieping vervangen, inclusief inloopdouche.",
     datum: null,
-    status: "aangevraagd",
+    status: "requested",
   });
 }
 if (buur1Id) {
@@ -463,7 +463,7 @@ if (buur1Id) {
     categorieId: leads.categorieId,
     omschrijving: "Gastentoilet betegelen en nieuw fonteintje plaatsen.",
     datum: null,
-    status: "aangevraagd",
+    status: "requested",
   });
 }
 console.log("  ✓ demo.vakman.leads: extra ongelezen aanvragen uit bestaande klantenpool");
@@ -483,17 +483,20 @@ for (const b of drukExtra) {
     categorieId: druk.categorieId,
     omschrijving: b.omschrijving,
     datum: dagen(b.dagenVooruit),
-    status: "bevestigd",
+    status: "confirmed",
   });
 }
-const beschikbaarheidRijen = Array.from({ length: 14 }, (_, i) => ({ vakman_id: druk.id, datum: dagen(i), status: "bezet" }));
+const beschikbaarheidRijen = Array.from({ length: 14 }, (_, i) => ({ professional_id: druk.id, date: dagen(i), status: "booked" }));
 for (const rij of beschikbaarheidRijen) {
-  const { data: bestaat } = await admin.from("beschikbaarheid").select("id").eq("vakman_id", rij.vakman_id).eq("datum", rij.datum).maybeSingle();
-  if (!bestaat) await admin.from("beschikbaarheid").insert(rij);
+  const { data: bestaat } = await admin.from("availability").select("id").eq("professional_id", rij.professional_id).eq("date", rij.date).maybeSingle();
+  if (!bestaat) await admin.from("availability").insert(rij);
 }
 console.log("  ✓ demo.vakman.druk: extra bevestigde boekingen + 14 dagen 'bezet'");
 
 // --- top: extra afgeronde boekingen + reviews uit bestaande klantenpool ---
+function randInt(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
 const topExtra = [
   { klantId: testBewonerId, tekst: "Nette montage van onze nieuwe keuken, precies zoals besproken. Enige puntje: iets later gestart dan gepland.", scores: { kwaliteit: 5, stiptheid: 3, communicatie: 4, prijs: 4 }, omschrijving: "Keukenmontage inclusief aansluiten vaatwasser en kookplaat." },
   { klantId: buur1Id, tekst: "Snel en professioneel de keuken geplaatst, ook de kleine aanpassingen achteraf keurig opgelost.", scores: { kwaliteit: 5, stiptheid: 5, communicatie: 5, prijs: 5 }, omschrijving: "Keukenmontage met maatwerk kastenwand." },
@@ -507,12 +510,9 @@ for (const t of topExtra) {
     categorieId: top.categorieId,
     omschrijving: t.omschrijving,
     datum: dagen(-randInt(3, 30)),
-    status: "afgerond",
+    status: "completed",
   });
   await ensureReview({ auteurId: t.klantId, vakmanId: top.id, boekingId, tekst: t.tekst, scores: t.scores });
-}
-function randInt(min, max) {
-  return min + Math.floor(Math.random() * (max - min + 1));
 }
 console.log("  ✓ demo.vakman.top: extra afgeronde boekingen + reviews");
 
@@ -524,7 +524,7 @@ if (testBewonerId) {
     categorieId: normaal.categorieId,
     omschrijving: "Laminaatvloer leggen in twee slaapkamers.",
     datum: dagen(-10),
-    status: "afgerond",
+    status: "completed",
   });
   await ensureReview({
     auteurId: testBewonerId,
@@ -538,31 +538,31 @@ console.log("  ✓ demo.vakman.normaal: extra afgeronde boeking + review");
 
 // --- deal & vol: deelname aan de bestaande groepskorting ---
 console.log("\n── Groepskorting-deelname koppelen ──");
-const { data: bestaandeDeal } = await admin.from("groepskortingen").select("id").eq("community_id", community.id).maybeSingle();
+const { data: bestaandeDeal } = await admin.from("group_discounts").select("id").eq("community_id", community.id).maybeSingle();
 let dealId = bestaandeDeal?.id;
 if (!dealId) {
   const { data: nieuweDeal, error } = await admin
-    .from("groepskortingen")
+    .from("group_discounts")
     .insert({
       community_id: community.id,
-      categorie_id: catIdBySlug["tuin"],
-      titel_nl: "Hoveniers- & Schuttingdeal",
-      titel_en: "Landscaping & Fencing deal",
-      beschrijving_nl: "Gezamenlijk tuinaanleg en schuttingen laten plaatsen voor Blok C. Hoe meer buren, hoe hoger de korting.",
-      beschrijving_en: "Have your garden and fencing installed together for Block C. The more neighbours join, the bigger the discount.",
-      min_deelnemers: 10,
-      prijs_normaal: 250000,
-      prijs_groep: 195000,
-      actief: true,
+      category_id: catIdBySlug["tuin"],
+      title_nl: "Hoveniers- & Schuttingdeal",
+      title_en: "Landscaping & Fencing deal",
+      description_nl: "Gezamenlijk tuinaanleg en schuttingen laten plaatsen voor Blok C. Hoe meer buren, hoe hoger de korting.",
+      description_en: "Have your garden and fencing installed together for Block C. The more neighbours join, the bigger the discount.",
+      min_participants: 10,
+      price_normal: 250000,
+      price_group: 195000,
+      active: true,
     })
     .select("id")
     .single();
-  if (error) throw new Error(`groepskorting insert: ${error.message}`);
+  if (error) throw new Error(`group_discount insert: ${error.message}`);
   dealId = nieuweDeal.id;
 }
 for (const userId of [dealBewoner, vol]) {
-  const { data: bestaat } = await admin.from("groepskorting_deelnemers").select("id").eq("groepskorting_id", dealId).eq("user_id", userId).maybeSingle();
-  if (!bestaat) await admin.from("groepskorting_deelnemers").insert({ groepskorting_id: dealId, user_id: userId });
+  const { data: bestaat } = await admin.from("group_discount_participants").select("id").eq("group_discount_id", dealId).eq("user_id", userId).maybeSingle();
+  if (!bestaat) await admin.from("group_discount_participants").insert({ group_discount_id: dealId, user_id: userId });
 }
 console.log("  ✓ demo.bewoner.deal en demo.bewoner.vol nemen deel aan de Hoveniers- & Schuttingdeal");
 

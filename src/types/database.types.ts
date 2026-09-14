@@ -1286,6 +1286,18 @@ export interface Database {
         Args: Record<string, never>;
         Returns: void;
       };
+      find_or_create_residential_cluster: {
+        Args: { p_bag_pand_ids: string[]; p_type?: string };
+        Returns: string;
+      };
+      count_residences_in_cluster: {
+        Args: { p_cluster_id: string };
+        Returns: number;
+      };
+      get_invite_context: {
+        Args: { p_code: string };
+        Returns: { postal_code: string | null; city: string | null }[];
+      };
     };
     Enums: {
       contact_preference: "phone" | "whatsapp" | "app";
