@@ -313,6 +313,33 @@ export interface Database {
         };
         Relationships: [];
       };
+      resident_residence_history: {
+        Row: {
+          id: string;
+          user_id: string;
+          residence_id: string;
+          started_at: string;
+          ended_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          residence_id: string;
+          started_at?: string;
+          ended_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          residence_id?: string;
+          started_at?: string;
+          ended_at?: string | null;
+        };
+        Relationships: [
+          { foreignKeyName: "resident_residence_history_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+          { foreignKeyName: "resident_residence_history_residence_id_fkey"; columns: ["residence_id"]; isOneToOne: false; referencedRelation: "residences"; referencedColumns: ["id"] },
+        ];
+      };
       transactions: {
         Row: {
           id: string;
@@ -464,6 +491,7 @@ export interface Database {
           house_number_suffix: string | null;
           building_label: string | null;
           show_community_suggestions: boolean;
+          current_residence_id: string | null;
         };
         Insert: {
           id?: string;
@@ -479,6 +507,7 @@ export interface Database {
           house_number_suffix?: string | null;
           building_label?: string | null;
           show_community_suggestions?: boolean;
+          current_residence_id?: string | null;
         };
         Update: {
           id?: string;
@@ -494,11 +523,54 @@ export interface Database {
           house_number_suffix?: string | null;
           building_label?: string | null;
           show_community_suggestions?: boolean;
+          current_residence_id?: string | null;
         };
         Relationships: [
           { foreignKeyName: "resident_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "resident_profiles_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
           { foreignKeyName: "resident_profiles_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
+          { foreignKeyName: "resident_profiles_current_residence_id_fkey"; columns: ["current_residence_id"]; isOneToOne: false; referencedRelation: "residences"; referencedColumns: ["id"] },
+        ];
+      };
+      development_phases: {
+        Row: {
+          id: string;
+          development_id: string;
+          name: string;
+          slug: string | null;
+          postal_codes: string[];
+          bag_pand_ids: string[];
+          expected_completion_date: string | null;
+          home_count: number | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          development_id: string;
+          name: string;
+          slug?: string | null;
+          postal_codes: string[];
+          bag_pand_ids: string[];
+          expected_completion_date?: string | null;
+          home_count?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          development_id?: string;
+          name?: string;
+          slug?: string | null;
+          postal_codes?: string[];
+          bag_pand_ids?: string[];
+          expected_completion_date?: string | null;
+          home_count?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          { foreignKeyName: "development_phases_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
         ];
       };
       availability: {
@@ -616,6 +688,47 @@ export interface Database {
           { foreignKeyName: "group_discount_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
       };
+      residences: {
+        Row: {
+          id: string;
+          address_id: string | null;
+          residential_cluster_id: string | null;
+          development_id: string | null;
+          development_phase_id: string | null;
+          construction_number: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          address_id?: string | null;
+          residential_cluster_id?: string | null;
+          development_id?: string | null;
+          development_phase_id?: string | null;
+          construction_number?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          address_id?: string | null;
+          residential_cluster_id?: string | null;
+          development_id?: string | null;
+          development_phase_id?: string | null;
+          construction_number?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          { foreignKeyName: "residences_address_id_fkey"; columns: ["address_id"]; isOneToOne: false; referencedRelation: "addresses"; referencedColumns: ["id"] },
+          { foreignKeyName: "residences_residential_cluster_id_fkey"; columns: ["residential_cluster_id"]; isOneToOne: false; referencedRelation: "residential_clusters"; referencedColumns: ["id"] },
+          { foreignKeyName: "residences_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
+          { foreignKeyName: "residences_development_phase_id_fkey"; columns: ["development_phase_id"]; isOneToOne: false; referencedRelation: "development_phases"; referencedColumns: ["id"] },
+        ];
+      };
       group_discounts: {
         Row: {
           id: string;
@@ -694,6 +807,48 @@ export interface Database {
           { foreignKeyName: "work_photos_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
+      residential_clusters: {
+        Row: {
+          id: string;
+          type: string;
+          cluster_key: string | null;
+          bag_pand_ids: string[];
+          name: string | null;
+          development_id: string | null;
+          development_phase_id: string | null;
+          community_threshold: number | null;
+          created_from: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          type?: string;
+          cluster_key?: string | null;
+          bag_pand_ids: string[];
+          name?: string | null;
+          development_id?: string | null;
+          development_phase_id?: string | null;
+          community_threshold?: number | null;
+          created_from?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          type?: string;
+          cluster_key?: string | null;
+          bag_pand_ids?: string[];
+          name?: string | null;
+          development_id?: string | null;
+          development_phase_id?: string | null;
+          community_threshold?: number | null;
+          created_from?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          { foreignKeyName: "residential_clusters_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
+          { foreignKeyName: "residential_clusters_development_phase_id_fkey"; columns: ["development_phase_id"]; isOneToOne: false; referencedRelation: "development_phases"; referencedColumns: ["id"] },
+        ];
+      };
       messages: {
         Row: {
           id: string;
@@ -753,6 +908,66 @@ export interface Database {
           { foreignKeyName: "community_members_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
           { foreignKeyName: "community_members_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
+      };
+      addresses: {
+        Row: {
+          id: string;
+          bag_nummeraanduiding_id: string | null;
+          bag_verblijfsobject_id: string | null;
+          bag_pand_ids: string[];
+          street: string | null;
+          postal_code: string;
+          house_number: number;
+          house_number_suffix: string | null;
+          city: string | null;
+          municipality: string | null;
+          latitude: number | null;
+          longitude: number | null;
+          bag_status: string | null;
+          source: string;
+          needs_review: boolean;
+          raw: Json | null;
+          resolved_at: string;
+        };
+        Insert: {
+          id?: string;
+          bag_nummeraanduiding_id?: string | null;
+          bag_verblijfsobject_id?: string | null;
+          bag_pand_ids: string[];
+          street?: string | null;
+          postal_code: string;
+          house_number: number;
+          house_number_suffix?: string | null;
+          city?: string | null;
+          municipality?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          bag_status?: string | null;
+          source?: string;
+          needs_review?: boolean;
+          raw?: Json | null;
+          resolved_at?: string;
+        };
+        Update: {
+          id?: string;
+          bag_nummeraanduiding_id?: string | null;
+          bag_verblijfsobject_id?: string | null;
+          bag_pand_ids?: string[];
+          street?: string | null;
+          postal_code?: string;
+          house_number?: number;
+          house_number_suffix?: string | null;
+          city?: string | null;
+          municipality?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          bag_status?: string | null;
+          source?: string;
+          needs_review?: boolean;
+          raw?: Json | null;
+          resolved_at?: string;
+        };
+        Relationships: [];
       };
       platform_stats_daily: {
         Row: {
