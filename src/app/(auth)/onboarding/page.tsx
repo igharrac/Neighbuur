@@ -3,16 +3,35 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { House, ArrowLeft, MagnifyingGlass, Users, Sparkle } from "@phosphor-icons/react";
+import { House, ArrowLeft, Users, Sparkle, MapPin } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useLang } from "@/lib/hooks/useLang";
 import { useToast } from "@/components/ui/Toast";
-import { generateUitnodigingscode } from "@/lib/utils";
 import type { UserRole, Development } from "@/types";
 
-type Step = "naam-rol" | "wijk" | "adres" | "detectie";
+type Step = "naam-rol" | "adres" | "adres-bevestiging" | "nieuwbouw-project" | "detectie";
 
 const STANDAARD_THRESHOLD = 3;
+
+interface AdresResultaat {
+  addressId: string;
+  formatted: string;
+  street: string | null;
+  houseNumber: number;
+  houseNumberSuffix: string | null;
+  postalCode: string;
+  city: string | null;
+}
+
+interface AdresKandidaat {
+  formatted: string;
+  huisNlt: string;
+}
+
+interface DevelopmentPhase {
+  id: string;
+  name: string;
+}
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -32,22 +51,30 @@ export default function OnboardingPage() {
   );
   const [akkoord, setAkkoord] = useState(false);
 
-  const [wijkQuery, setWijkQuery] = useState("");
-  const [wijken, setWijken] = useState<Development[]>([]);
-  const [gekozenWijk, setGekozenWijk] = useState<Development | null>(null);
-
-  // Adres — gebruikt voor de buren-detectie, nooit zichtbaar voor anderen
-  // zonder dat ze zelf lid worden van dezelfde community.
+  // ── Adres-stap ──
   const [postcode, setPostcode] = useState("");
   const [huisnummer, setHuisnummer] = useState("");
   const [huisnummerToevoeging, setHuisnummerToevoeging] = useState("");
-  const [gebouwLabel, setGebouwLabel] = useState("");
+  const [zoeken, setZoeken] = useState(false);
+  const [nietGevonden, setNietGevonden] = useState(false);
+  const [kandidaten, setKandidaten] = useState<AdresKandidaat[] | null>(null);
+  const [adresResultaat, setAdresResultaat] = useState<AdresResultaat | null>(null);
 
-  // Detectie-resultaat
+  // ── Nieuwbouw-escaperoute ──
+  const [projectQuery, setProjectQuery] = useState("");
+  const [projecten, setProjecten] = useState<Development[]>([]);
+  const [gekozenProject, setGekozenProject] = useState<Development | null>(null);
+  const [fases, setFases] = useState<DevelopmentPhase[]>([]);
+  const [gekozenFase, setGekozenFase] = useState<DevelopmentPhase | null>(null);
+  const [bouwnummer, setBouwnummer] = useState("");
+
+  // ── Detectie-resultaat ──
   const [bestaandeCommunity, setBestaandeCommunity] = useState<{ id: string; name: string; slug: string } | null>(null);
   const [clusterTelling, setClusterTelling] = useState(1);
   const [threshold, setThreshold] = useState(STANDAARD_THRESHOLD);
   const [nieuweTitel, setNieuweTitel] = useState("");
+  const [geenCluster, setGeenCluster] = useState(false);
+  const [detectieClusterId, setDetectieClusterId] = useState<string | null>(null);
 
   const [saving, setSaving] = useState(false);
 
@@ -75,11 +102,17 @@ export default function OnboardingPage() {
         return;
       }
 
-      // Nieuwe gebruiker die al via /login als vakman aangaf verder te
-      // willen — meteen door, geen rolvraag nogmaals tonen.
       if (roleParam === "professional") {
         router.replace("/registreer/vakman");
         return;
+      }
+
+      // Uitnodiging: postcode/stad van de uitnodiger vast vooraf invullen
+      // als hint — nooit het volledige adres, puur voor het gemak.
+      if (invite) {
+        const { data: context } = await supabase.rpc("get_invite_context", { p_code: invite });
+        const hint = context?.[0];
+        if (hint?.postal_code) setPostcode(hint.postal_code);
       }
 
       setChecking(false);
@@ -88,71 +121,16 @@ export default function OnboardingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, invite]);
 
-  // ── Wijken laden + filteren ──
-  useEffect(() => {
-    if (step !== "wijk") return;
-    async function load() {
-      const supabase = createClient();
-      const { data } = await supabase.from("developments").select("*").eq("active", true).order("name");
-      setWijken((data ?? []) as Development[]);
-    }
-    load();
-  }, [step]);
-
-  const gefilterdeWijken = wijken.filter((w) =>
-    `${w.name} ${w.city}`.toLowerCase().includes(wijkQuery.toLowerCase())
-  );
-
   async function handleNaamRolNext() {
     if (!naam || !rol) return;
 
     if (rol === "professional") {
-      // Vakman-registratie heeft zijn eigen akkoord-stap met vakman-specifieke
-      // voorwaarden (RegistratieForm.tsx) — hier nog niks opslaan/vragen.
       router.push("/registreer/vakman");
       return;
     }
 
     if (!akkoord) return;
 
-    if (invite) {
-      // Invite bepaalt de community — sla alleen het profiel op en laat de
-      // /uitnodiging/[code] handler de rest afronden.
-      setSaving(true);
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { error } = await supabase.from("profiles").insert({
-        id: user.id,
-        name: naam,
-        email: user.email ?? null,
-        phone: user.phone ?? null,
-        role: "resident",
-        language: lang,
-      });
-
-      setSaving(false);
-      if (error) {
-        showToast(error.message, "error");
-        return;
-      }
-      router.push(`/uitnodiging/${invite}`);
-      return;
-    }
-
-    setStep("wijk");
-  }
-
-  function handleKiesWijk(wijk: Development) {
-    setGekozenWijk(wijk);
-    setStep("adres");
-  }
-
-  async function handleAdresNext() {
-    if (!postcode.trim() || !huisnummer.trim() || !gekozenWijk) return;
     setSaving(true);
     const supabase = createClient();
     const {
@@ -163,12 +141,7 @@ export default function OnboardingPage() {
       return;
     }
 
-    const postcodeNorm = postcode.trim().toUpperCase().replace(/\s+/g, "");
-    const gebouwNorm = gebouwLabel.trim() || null;
-
-    // Account bestaat vanaf hier — met of zonder community. Community-
-    // koppeling gebeurt pas na een expliciete keuze op de volgende stap.
-    const { error: profielError } = await supabase.from("profiles").insert({
+    const { error } = await supabase.from("profiles").insert({
       id: user.id,
       name: naam,
       email: user.email ?? null,
@@ -176,69 +149,176 @@ export default function OnboardingPage() {
       role: "resident",
       language: lang,
     });
-    if (profielError) {
-      setSaving(false);
-      showToast(profielError.message, "error");
+
+    setSaving(false);
+    if (error) {
+      showToast(error.message, "error");
       return;
     }
+    setStep("adres");
+  }
 
-    let code = generateUitnodigingscode();
-    for (let i = 0; i < 5; i++) {
-      const { data: existing } = await supabase.from("resident_profiles").select("id").eq("invite_code", code).maybeSingle();
-      if (!existing) break;
-      code = generateUitnodigingscode();
-    }
+  async function handleAdresZoeken() {
+    if (!postcode.trim() || !huisnummer.trim()) return;
+    setZoeken(true);
+    setNietGevonden(false);
+    setKandidaten(null);
 
-    const { error: bewonerError } = await supabase.from("resident_profiles").insert({
-      user_id: user.id,
-      development_id: gekozenWijk.id,
-      postal_code: postcodeNorm,
-      house_number: huisnummer.trim(),
-      house_number_suffix: huisnummerToevoeging.trim() || null,
-      building_label: gebouwNorm,
-      invite_code: code,
+    const res = await fetch("/api/adres/zoeken", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postcode: postcode.trim(), huisnummer: huisnummer.trim(), toevoeging: huisnummerToevoeging.trim() || null }),
     });
-    if (bewonerError) {
-      setSaving(false);
-      showToast(bewonerError.message, "error");
+    const data = await res.json();
+    setZoeken(false);
+
+    if (!res.ok || data.error) {
+      showToast("Adres opzoeken lukte even niet. Probeer het nog eens.", "error");
+      return;
+    }
+    if (data.ambiguous) {
+      setKandidaten(data.candidates);
+      return;
+    }
+    if (!data.found) {
+      setNietGevonden(true);
       return;
     }
 
-    // Detectie: bestaat er al een community voor dit adres-cluster?
+    setAdresResultaat({
+      addressId: data.addressId,
+      formatted: data.formatted,
+      street: data.street,
+      houseNumber: data.houseNumber,
+      houseNumberSuffix: data.houseNumberSuffix,
+      postalCode: data.postalCode,
+      city: data.city,
+    });
+    setStep("adres-bevestiging");
+  }
+
+  function handleKiesKandidaat(kandidaat: AdresKandidaat) {
+    const suffix = kandidaat.huisNlt.replace(huisnummer.trim(), "").replace(/^-/, "");
+    setHuisnummerToevoeging(suffix);
+    setKandidaten(null);
+    handleAdresZoeken();
+  }
+
+  async function runDetectie(clusterId: string | null) {
+    setDetectieClusterId(clusterId);
+    if (!clusterId) {
+      setGeenCluster(true);
+      setStep("detectie");
+      return;
+    }
+
+    const supabase = createClient();
     const { data: bestaande } = await supabase
       .from("communities")
       .select("id, name, slug")
-      .eq("development_id", gekozenWijk.id)
-      .eq("postcode_cluster", postcodeNorm)
+      .eq("residential_cluster_id", clusterId)
       .neq("status", "dormant")
       .maybeSingle();
 
     if (bestaande) {
       setBestaandeCommunity(bestaande);
-    } else {
-      const { data: telling } = await supabase.rpc("count_residents_in_cluster", {
-        p_development_id: gekozenWijk.id,
-        p_postcode: postcodeNorm,
-        p_gebouw_label: gebouwNorm,
-      });
-      const aantal = typeof telling === "number" ? telling : 1;
-      setClusterTelling(aantal);
-
-      const drempel = gekozenWijk.community_threshold ?? STANDAARD_THRESHOLD;
-      if (aantal === drempel) {
-        // Deze inschrijving heeft de drempel net bereikt — eenmalige melding
-        // aan het hele cluster. Bewust fire-and-forget: mag de onboarding-
-        // flow nooit blokkeren of laten falen.
-        fetch("/api/community/meld-drempel", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ developmentId: gekozenWijk.id, postcode: postcodeNorm }),
-        }).catch(() => {});
-      }
+      setStep("detectie");
+      return;
     }
-    setThreshold(gekozenWijk.community_threshold ?? STANDAARD_THRESHOLD);
-    setSaving(false);
+
+    const { data: cluster } = await supabase
+      .from("residential_clusters")
+      .select("community_threshold, development_id")
+      .eq("id", clusterId)
+      .maybeSingle();
+    let drempel = cluster?.community_threshold ?? undefined;
+    if (drempel == null && cluster?.development_id) {
+      const { data: development } = await supabase.from("developments").select("community_threshold").eq("id", cluster.development_id).maybeSingle();
+      drempel = development?.community_threshold ?? undefined;
+    }
+    drempel = drempel ?? STANDAARD_THRESHOLD;
+
+    const { data: telling } = await supabase.rpc("count_residences_in_cluster", { p_cluster_id: clusterId });
+    const aantal = typeof telling === "number" ? telling : 1;
+
+    setClusterTelling(aantal);
+    setThreshold(drempel);
+    if (aantal === drempel) {
+      fetch("/api/community/meld-drempel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clusterId }),
+      }).catch(() => {});
+    }
     setStep("detectie");
+  }
+
+  async function handleAdresBevestigen() {
+    if (!adresResultaat) return;
+    setSaving(true);
+
+    const res = await fetch("/api/adres/bevestigen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ addressId: adresResultaat.addressId }),
+    });
+    const data = await res.json();
+    setSaving(false);
+
+    if (!res.ok || data.error) {
+      showToast(data.error ?? "Adres bevestigen lukte niet, probeer het nog eens.", "error");
+      return;
+    }
+
+    if (invite) {
+      router.push(`/uitnodiging/${invite}`);
+      return;
+    }
+    await runDetectie(data.clusterId);
+  }
+
+  // ── Nieuwbouw-escaperoute: projecten laden bij intypen ──
+  useEffect(() => {
+    if (step !== "nieuwbouw-project" || gekozenProject) return;
+    async function load() {
+      const supabase = createClient();
+      const { data } = await supabase.from("developments").select("*").eq("active", true).order("name");
+      setProjecten((data ?? []) as Development[]);
+    }
+    load();
+  }, [step, gekozenProject]);
+
+  const gefilterdeProjecten = projecten.filter((p) => `${p.name} ${p.city}`.toLowerCase().includes(projectQuery.toLowerCase()));
+
+  async function handleKiesProject(project: Development) {
+    setGekozenProject(project);
+    const supabase = createClient();
+    const { data } = await supabase.from("development_phases").select("id, name").eq("development_id", project.id).order("sort_order");
+    setFases((data ?? []) as DevelopmentPhase[]);
+  }
+
+  async function handleNieuwbouwBevestigen() {
+    if (!gekozenFase || !bouwnummer.trim()) return;
+    setSaving(true);
+
+    const res = await fetch("/api/adres/bevestigen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ developmentPhaseId: gekozenFase.id, constructionNumber: bouwnummer.trim() }),
+    });
+    const data = await res.json();
+    setSaving(false);
+
+    if (!res.ok || data.error) {
+      showToast(data.error ?? "Opslaan lukte niet, probeer het nog eens.", "error");
+      return;
+    }
+
+    if (invite) {
+      router.push(`/uitnodiging/${invite}`);
+      return;
+    }
+    await runDetectie(data.clusterId);
   }
 
   async function handleWordLid() {
@@ -258,14 +338,12 @@ export default function OnboardingPage() {
   }
 
   async function handleStartCommunity() {
-    if (!gekozenWijk) return;
+    if (!detectieClusterId) return;
     setSaving(true);
     const supabase = createClient();
-    const postcodeNorm = postcode.trim().toUpperCase().replace(/\s+/g, "");
 
     const { data, error } = await supabase.rpc("start_community", {
-      p_development_id: gekozenWijk.id,
-      p_postcode: postcodeNorm,
+      p_cluster_id: detectieClusterId,
       p_titel_nl: nieuweTitel.trim() || null,
     });
 
@@ -372,62 +450,19 @@ export default function OnboardingPage() {
                 onClick={handleNaamRolNext}
                 disabled={saving || !naam || !rol || (rol === "resident" && !akkoord)}
               >
-                {dict.login.letsGo}
+                {saving ? "Bezig..." : dict.login.letsGo}
                 <ArrowLeft size={16} weight="bold" className="rotate-180" />
               </button>
             </>
           )}
 
-          {/* ── Stap: wijk kiezen ── */}
-          {step === "wijk" && (
-            <>
-              <h1 className="font-display text-display-sm text-center mb-1.5">In welke wijk woon je?</h1>
-              <p className="text-center text-body text-warmgrijs mb-6">Zoek of kies je nieuwbouwwijk</p>
-
-              <div className="relative mb-4">
-                <MagnifyingGlass size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-warmgrijs" />
-                <input
-                  className="input !pl-10"
-                  placeholder="Zoek op wijk of stad..."
-                  value={wijkQuery}
-                  onChange={(e) => setWijkQuery(e.target.value)}
-                  autoFocus
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 max-h-[280px] overflow-y-auto">
-                {gefilterdeWijken.length === 0 && (
-                  <p className="text-body-sm text-warmgrijs text-center py-4">Geen wijken gevonden.</p>
-                )}
-                {gefilterdeWijken.map((wijk) => (
-                  <button
-                    key={wijk.id}
-                    onClick={() => handleKiesWijk(wijk)}
-                    className="flex items-center justify-between gap-2 p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 transition-all text-left"
-                  >
-                    <div>
-                      <div className="font-semibold text-body-sm">{wijk.name}</div>
-                      <div className="text-body-xs text-warmgrijs">{wijk.city}</div>
-                    </div>
-                    <ArrowLeft size={15} weight="bold" className="rotate-180 text-warmgrijs" />
-                  </button>
-                ))}
-              </div>
-
-              <button onClick={() => setStep("naam-rol")} className="text-body-sm text-warmgrijs hover:text-warmzwart mt-5">
-                ← Terug
-              </button>
-            </>
-          )}
-
-          {/* ── Stap: adres invullen ── */}
-          {step === "adres" && gekozenWijk && (
+          {/* ── Stap: adres ── */}
+          {step === "adres" && (
             <>
               <h1 className="font-display text-display-sm text-center mb-1.5">Wat is je adres?</h1>
               <p className="text-center text-body text-warmgrijs mb-6">
-                In <span className="font-semibold text-warmzwart">{gekozenWijk.name}</span> — dit gebruiken we alleen
-                om te zien welke buren al actief zijn. Niet zichtbaar voor anderen, tenzij je samen lid wordt van
-                dezelfde community.
+                Zo herkennen we automatisch of je buren al actief zijn. Niet zichtbaar voor anderen, tenzij je samen
+                lid wordt van dezelfde community.
               </p>
 
               <label className="text-body-sm font-semibold block mb-1.5">Postcode</label>
@@ -440,7 +475,7 @@ export default function OnboardingPage() {
               />
 
               <label className="text-body-sm font-semibold block mb-1.5">Huisnummer</label>
-              <div className="flex gap-2 mb-4">
+              <div className="flex gap-2 mb-2">
                 <input
                   className="input flex-1"
                   placeholder="12"
@@ -455,30 +490,166 @@ export default function OnboardingPage() {
                 />
               </div>
 
-              <label className="text-body-sm font-semibold block mb-1.5">Gebouw of toren (optioneel)</label>
-              <input
-                className="input mb-6"
-                placeholder="Bijv. Toren A"
-                value={gebouwLabel}
-                onChange={(e) => setGebouwLabel(e.target.value)}
-              />
+              {nietGevonden && (
+                <p className="text-body-xs text-terracotta mb-4">
+                  Dit adres kunnen we niet vinden. Controleer de postcode en het huisnummer, of gebruik hieronder de
+                  nieuwbouw-optie als je nog geen definitief adres hebt.
+                </p>
+              )}
+
+              {kandidaten && kandidaten.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-body-xs text-warmgrijs mb-2">Welke van deze klopt?</p>
+                  <div className="flex flex-col gap-2">
+                    {kandidaten.map((k) => (
+                      <button
+                        key={k.huisNlt}
+                        onClick={() => handleKiesKandidaat(k)}
+                        className="p-3 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 text-left text-body-sm"
+                      >
+                        {k.formatted}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <button
-                className="btn-primary w-full mb-3"
-                onClick={handleAdresNext}
-                disabled={saving || !postcode.trim() || !huisnummer.trim()}
+                className="btn-primary w-full mb-4 mt-2"
+                onClick={handleAdresZoeken}
+                disabled={zoeken || !postcode.trim() || !huisnummer.trim()}
               >
-                {saving ? "Bezig..." : "Volgende"}
+                {zoeken ? "Zoeken..." : "Vind mijn adres"}
                 <ArrowLeft size={16} weight="bold" className="rotate-180" />
               </button>
-              <button onClick={() => setStep("wijk")} className="text-body-sm text-warmgrijs hover:text-warmzwart">
-                ← Andere wijk
+
+              <button
+                onClick={() => setStep("nieuwbouw-project")}
+                className="text-body-sm text-warmgrijs hover:text-warmzwart w-full text-center"
+              >
+                Heb je nog geen definitief adres?
+              </button>
+            </>
+          )}
+
+          {/* ── Stap: adres bevestigen ── */}
+          {step === "adres-bevestiging" && adresResultaat && (
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-full bg-terracotta-50 flex items-center justify-center mx-auto mb-4">
+                <MapPin size={22} className="text-terracotta" weight="fill" />
+              </div>
+              <h1 className="font-display text-display-sm mb-1.5">Is dit jouw adres?</h1>
+              <p className="text-body text-warmgrijs mb-6">{adresResultaat.formatted}</p>
+
+              <button className="btn-primary w-full mb-3" onClick={handleAdresBevestigen} disabled={saving}>
+                {saving ? "Bezig..." : "Ja, klopt"}
+                <ArrowLeft size={16} weight="bold" className="rotate-180" />
+              </button>
+              <button
+                onClick={() => {
+                  setAdresResultaat(null);
+                  setStep("adres");
+                }}
+                className="text-body-sm text-warmgrijs hover:text-warmzwart"
+              >
+                Wijzigen
+              </button>
+            </div>
+          )}
+
+          {/* ── Stap: nieuwbouw zonder definitief adres ── */}
+          {step === "nieuwbouw-project" && (
+            <>
+              <h1 className="font-display text-display-sm text-center mb-1.5">Zoek je nieuwbouwproject</h1>
+              <p className="text-center text-body text-warmgrijs mb-6">
+                Nog geen definitief adres? Vul dan je bouwnummer in — je kunt dit later altijd aanvullen zodra je
+                adres bekend is.
+              </p>
+
+              {!gekozenProject ? (
+                <>
+                  <input
+                    className="input mb-4"
+                    placeholder="Zoek op project of stad..."
+                    value={projectQuery}
+                    onChange={(e) => setProjectQuery(e.target.value)}
+                    autoFocus
+                  />
+                  <div className="flex flex-col gap-2 max-h-[280px] overflow-y-auto mb-4">
+                    {gefilterdeProjecten.length === 0 && (
+                      <p className="text-body-sm text-warmgrijs text-center py-4">Geen projecten gevonden.</p>
+                    )}
+                    {gefilterdeProjecten.map((project) => (
+                      <button
+                        key={project.id}
+                        onClick={() => handleKiesProject(project)}
+                        className="flex items-center justify-between gap-2 p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 transition-all text-left"
+                      >
+                        <div>
+                          <div className="font-semibold text-body-sm">{project.name}</div>
+                          <div className="text-body-xs text-warmgrijs">{project.city}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-body-sm text-warmgrijs mb-4">
+                    Project: <span className="font-semibold text-warmzwart">{gekozenProject.name}</span>
+                  </p>
+
+                  {fases.length > 0 && !gekozenFase && (
+                    <div className="flex flex-col gap-2 mb-4">
+                      {fases.map((fase) => (
+                        <button
+                          key={fase.id}
+                          onClick={() => setGekozenFase(fase)}
+                          className="p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 text-left text-body-sm font-semibold"
+                        >
+                          {fase.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {(gekozenFase || fases.length === 0) && (
+                    <>
+                      <label className="text-body-sm font-semibold block mb-1.5">Bouwnummer</label>
+                      <input
+                        className="input mb-4"
+                        placeholder="Bijv. 42"
+                        value={bouwnummer}
+                        onChange={(e) => setBouwnummer(e.target.value)}
+                      />
+                      <button
+                        className="btn-primary w-full mb-3"
+                        onClick={handleNieuwbouwBevestigen}
+                        disabled={saving || !bouwnummer.trim() || (fases.length > 0 && !gekozenFase)}
+                      >
+                        {saving ? "Bezig..." : "Opslaan"}
+                        <ArrowLeft size={16} weight="bold" className="rotate-180" />
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
+
+              <button
+                onClick={() => {
+                  setGekozenProject(null);
+                  setGekozenFase(null);
+                  setStep("adres");
+                }}
+                className="text-body-sm text-warmgrijs hover:text-warmzwart"
+              >
+                ← Ik heb toch een adres
               </button>
             </>
           )}
 
           {/* ── Stap: detectie-resultaat ── */}
-          {step === "detectie" && gekozenWijk && (
+          {step === "detectie" && (
             <div className="text-center">
               <div className="w-14 h-14 rounded-full bg-terracotta-50 flex items-center justify-center mx-auto mb-4">
                 {bestaandeCommunity || clusterTelling >= threshold ? (
@@ -488,12 +659,24 @@ export default function OnboardingPage() {
                 )}
               </div>
 
-              {bestaandeCommunity ? (
+              {geenCluster ? (
+                <>
+                  <h1 className="font-display text-display-sm mb-1.5">Je account staat klaar.</h1>
+                  <p className="text-body text-warmgrijs mb-6">
+                    Je kunt Neighbuur direct gebruiken. Zodra er een community voor jouw gebouw ontstaat, laten we
+                    het je weten.
+                  </p>
+                  <button className="btn-primary w-full" onClick={() => router.push(next || "/plan")}>
+                    Naar Mijn Plan
+                    <ArrowLeft size={16} weight="bold" className="rotate-180" />
+                  </button>
+                </>
+              ) : bestaandeCommunity ? (
                 <>
                   <h1 className="font-display text-display-sm mb-1.5">Je buren hebben al een community gestart.</h1>
                   <p className="text-body text-warmgrijs mb-6">
                     <span className="font-semibold text-warmzwart">{bestaandeCommunity.name}</span> is al actief voor
-                    jouw adres.
+                    jouw gebouw.
                   </p>
                   <button className="btn-primary w-full" onClick={handleWordLid} disabled={saving}>
                     {saving ? "Bezig..." : "Word lid"}
@@ -503,14 +686,14 @@ export default function OnboardingPage() {
               ) : clusterTelling >= threshold ? (
                 <>
                   <h1 className="font-display text-display-sm mb-1.5">
-                    Er zijn inmiddels {clusterTelling} bewoners uit {gebouwLabel || postcode} actief.
+                    Er zijn inmiddels {clusterTelling} woningen uit jouw gebouw actief.
                   </h1>
                   <p className="text-body text-warmgrijs mb-6">
                     Genoeg buren voor een eigen community. Jij mag 'm starten — of iemand anders doet dat straks.
                   </p>
                   <input
                     className="input mb-3 text-left"
-                    placeholder={`Bijv. Buurtgroep ${postcode}`}
+                    placeholder="Bijv. Buurtgroep de Vrienden"
                     value={nieuweTitel}
                     onChange={(e) => setNieuweTitel(e.target.value)}
                   />
@@ -525,7 +708,7 @@ export default function OnboardingPage() {
               ) : (
                 <>
                   <h1 className="font-display text-display-sm mb-1.5">
-                    Je bent een van de eerste bewoners uit dit blok op Neighbuur.
+                    Je bent een van de eerste bewoners uit dit gebouw op Neighbuur.
                   </h1>
                   <p className="text-body text-warmgrijs mb-6">
                     Zodra er {threshold} buren zijn, kun je samen een community starten. Nodig gerust buren uit om

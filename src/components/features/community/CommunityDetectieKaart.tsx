@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase";
 
 export type DetectieResultaat =
   | { type: "bestaande"; name: string; slug: string; communityId: string }
-  | { type: "drempel"; postcode: string; telling: number; threshold: number; developmentId: string }
+  | { type: "drempel"; telling: number; threshold: number; clusterId: string }
   | { type: "vroeg"; threshold: number };
 
 export function CommunityDetectieKaart(props: DetectieResultaat) {
@@ -47,8 +47,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
     setSaving(true);
     const supabase = createClient();
     const { data, error } = await supabase.rpc("start_community", {
-      p_development_id: props.developmentId,
-      p_postcode: props.postcode,
+      p_cluster_id: props.clusterId,
       p_titel_nl: titel.trim() || null,
     });
     setSaving(false);
@@ -93,7 +92,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
           </span>
           <div>
             <h3 className="font-body font-bold text-[15px] text-warmzwart">
-              Er zijn inmiddels {props.telling} bewoners uit {props.postcode} actief
+              Er zijn inmiddels {props.telling} woningen uit jouw gebouw actief
             </h3>
             <p className="font-body text-[13px] text-warmgrijs">Genoeg buren voor een eigen community.</p>
           </div>
@@ -102,7 +101,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
           <input
             value={titel}
             onChange={(e) => setTitel(e.target.value)}
-            placeholder={`Bijv. Buurtgroep ${props.postcode}`}
+            placeholder="Bijv. Buurtgroep de Vrienden"
             className="input flex-1 !py-2.5 !text-[14px]"
           />
           <button onClick={start} disabled={saving} className="btn-primary shrink-0 !py-2.5">

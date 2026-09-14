@@ -45,7 +45,7 @@ export default async function PlanPage() {
 
   const { data: bewonerProfiel } = await supabase
     .from("resident_profiles")
-    .select("community_id, development_id, postal_code, show_community_suggestions")
+    .select("community_id, current_residence_id, show_community_suggestions")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -60,37 +60,48 @@ export default async function PlanPage() {
   }
 
   // Geen community? Dan proberen we buren te detecteren (organische
-  // communityvorming) — alleen mogelijk als er een postcode bekend is
-  // (oudere/demo-accounts zonder adres slaan dit gewoon over).
+  // communityvorming) — alleen mogelijk als de woning al een cluster heeft
+  // (bv. geen gebouwrelatie gevonden, of nog geen adres bevestigd).
   let detectie: DetectieResultaat | null = null;
-  if (!community && bewonerProfiel?.development_id && bewonerProfiel?.postal_code && bewonerProfiel.show_community_suggestions !== false) {
-    const { data: bestaande } = await supabase
-      .from("communities")
-      .select("id, name, slug")
-      .eq("development_id", bewonerProfiel.development_id)
-      .eq("postcode_cluster", bewonerProfiel.postal_code)
-      .neq("status", "dormant")
+  if (!community && bewonerProfiel?.current_residence_id && bewonerProfiel.show_community_suggestions !== false) {
+    const { data: residence } = await supabase
+      .from("residences")
+      .select("residential_cluster_id")
+      .eq("id", bewonerProfiel.current_residence_id)
       .maybeSingle();
+    const clusterId = residence?.residential_cluster_id;
 
-    if (bestaande) {
-      detectie = { type: "bestaande", name: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
-    } else {
-      const { data: wijkRow } = await supabase
-        .from("developments")
-        .select("community_threshold")
-        .eq("id", bewonerProfiel.development_id)
+    if (clusterId) {
+      const { data: bestaande } = await supabase
+        .from("communities")
+        .select("id, name, slug")
+        .eq("residential_cluster_id", clusterId)
+        .neq("status", "dormant")
         .maybeSingle();
-      const { data: telling } = await supabase.rpc("count_residents_in_cluster", {
-        p_development_id: bewonerProfiel.development_id,
-        p_postcode: bewonerProfiel.postal_code,
-        p_gebouw_label: null,
-      });
-      const threshold = wijkRow?.community_threshold ?? 3;
-      const count = typeof telling === "number" ? telling : 1;
-      detectie =
-        count >= threshold
-          ? { type: "drempel", postcode: bewonerProfiel.postal_code, telling: count, threshold, developmentId: bewonerProfiel.development_id }
-          : { type: "vroeg", threshold };
+
+      if (bestaande) {
+        detectie = { type: "bestaande", name: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
+      } else {
+        const { data: cluster } = await supabase
+          .from("residential_clusters")
+          .select("community_threshold, development_id")
+          .eq("id", clusterId)
+          .maybeSingle();
+        let threshold = cluster?.community_threshold ?? undefined;
+        if (threshold == null && cluster?.development_id) {
+          const { data: development } = await supabase
+            .from("developments")
+            .select("community_threshold")
+            .eq("id", cluster.development_id)
+            .maybeSingle();
+          threshold = development?.community_threshold ?? undefined;
+        }
+        threshold = threshold ?? 3;
+
+        const { data: telling } = await supabase.rpc("count_residences_in_cluster", { p_cluster_id: clusterId });
+        const count = typeof telling === "number" ? telling : 1;
+        detectie = count >= threshold ? { type: "drempel", telling: count, threshold, clusterId } : { type: "vroeg", threshold };
+      }
     }
   }
 

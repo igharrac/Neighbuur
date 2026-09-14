@@ -150,7 +150,7 @@ const functionsBlock = `      calculate_profile_strength: {
         Returns: number;
       };
       start_community: {
-        Args: { p_development_id: string; p_postcode: string; p_titel_nl: string | null };
+        Args: { p_cluster_id: string; p_titel_nl: string | null };
         Returns: { id: string; slug: string; aangemaakt: boolean }[];
       };
       reset_monthly_requests: {

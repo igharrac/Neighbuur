@@ -609,6 +609,7 @@ export interface Database {
           created_at: string | null;
           status: string;
           postcode_cluster: string | null;
+          residential_cluster_id: string | null;
         };
         Insert: {
           id?: string;
@@ -622,6 +623,7 @@ export interface Database {
           created_at?: string | null;
           status?: string;
           postcode_cluster?: string | null;
+          residential_cluster_id?: string | null;
         };
         Update: {
           id?: string;
@@ -635,9 +637,11 @@ export interface Database {
           created_at?: string | null;
           status?: string;
           postcode_cluster?: string | null;
+          residential_cluster_id?: string | null;
         };
         Relationships: [
           { foreignKeyName: "communities_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
+          { foreignKeyName: "communities_residential_cluster_id_fkey"; columns: ["residential_cluster_id"]; isOneToOne: false; referencedRelation: "residential_clusters"; referencedColumns: ["id"] },
         ];
       };
       review_votes: {
@@ -1279,7 +1283,7 @@ export interface Database {
         Returns: number;
       };
       start_community: {
-        Args: { p_development_id: string; p_postcode: string; p_titel_nl: string | null };
+        Args: { p_cluster_id: string; p_titel_nl: string | null };
         Returns: { id: string; slug: string; aangemaakt: boolean }[];
       };
       reset_monthly_requests: {
