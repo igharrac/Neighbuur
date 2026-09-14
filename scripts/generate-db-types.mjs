@@ -168,6 +168,10 @@ const functionsBlock = `      calculate_profile_strength: {
       get_invite_context: {
         Args: { p_code: string };
         Returns: { postal_code: string | null; city: string | null }[];
+      };
+      anonymize_and_ban_account: {
+        Args: { p_user_id: string };
+        Returns: void;
       };`;
 
 const output = `/**

@@ -23,7 +23,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function loadProfile(userId: string) {
     const supabase = createClient();
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
-    setProfile(data as Profile | null);
+    let profielData = data as Profile | null;
+
+    // Gedeactiveerd account: opnieuw inloggen heractiveert automatisch,
+    // geen aparte bevestigingsstap. Een verwijderd (geanonimiseerd)
+    // account kan hier niet meer komen — dat is auth-side geband.
+    if (profielData?.deactivated_at) {
+      const { data: gereactiveerd } = await supabase
+        .from("profiles")
+        .update({ deactivated_at: null })
+        .eq("id", userId)
+        .select("*")
+        .maybeSingle();
+      if (gereactiveerd) profielData = gereactiveerd as Profile;
+    }
+
+    setProfile(profielData);
   }
 
   useEffect(() => {

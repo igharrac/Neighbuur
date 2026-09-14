@@ -30,6 +30,8 @@ export interface Profile {
   language: "nl" | "en";
   created_at: string;
   updated_at: string;
+  deactivated_at: string | null;
+  deleted_at: string | null;
 }
 
 export interface Category {

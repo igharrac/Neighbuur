@@ -288,6 +288,8 @@ export interface Database {
           language: string;
           created_at: string | null;
           updated_at: string | null;
+          deactivated_at: string | null;
+          deleted_at: string | null;
         };
         Insert: {
           id: string;
@@ -299,6 +301,8 @@ export interface Database {
           language?: string;
           created_at?: string | null;
           updated_at?: string | null;
+          deactivated_at?: string | null;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
@@ -310,6 +314,8 @@ export interface Database {
           language?: string;
           created_at?: string | null;
           updated_at?: string | null;
+          deactivated_at?: string | null;
+          deleted_at?: string | null;
         };
         Relationships: [];
       };
@@ -1225,6 +1231,8 @@ export interface Database {
           requests_limit: number | null;
           owner_name: string | null;
           owner_avatar: string | null;
+          deactivated_at: string | null;
+          deleted_at: string | null;
           completed_jobs: number | null;
           category_slugs: string[] | null;
         };
@@ -1301,6 +1309,10 @@ export interface Database {
       get_invite_context: {
         Args: { p_code: string };
         Returns: { postal_code: string | null; city: string | null }[];
+      };
+      anonymize_and_ban_account: {
+        Args: { p_user_id: string };
+        Returns: void;
       };
     };
     Enums: {
