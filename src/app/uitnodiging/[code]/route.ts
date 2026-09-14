@@ -12,7 +12,7 @@ export async function GET(request: Request, { params }: { params: { code: string
   // Zoek de uitnodiger via zijn persoonlijke code
   const { data: uitnodigerProfiel } = await admin
     .from("resident_profiles")
-    .select("user_id, community_id, development_id, communities(slug)")
+    .select("user_id, community_id, communities(slug)")
     .eq("invite_code", code)
     .maybeSingle();
 
@@ -50,10 +50,14 @@ export async function GET(request: Request, { params }: { params: { code: string
       { onConflict: "community_id,user_id", ignoreDuplicates: true }
     );
 
-  // Zorg dat de nieuwe gebruiker zelf ook een uitnodigingscode heeft
+  // De nieuwe adres-eerst onboardingflow heeft de uitnodigde gebruiker al
+  // een eigen resident_profiles-rij gegeven (met zijn eigen, echte adres/
+  // residence) vóórdat die hier belandt — dit is dus alleen nog de
+  // community-koppeling zelf, en een uitzonderingspad voor het geval er
+  // (bv. via een oudere route) nog geen resident_profiles-rij bestaat.
   const { data: eigenBewonerProfiel } = await admin
     .from("resident_profiles")
-    .select("id")
+    .select("id, community_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -72,9 +76,12 @@ export async function GET(request: Request, { params }: { params: { code: string
     await admin.from("resident_profiles").insert({
       user_id: user.id,
       community_id: uitnodigerProfiel.community_id,
-      development_id: uitnodigerProfiel.development_id,
       invite_code: eigenCode,
     });
+  } else if (!eigenBewonerProfiel.community_id) {
+    // Alleen zetten als de bewoner nog geen (eigen, organisch gedetecteerde)
+    // community heeft — een uitnodiging overschrijft die nooit.
+    await admin.from("resident_profiles").update({ community_id: uitnodigerProfiel.community_id }).eq("id", eigenBewonerProfiel.id);
   }
 
   // Log deze acceptatie + notificeer de uitnodiger (eenmalig per persoon)
