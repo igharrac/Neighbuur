@@ -210,7 +210,7 @@ export default function OnboardingPage() {
       .select("id, name, slug")
       .eq("development_id", gekozenWijk.id)
       .eq("postcode_cluster", postcodeNorm)
-      .neq("status", "slapend")
+      .neq("status", "dormant")
       .maybeSingle();
 
     if (bestaande) {
@@ -250,7 +250,7 @@ export default function OnboardingPage() {
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    await supabase.from("community_members").insert({ community_id: bestaandeCommunity.id, user_id: user.id, role: "lid" });
+    await supabase.from("community_members").insert({ community_id: bestaandeCommunity.id, user_id: user.id, role: "member" });
     await supabase.from("resident_profiles").update({ community_id: bestaandeCommunity.id }).eq("user_id", user.id);
 
     setSaving(false);

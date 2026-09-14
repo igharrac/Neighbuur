@@ -46,7 +46,7 @@ export async function GET(request: Request, { params }: { params: { code: string
   await admin
     .from("community_members")
     .upsert(
-      { community_id: uitnodigerProfiel.community_id, user_id: user.id, role: "lid" },
+      { community_id: uitnodigerProfiel.community_id, user_id: user.id, role: "member" },
       { onConflict: "community_id,user_id", ignoreDuplicates: true }
     );
 

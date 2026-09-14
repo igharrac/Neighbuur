@@ -69,7 +69,7 @@ export default async function PlanPage() {
       .select("id, name, slug")
       .eq("development_id", bewonerProfiel.development_id)
       .eq("postcode_cluster", bewonerProfiel.postal_code)
-      .neq("status", "slapend")
+      .neq("status", "dormant")
       .maybeSingle();
 
     if (bestaande) {

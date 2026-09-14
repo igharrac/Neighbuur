@@ -28,7 +28,7 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
       .eq("community_id", community.id)
       .eq("user_id", user.id)
       .maybeSingle();
-    geautoriseerd = lid?.role === "beheerder";
+    geautoriseerd = lid?.role === "admin";
   }
 
   if (!geautoriseerd) redirect("/");

@@ -33,8 +33,8 @@ export async function GET() {
     admin.from("bookings").select("price_cents").eq("status", "completed"),
   ]);
 
-  const activeCommunityCount = communities?.filter((c) => c.status === "actief").length ?? 0;
-  const dormantCommunityCount = communities?.filter((c) => c.status === "slapend").length ?? 0;
+  const activeCommunityCount = communities?.filter((c) => c.status === "active").length ?? 0;
+  const dormantCommunityCount = communities?.filter((c) => c.status === "dormant").length ?? 0;
 
   let avgMembersPerCommunity = 0;
   if (communities && communities.length > 0) {

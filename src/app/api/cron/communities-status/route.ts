@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 
 /**
- * Zet communities zonder leden op status 'slapend' (niet meer actief
+ * Zet communities zonder leden op status 'dormant' (niet meer actief
  * voorstellen, wel nog bestaand/doorzoekbaar — reviews en geschiedenis
- * blijven waardevol), en zet ze terug op 'actief' zodra ze weer leden
+ * blijven waardevol), en zet ze terug op 'active' zodra ze weer leden
  * hebben. Bedoeld om periodiek aangeroepen te worden (zie vercel.json).
  *
  * Vereenvoudiging t.o.v. het oorspronkelijke voorstel: geen "X maanden
  * zonder leden"-vertraging, want er wordt nergens bijgehouden sinds
- * wanneer een community leeg is. Direct op 'slapend' zetten bij 0 leden
+ * wanneer een community leeg is. Direct op 'dormant' zetten bij 0 leden
  * is voor nu het pragmatische alternatief.
  */
 export async function GET() {
@@ -25,7 +25,7 @@ export async function GET() {
       .select("user_id", { count: "exact", head: true })
       .eq("community_id", c.id);
 
-    const nieuweStatus = (count ?? 0) === 0 ? "slapend" : "actief";
+    const nieuweStatus = (count ?? 0) === 0 ? "dormant" : "active";
     if (nieuweStatus !== c.status) {
       await admin.from("communities").update({ status: nieuweStatus }).eq("id", c.id);
       bijgewerkt++;
