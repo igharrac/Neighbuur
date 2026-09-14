@@ -6,17 +6,25 @@ import { sendEmail } from "@/lib/email";
 /**
  * Verwijdert een account permanent — anonimiseert (zie
  * anonymize_and_ban_account, migratie 0048) i.p.v. hard te verwijderen,
- * en bant daarna de auth-user zodat inloggen nooit meer lukt. Bewust
- * geen auth.admin.deleteUser(): die zou proberen te cascaden naar
- * profiles en direct op dezelfde RESTRICT-constraints stuklopen als de
- * RPC bewust omzeilt.
+ * en verandert daarna het e-mailadres op de auth-user naar iets
+ * onherkenbaars + bant de sessie. Bewust geen auth.admin.deleteUser():
+ * die zou proberen te cascaden naar profiles en direct op dezelfde
+ * RESTRICT-constraints stuklopen als de RPC bewust omzeilt.
+ *
+ * Het e-mailadres wordt vervangen (i.p.v. alleen bannen) zodat het echte
+ * adres weer vrij is voor een nieuwe, volledig losse registratie — zoals
+ * op de meeste platforms. Simpelweg bannen zou dat adres voor altijd
+ * blokkeren, ook voor een compleet nieuwe registratiepoging. De ban blijft
+ * ernaast staan om lopende sessies/refresh-tokens van vóór de verwijdering
+ * meteen ongeldig te maken.
  *
  * Volgorde is belangrijk: e-mailadres/naam ophalen en de bevestigingsmail
  * versturen vóórdat de RPC het adres wegschoont (notifyUser() zou het na
  * de schoning niet meer kunnen opzoeken, vandaar hier rechtstreeks
- * sendEmail() met de al-opgehaalde waarden). Banned wordt pas ná een
- * geslaagde RPC, zodat een mislukte anonimisatie nooit een gebande maar
- * ongeschoonde gebruiker achterlaat.
+ * sendEmail() met de al-opgehaalde waarden). Auth wordt pas ná een
+ * geslaagde RPC bijgewerkt, zodat een mislukte anonimisatie nooit een
+ * geschoonde-maar-nog-inlogbare of juist afgesloten-maar-ongeschoonde
+ * gebruiker achterlaat.
  */
 export async function POST() {
   const supabase = createServerSupabase();
@@ -44,8 +52,11 @@ export async function POST() {
   const { error: rpcError } = await admin.rpc("anonymize_and_ban_account", { p_user_id: user.id });
   if (rpcError) return NextResponse.json({ error: rpcError.message }, { status: 500 });
 
-  const { error: banError } = await admin.auth.admin.updateUserById(user.id, { ban_duration: "876000h" });
-  if (banError) return NextResponse.json({ error: banError.message }, { status: 500 });
+  const { error: authError } = await admin.auth.admin.updateUserById(user.id, {
+    email: `deleted-${user.id}@neighbuur.invalid`,
+    ban_duration: "876000h",
+  });
+  if (authError) return NextResponse.json({ error: authError.message }, { status: 500 });
 
   return NextResponse.json({ ok: true });
 }
