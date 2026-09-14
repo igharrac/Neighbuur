@@ -101,6 +101,28 @@ console.log("── Vakman- en bewonerprofielen verwijderen ──");
 if (vIds.length) await admin.from("professional_profiles").delete().in("id", vIds);
 if (buurUserIds.length) await admin.from("resident_profiles").delete().in("user_id", buurUserIds);
 
+console.log("── Fictieve adres-scenario's van scripts/seed-demo-addresses.mjs opruimen ──");
+// Herkenbaar aan de eigen prefixes die dat script gebruikt: bag-id's
+// beginnend met '9999' (nooit een echt BAG-pand-id) en cluster_key's
+// beginnend met 'demo:'.
+const { data: demoAddresses } = await admin.from("addresses").select("id").like("bag_nummeraanduiding_id", "9999%");
+const demoAddressIds = (demoAddresses ?? []).map((a) => a.id);
+const { data: demoClusters } = await admin.from("residential_clusters").select("id").like("cluster_key", "demo:%");
+const demoClusterIds = (demoClusters ?? []).map((c) => c.id);
+
+if (demoClusterIds.length) await admin.from("communities").delete().in("residential_cluster_id", demoClusterIds);
+if (demoAddressIds.length) await admin.from("residences").delete().in("address_id", demoAddressIds);
+if (demoClusterIds.length) await admin.from("residences").delete().in("residential_cluster_id", demoClusterIds);
+if (demoClusterIds.length) await admin.from("residential_clusters").delete().in("id", demoClusterIds);
+if (demoAddressIds.length) await admin.from("addresses").delete().in("id", demoAddressIds);
+
+const { data: demoDevelopment } = await admin.from("developments").select("id").eq("slug", "de-nieuwe-kern").maybeSingle();
+if (demoDevelopment) {
+  await admin.from("development_phases").delete().eq("development_id", demoDevelopment.id);
+  await admin.from("developments").delete().eq("id", demoDevelopment.id);
+}
+console.log(`Verwijderd: ${demoAddressIds.length} adressen, ${demoClusterIds.length} clusters, evt. 'De Nieuwe Kern'-fixture.`);
+
 console.log("── Profielen + auth-accounts verwijderen ──");
 let verwijderd = 0;
 for (const userId of alleDemoUserIds) {
