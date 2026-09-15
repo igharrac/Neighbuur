@@ -3,23 +3,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { MagnifyingGlass, MapPin, ArrowRight, Star, Tag } from "@phosphor-icons/react";
+import { MagnifyingGlass, MapPin, ArrowRight, Tag } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
-import type { CommunityOverview } from "@/lib/communities";
 
-const AVATARS = [
-  { init: "MB", bg: "#cb4914", color: "#fffbff" },
-  { init: "LK", bg: "#9a6b35", color: "#fffbff" },
-  { init: "JS", bg: "#2c694e", color: "#ffffff" },
-  { init: "+2k", bg: "#e9e1dd", color: "#1e1b19" },
-];
-
-interface HeroProps {
-  communities: CommunityOverview[];
-}
-
-export function Hero({ communities }: HeroProps) {
+export function Hero() {
   const { dict } = useLang();
   const router = useRouter();
   const [zoekterm, setZoekterm] = useState("");
@@ -29,8 +16,6 @@ export function Hero({ communities }: HeroProps) {
     const trimmed = zoekterm.trim();
     router.push(trimmed ? `/zoeken?q=${encodeURIComponent(trimmed)}` : "/zoeken");
   }
-
-  const pillCommunities = communities.slice(0, 3);
 
   return (
     <section className="relative overflow-hidden bg-cream-warm px-6 py-12 lg:px-[72px] lg:py-24">
@@ -85,7 +70,7 @@ export function Hero({ communities }: HeroProps) {
             </span>
           </div>
 
-          <h1 className="font-display font-bold text-[40px] leading-[48px] sm:text-[56px] sm:leading-[64px] tracking-[-1.12px] text-[#1e1b19] pb-4 pr-0 lg:pr-[96px]">
+          <h1 className="font-display font-bold text-[40px] leading-[48px] sm:text-[56px] sm:leading-[64px] tracking-[-1.12px] text-[#1e1b19] pb-6 pr-0 lg:pr-[96px]">
             <span className="block">{dict.hero.title}</span>
             <span
               className="block font-display italic font-normal text-[#a73400] [text-decoration-line:underline] [text-decoration-style:wavy] [text-decoration-color:#ffdbcf] [text-underline-position:from-font] [text-decoration-skip-ink:none]"
@@ -131,49 +116,6 @@ export function Hero({ communities }: HeroProps) {
               {dict.hero.searchButton}
               <ArrowRight size={12} weight="bold" />
             </button>
-          </div>
-
-          {pillCommunities.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 pt-6">
-              <span className="font-body font-medium text-[12px] tracking-[0.24px] text-[#8d7168]">
-                {dict.hero.activeRegionLabel}
-              </span>
-              {pillCommunities.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/wijk/${c.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#f4ece8] px-3 py-1 no-underline"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2c694e]" />
-                  <span className="font-body font-semibold text-[12px] tracking-[0.24px] text-[#1e1b19]">
-                    {c.name} ({c.member_count} {dict.hero.buren})
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className="flex flex-wrap items-center gap-6 pt-8">
-            <div className="flex items-center">
-              {AVATARS.map((a, i) => (
-                <span
-                  key={a.init}
-                  style={{ backgroundColor: a.bg, color: a.color, marginLeft: i === 0 ? 0 : -8 }}
-                  className="w-9 h-9 rounded-full flex items-center justify-center font-body font-semibold text-[12px] tracking-[0.24px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] border-2 border-cream-warm"
-                >
-                  {a.init}
-                </span>
-              ))}
-            </div>
-            <div>
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} weight="fill" className="text-[#a73400]" />
-                ))}
-                <span className="font-body font-bold text-[14px] text-[#1e1b19] pl-1">4.8 / 5</span>
-              </div>
-              <p className="font-body text-[13px] text-[#594139]">2.847 {dict.hero.trustCount}</p>
-            </div>
           </div>
         </div>
       </div>

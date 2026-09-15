@@ -61,7 +61,7 @@ export function HomePageClient({ categories, communities }: HomePageClientProps)
   return (
     <>
       {/* ── HERO ── */}
-      <Hero communities={communities} />
+      <Hero />
 
       {/* ── HOE WERKT NEIGHBUUR ── */}
       <HoeHetWerkt />
