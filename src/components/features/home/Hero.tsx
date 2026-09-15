@@ -70,13 +70,9 @@ export function Hero() {
             </span>
           </div>
 
-          <h1 className="font-display font-bold text-[40px] leading-[48px] sm:text-[56px] sm:leading-[64px] tracking-[-1.12px] text-[#1e1b19] pb-6 pr-0 lg:pr-[96px]">
+          <h1 className="font-display font-bold text-[40px] leading-[48px] sm:text-[84px] sm:leading-[92px] tracking-[-1.12px] text-[#1e1b19] pb-6 pr-0 lg:pr-[96px]">
             <span className="block">{dict.hero.title}</span>
-            <span
-              className="block font-display italic font-normal text-[#a73400] [text-decoration-line:underline] [text-decoration-style:wavy] [text-decoration-color:#ffdbcf] [text-underline-position:from-font] [text-decoration-skip-ink:none]"
-            >
-              {dict.hero.titleAccent}
-            </span>
+            <span className="block font-display italic font-normal text-[#a73400]">{dict.hero.titleAccent}</span>
           </h1>
 
           <p className="font-body text-[17px] leading-[26px] text-[#594139] max-w-[576px] pb-20">
