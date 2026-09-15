@@ -79,7 +79,7 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="font-body text-[17px] leading-[26px] text-[#594139] max-w-[576px] pb-8">
+          <p className="font-body text-[17px] leading-[26px] text-[#594139] max-w-[576px] pb-20">
             {dict.hero.subtitle}
           </p>
 
