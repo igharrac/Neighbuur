@@ -11,13 +11,13 @@ function layout(lang: Lang, title: string, body: string, ctaLabel: string, ctaUr
   return `
   <div style="font-family:'DM Sans',Arial,sans-serif;background:#FAF7F2;padding:32px 16px;">
     <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #E5E2DA;">
-      <div style="background:#E8572A;padding:20px 28px;">
+      <div style="background:#578042;padding:20px 28px;">
         <span style="font-family:Georgia,serif;font-weight:900;font-size:20px;color:#ffffff;">Neigh<span style="color:#1A1A18;">buur</span></span>
       </div>
       <div style="padding:28px;">
         <h1 style="font-family:Georgia,serif;font-size:20px;color:#1A1A18;margin:0 0 12px;">${title}</h1>
         <div style="font-size:14px;line-height:1.6;color:#1A1A18;">${body}</div>
-        <a href="${ctaUrl}" style="display:inline-block;margin-top:24px;background:#E8572A;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 22px;border-radius:8px;">${ctaLabel}</a>
+        <a href="${ctaUrl}" style="display:inline-block;margin-top:24px;background:#578042;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 22px;border-radius:8px;">${ctaLabel}</a>
       </div>
       <div style="padding:16px 28px;border-top:1px solid #E5E2DA;">
         <span style="font-size:11px;color:#8A877F;">${lang === "nl" ? "Je ontvangt dit omdat je een account hebt op Neighbuur." : "You're receiving this because you have a Neighbuur account."}</span>

@@ -6,7 +6,7 @@
  * AI-gegenereerde illustraties in de warme editorial stijl.
  *
  * Alle illustraties gebruiken enkel merkkleurenL
- * - sage (#E8572A)
+ * - sage (#578042)
  * - groen (#2A8C5A)
  * - blauw (#2A6BE8)
  * - oker (#C4871A)
@@ -21,14 +21,14 @@ export function IllusHuis({ className, size = 200 }: IllusProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none" className={cn("flex-shrink-0", className)}>
       {/* Ground shadow */}
-      <ellipse cx="100" cy="172" rx="70" ry="8" fill="#E8572A" opacity="0.06" />
+      <ellipse cx="100" cy="172" rx="70" ry="8" fill="#578042" opacity="0.06" />
       {/* House body */}
-      <rect x="52" y="82" width="96" height="88" rx="4" fill="white" stroke="#E8572A" strokeWidth="2" />
+      <rect x="52" y="82" width="96" height="88" rx="4" fill="white" stroke="#578042" strokeWidth="2" />
       {/* Roof */}
-      <path d="M42 88 L100 42 L158 88" stroke="#E8572A" strokeWidth="2.5" fill="#FFF5F0" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M42 88 L100 42 L158 88" stroke="#578042" strokeWidth="2.5" fill="#F4F8F1" strokeLinecap="round" strokeLinejoin="round" />
       {/* Door */}
-      <rect x="84" y="125" width="32" height="45" rx="16" fill="#E8572A" opacity="0.12" stroke="#E8572A" strokeWidth="1.5" />
-      <circle cx="108" cy="150" r="2.5" fill="#E8572A" />
+      <rect x="84" y="125" width="32" height="45" rx="16" fill="#578042" opacity="0.12" stroke="#578042" strokeWidth="1.5" />
+      <circle cx="108" cy="150" r="2.5" fill="#578042" />
       {/* Windows */}
       <rect x="62" y="95" width="22" height="22" rx="3" fill="#EBF1FF" stroke="#2A6BE8" strokeWidth="1.5" />
       <line x1="73" y1="95" x2="73" y2="117" stroke="#2A6BE8" strokeWidth="1" opacity="0.5" />
@@ -37,9 +37,9 @@ export function IllusHuis({ className, size = 200 }: IllusProps) {
       <line x1="127" y1="95" x2="127" y2="117" stroke="#2A6BE8" strokeWidth="1" opacity="0.5" />
       <line x1="116" y1="106" x2="138" y2="106" stroke="#2A6BE8" strokeWidth="1" opacity="0.5" />
       {/* Key */}
-      <circle cx="100" cy="30" r="7" fill="none" stroke="#E8572A" strokeWidth="2" />
-      <line x1="107" y1="30" x2="122" y2="30" stroke="#E8572A" strokeWidth="2" strokeLinecap="round" />
-      <line x1="118" y1="30" x2="118" y2="37" stroke="#E8572A" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="100" cy="30" r="7" fill="none" stroke="#578042" strokeWidth="2" />
+      <line x1="107" y1="30" x2="122" y2="30" stroke="#578042" strokeWidth="2" strokeLinecap="round" />
+      <line x1="118" y1="30" x2="118" y2="37" stroke="#578042" strokeWidth="2" strokeLinecap="round" />
       {/* Plant left */}
       <ellipse cx="30" cy="168" rx="14" ry="6" fill="#2A8C5A" opacity="0.15" />
       <rect x="28" y="148" width="4" height="22" rx="2" fill="#2A8C5A" opacity="0.3" />
@@ -62,10 +62,10 @@ export function IllusStucwerk({ className, size = 160 }: IllusProps) {
       <line x1="30" y1="70" x2="130" y2="70" stroke="#E5DDD0" strokeWidth="1" />
       <line x1="30" y1="90" x2="130" y2="90" stroke="#E5DDD0" strokeWidth="1" />
       {/* Smooth section */}
-      <rect x="20" y="30" width="65" height="100" rx="4" fill="white" stroke="#E8572A" strokeWidth="1.5" opacity="0.8" />
+      <rect x="20" y="30" width="65" height="100" rx="4" fill="white" stroke="#578042" strokeWidth="1.5" opacity="0.8" />
       {/* Trowel */}
       <rect x="90" y="55" width="40" height="6" rx="3" fill="#C4871A" />
-      <rect x="95" y="48" width="30" height="4" rx="2" fill="#E8572A" opacity="0.6" />
+      <rect x="95" y="48" width="30" height="4" rx="2" fill="#578042" opacity="0.6" />
       <line x1="110" y1="61" x2="110" y2="80" stroke="#8A877F" strokeWidth="2.5" strokeLinecap="round" />
       {/* Bucket */}
       <rect x="28" y="108" width="24" height="20" rx="2" fill="#8A877F" opacity="0.2" stroke="#8A877F" strokeWidth="1.5" />
@@ -78,16 +78,16 @@ export function IllusSchilderen({ className, size = 160 }: IllusProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 160 160" fill="none" className={cn("flex-shrink-0", className)}>
       {/* Paint can */}
-      <rect x="30" y="60" width="40" height="50" rx="4" fill="#E8572A" opacity="0.15" stroke="#E8572A" strokeWidth="1.5" />
-      <ellipse cx="50" cy="60" rx="20" ry="6" fill="#E8572A" opacity="0.2" stroke="#E8572A" strokeWidth="1.5" />
+      <rect x="30" y="60" width="40" height="50" rx="4" fill="#578042" opacity="0.15" stroke="#578042" strokeWidth="1.5" />
+      <ellipse cx="50" cy="60" rx="20" ry="6" fill="#578042" opacity="0.2" stroke="#578042" strokeWidth="1.5" />
       {/* Paint drip */}
-      <path d="M70 65 Q75 65 75 80 Q75 90 72 95" stroke="#E8572A" strokeWidth="3" strokeLinecap="round" fill="none" />
+      <path d="M70 65 Q75 65 75 80 Q75 90 72 95" stroke="#578042" strokeWidth="3" strokeLinecap="round" fill="none" />
       {/* Roller */}
-      <rect x="88" y="30" width="30" height="18" rx="9" fill="#E8572A" opacity="0.8" stroke="#E8572A" strokeWidth="1.5" />
+      <rect x="88" y="30" width="30" height="18" rx="9" fill="#578042" opacity="0.8" stroke="#578042" strokeWidth="1.5" />
       <rect x="100" y="48" width="6" height="60" rx="3" fill="#C4871A" opacity="0.5" />
       <rect x="98" y="105" width="10" height="14" rx="2" fill="#8A877F" opacity="0.3" />
       {/* Color swatches */}
-      <circle cx="40" cy="135" r="8" fill="#E8572A" opacity="0.3" />
+      <circle cx="40" cy="135" r="8" fill="#578042" opacity="0.3" />
       <circle cx="60" cy="135" r="8" fill="#2A8C5A" opacity="0.3" />
       <circle cx="80" cy="135" r="8" fill="#2A6BE8" opacity="0.3" />
     </svg>
