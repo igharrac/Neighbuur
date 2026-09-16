@@ -3,10 +3,20 @@
 import { ReactNode, useEffect } from "react";
 import { X } from "@phosphor-icons/react";
 
+type PanelWidth = "md" | "lg" | "xl";
+
+const widthClass: Record<PanelWidth, string> = {
+  md: "sm:w-[480px]",
+  lg: "sm:w-[720px]",
+  xl: "sm:w-[960px]",
+};
+
 interface SidePanelProps {
   open: boolean;
   onClose: () => void;
   title?: string;
+  /** md (480px, default) · lg (720px) · xl (960px) — altijd volle breedte op mobiel. */
+  width?: PanelWidth;
   children: ReactNode;
 }
 
@@ -16,7 +26,7 @@ interface SidePanelProps {
  * bewerkformulieren in een lijst, zodat de lijst zelf zichtbaar blijft en
  * het paneel altijd in beeld staat, ongeacht scrollpositie.
  */
-export function SidePanel({ open, onClose, title, children }: SidePanelProps) {
+export function SidePanel({ open, onClose, title, width = "md", children }: SidePanelProps) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -36,7 +46,7 @@ export function SidePanel({ open, onClose, title, children }: SidePanelProps) {
       onClick={onClose}
     >
       <div
-        className="fixed inset-y-0 right-0 w-full sm:w-[480px] bg-white shadow-strong p-6 sm:p-8 overflow-y-auto animate-slide-in-right"
+        className={`fixed inset-y-0 right-0 w-full ${widthClass[width]} bg-white shadow-strong p-6 sm:p-8 overflow-y-auto animate-slide-in-right`}
         onClick={(e) => e.stopPropagation()}
       >
         <button

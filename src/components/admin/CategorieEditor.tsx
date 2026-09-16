@@ -188,17 +188,20 @@ export function CategorieEditor({ initialCategories }: { initialCategories: Cate
         open={editingId !== null}
         onClose={cancelEdit}
         title={editingId === "new" ? "Nieuwe categorie" : "Categorie bewerken"}
+        width="xl"
       >
         {editingId !== null && (
           <div className="flex flex-col gap-4">
-            <ImageUploader
-              bucket="categorie-images"
-              pathPrefix={`${editingId === "new" ? crypto.randomUUID() : editingId}`}
-              value={form.image_url}
-              onUploaded={(url) => setField("image_url", url)}
-              aspect="square"
-              label="Afbeelding"
-            />
+            <div className="max-w-[280px]">
+              <ImageUploader
+                bucket="categorie-images"
+                pathPrefix={`${editingId === "new" ? crypto.randomUUID() : editingId}`}
+                value={form.image_url}
+                onUploaded={(url) => setField("image_url", url)}
+                aspect="square"
+                label="Afbeelding"
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <Input
