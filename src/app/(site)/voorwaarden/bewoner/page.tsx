@@ -1,3 +1,5 @@
+import { InvullenVoorPublicatie } from "@/components/features/legal/InvullenVoorPublicatie";
+
 export default function VoorwaardenBewonerPage() {
   return (
     <div className="bg-cream-warm min-h-screen">
@@ -14,13 +16,18 @@ export default function VoorwaardenBewonerPage() {
         <p className="font-body text-[14px] text-warmgrijs mb-10">Laatst bijgewerkt: september 2026</p>
 
         <div className="font-body text-[15px] leading-[26px] text-warmzwart space-y-8">
-          <section>
+          <section className="space-y-3">
             <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">1. Over Neighbuur</h2>
             <p>
               Neighbuur is een platform dat bewoners van nieuwbouwwijken verbindt met lokale vakmensen en met
               elkaar, via wijk- en community-pagina&apos;s. Door een account aan te maken ga je akkoord met deze
               voorwaarden.
             </p>
+            <InvullenVoorPublicatie>
+              Neighbuur wordt aangeboden door [statutaire bedrijfsnaam] B.V., statutair gevestigd te [plaats],
+              kantoorhoudend aan [adres], ingeschreven in het Handelsregister van de Kamer van Koophandel onder
+              nummer [KvK-nummer].
+            </InvullenVoorPublicatie>
           </section>
 
           <section>
@@ -65,7 +72,8 @@ export default function VoorwaardenBewonerPage() {
             <p>
               Neighbuur spant zich in om het platform betrouwbaar en beschikbaar te houden, maar geeft geen garantie
               dat de dienst altijd zonder onderbreking of fouten werkt. Voor zover wettelijk toegestaan is Neighbuur
-              niet aansprakelijk voor indirecte schade die voortvloeit uit het gebruik van het platform.
+              niet aansprakelijk voor indirecte schade die voortvloeit uit het gebruik van het platform. Deze
+              beperking geldt niet voor schade die het gevolg is van opzet of bewuste roekeloosheid van Neighbuur.
             </p>
           </section>
 
@@ -87,8 +95,27 @@ export default function VoorwaardenBewonerPage() {
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">9. Toepasselijk recht</h2>
-            <p>Op deze voorwaarden is Nederlands recht van toepassing.</p>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">9. Privacy en cookies</h2>
+            <p>
+              Hoe we met je persoonsgegevens omgaan staat in onze{" "}
+              <a href="/privacy" className="text-terracotta underline">
+                privacyverklaring
+              </a>
+              . We gebruiken alleen functionele cookies, geen tracking- of advertentiecookies.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">10. Toepasselijk recht en geschillen</h2>
+            <p>
+              Op deze voorwaarden is Nederlands recht van toepassing. Geschillen leggen we bij voorkeur eerst
+              samen op, bijvoorbeeld via{" "}
+              <a href="mailto:support@neighbuur.nl" className="text-terracotta underline">
+                support@neighbuur.nl
+              </a>
+              . Komen we er niet uit, dan is de bevoegde Nederlandse rechter aangewezen — tenzij dwingend
+              consumentenrecht een andere rechter voorschrijft.
+            </p>
           </section>
         </div>
       </div>

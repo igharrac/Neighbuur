@@ -206,6 +206,10 @@ export function Footer() {
         <Link href="#" className="text-terracotta hover:underline">{dict.footer.forPros}</Link>
         {" · "}
         <Link href="#" className="text-terracotta hover:underline">{dict.footer.contact}</Link>
+        {" · "}
+        <Link href="/voorwaarden/bewoner" className="text-terracotta hover:underline">{dict.footer.terms}</Link>
+        {" · "}
+        <Link href="/privacy" className="text-terracotta hover:underline">{dict.footer.privacy}</Link>
       </p>
       <p className="text-body-xs text-warmgrijs-light mt-2">
         © {new Date().getFullYear()} Neighbuur

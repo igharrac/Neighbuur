@@ -1,3 +1,5 @@
+import { InvullenVoorPublicatie } from "@/components/features/legal/InvullenVoorPublicatie";
+
 export default function VoorwaardenVakmanPage() {
   return (
     <div className="bg-cream-warm min-h-screen">
@@ -14,13 +16,18 @@ export default function VoorwaardenVakmanPage() {
         <p className="font-body text-[14px] text-warmgrijs mb-10">Laatst bijgewerkt: september 2026</p>
 
         <div className="font-body text-[15px] leading-[26px] text-warmzwart space-y-8">
-          <section>
+          <section className="space-y-3">
             <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">1. Over Neighbuur voor vakmensen</h2>
             <p>
               Neighbuur brengt vakbedrijven in contact met bewoners van nieuwbouwwijken. Door je als vakbedrijf te
               registreren ga je akkoord met deze voorwaarden, die aanvullend zijn op de algemene voorwaarden voor
               bewoners.
             </p>
+            <InvullenVoorPublicatie>
+              Neighbuur wordt aangeboden door [statutaire bedrijfsnaam] B.V., statutair gevestigd te [plaats],
+              kantoorhoudend aan [adres], ingeschreven in het Handelsregister van de Kamer van Koophandel onder
+              nummer [KvK-nummer].
+            </InvullenVoorPublicatie>
           </section>
 
           <section>
@@ -67,12 +74,25 @@ export default function VoorwaardenVakmanPage() {
               Neighbuur is geen partij bij de overeenkomst tussen jou en de bewoner, en bemiddelt niet in prijs,
               planning of garantievoorwaarden. Jij bent en blijft zelf verantwoordelijk voor de kwaliteit van je
               werk, voor het naleven van geldende wet- en regelgeving (waaronder eventuele vergunningsplicht), en
-              voor je eigen verzekering en aansprakelijkheid richting de klant.
+              voor je eigen verzekering en aansprakelijkheid richting de klant. Neighbuur is niet aansprakelijk
+              voor schade die voortvloeit uit de door jou geleverde diensten; deze beperking geldt niet voor
+              schade die het gevolg is van opzet of bewuste roekeloosheid van Neighbuur zelf.
             </p>
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">7. Reviews</h2>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">7. Betalingen en commissie</h2>
+            <p>
+              Betalingen via het platform verlopen via onze betaaldienstverlener (Mollie). Neighbuur brengt een
+              commissie in rekening op boekingen die via het platform worden afgerond; de hoogte hiervan
+              communiceren we vooraf en kan per periode of categorie verschillen. Bij boekingen die je buiten het
+              platform om afrondt met een bewoner die je via Neighbuur hebt gevonden, gelden de voorwaarden die op
+              dat moment gecommuniceerd zijn.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">8. Reviews</h2>
             <p>
               Bewoners kunnen een review over jouw werk achterlaten; je mag daar één keer publiekelijk op reageren.
               Het is niet toegestaan om reviews te kopen, te ruilen, of bewoners onder druk te zetten om een review
@@ -81,7 +101,7 @@ export default function VoorwaardenVakmanPage() {
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">8. Collectieve deals</h2>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">9. Collectieve deals</h2>
             <p>
               Bij deelname aan een collectieve wijkdeal gelden de voorwaarden (minimumaantal deelnemers, groepsprijs)
               zoals vermeld bij die specifieke deal. Neighbuur kan een deal aanpassen of intrekken als het minimum
@@ -90,7 +110,7 @@ export default function VoorwaardenVakmanPage() {
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">9. Schorsing en beëindiging</h2>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">10. Schorsing en beëindiging</h2>
             <p>
               Bij herhaalde klachten, onjuiste gegevens, of het overtreden van deze voorwaarden kan Neighbuur je
               profiel tijdelijk of definitief van het platform verwijderen.
@@ -98,7 +118,7 @@ export default function VoorwaardenVakmanPage() {
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">10. Wijzigingen</h2>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">11. Wijzigingen</h2>
             <p>
               We kunnen deze voorwaarden aanpassen. Bij een belangrijke wijziging laten we dat weten via het
               platform of per e-mail.
@@ -106,8 +126,26 @@ export default function VoorwaardenVakmanPage() {
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">11. Toepasselijk recht</h2>
-            <p>Op deze voorwaarden is Nederlands recht van toepassing.</p>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">12. Privacy en cookies</h2>
+            <p>
+              Hoe we met persoonsgegevens omgaan (van jou en van bewoners) staat in onze{" "}
+              <a href="/privacy" className="text-terracotta underline">
+                privacyverklaring
+              </a>
+              . We gebruiken alleen functionele cookies, geen tracking- of advertentiecookies.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">13. Toepasselijk recht en geschillen</h2>
+            <p>
+              Op deze voorwaarden is Nederlands recht van toepassing. Geschillen leggen we bij voorkeur eerst
+              samen op, bijvoorbeeld via{" "}
+              <a href="mailto:support@neighbuur.nl" className="text-terracotta underline">
+                support@neighbuur.nl
+              </a>
+              . Komen we er niet uit, dan is de bevoegde Nederlandse rechter aangewezen.
+            </p>
           </section>
         </div>
       </div>
