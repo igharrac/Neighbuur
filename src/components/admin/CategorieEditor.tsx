@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { SidePanel } from "@/components/ui/SidePanel";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { slugify } from "@/lib/utils";
 import type { Category, CategoryType } from "@/types";
@@ -183,11 +184,12 @@ export function CategorieEditor({ initialCategories }: { initialCategories: Cate
         )}
       </div>
 
-      {editingId !== null && (
-        <div className="border border-lijn rounded-md p-6 bg-cream mb-8">
-          <h2 className="font-bold text-body mb-4">
-            {editingId === "new" ? "Nieuwe categorie" : "Categorie bewerken"}
-          </h2>
+      <SidePanel
+        open={editingId !== null}
+        onClose={cancelEdit}
+        title={editingId === "new" ? "Nieuwe categorie" : "Categorie bewerken"}
+      >
+        {editingId !== null && (
           <div className="flex flex-col gap-4">
             <ImageUploader
               bucket="categorie-images"
@@ -267,18 +269,18 @@ export function CategorieEditor({ initialCategories }: { initialCategories: Cate
               />
               Actief (zichtbaar op homepage)
             </label>
-          </div>
 
-          <div className="flex gap-2 mt-5">
-            <Button size="sm" onClick={handleSave} disabled={saving}>
-              {saving ? "Opslaan..." : "Opslaan"}
-            </Button>
-            <Button size="sm" variant="ghost" onClick={cancelEdit} disabled={saving}>
-              Annuleren
-            </Button>
+            <div className="flex gap-2 mt-2">
+              <Button size="sm" onClick={handleSave} disabled={saving}>
+                {saving ? "Opslaan..." : "Opslaan"}
+              </Button>
+              <Button size="sm" variant="ghost" onClick={cancelEdit} disabled={saving}>
+                Annuleren
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </SidePanel>
 
       <div className="flex flex-col gap-2.5">
         {categories.map((cat, i) => (

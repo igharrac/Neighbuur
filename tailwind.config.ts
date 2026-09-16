@@ -106,6 +106,7 @@ const config: Config = {
         "fade-up": "fadeUp 0.5s ease-out both",
         "fade-in": "fadeIn 0.3s ease-out both",
         "slide-up": "slideUp 0.4s cubic-bezier(0.16,1,0.3,1) both",
+        "slide-in-right": "slideInRight 0.3s cubic-bezier(0.16,1,0.3,1) both",
         "confetti-fall": "confettiFall 1.4s ease-in both",
       },
 
@@ -121,6 +122,10 @@ const config: Config = {
         slideUp: {
           from: { opacity: "0", transform: "translateY(100%)" },
           to:   { opacity: "1", transform: "translateY(0)" },
+        },
+        slideInRight: {
+          from: { transform: "translateX(100%)" },
+          to:   { transform: "translateX(0)" },
         },
         confettiFall: {
           "0%":   { opacity: "1", transform: "translateY(0) rotate(0deg)" },
