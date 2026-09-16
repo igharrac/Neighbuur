@@ -125,7 +125,7 @@ export function BookingFlow({
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             {[1, 2, 3].map((s) => (
-              <div key={s} className={`h-1.5 flex-1 rounded-full ${s <= stap ? "bg-terracotta" : "bg-lijn"}`} />
+              <div key={s} className={`h-1.5 flex-1 rounded-full ${s <= stap ? "bg-sage" : "bg-lijn"}`} />
             ))}
           </div>
 

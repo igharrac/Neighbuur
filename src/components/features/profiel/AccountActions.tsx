@@ -60,7 +60,7 @@ export function AccountActions() {
         </Button>
         <Button
           variant="ghost"
-          className="!text-terracotta hover:!bg-terracotta-50"
+          className="!text-sage hover:!bg-sage-50"
           onClick={() => {
             setBevestiging("");
             setVerwijderenOpen(true);
@@ -98,7 +98,7 @@ export function AccountActions() {
           </ul>
         </div>
         <label className="text-body-sm font-semibold block mb-1.5">
-          Typ <span className="text-terracotta">{BEVESTIGINGSTEKST}</span> ter bevestiging
+          Typ <span className="text-sage">{BEVESTIGINGSTEKST}</span> ter bevestiging
         </label>
         <Input value={bevestiging} onChange={(e) => setBevestiging(e.target.value)} className="mb-5" autoFocus />
         <div className="flex gap-3">
@@ -108,7 +108,7 @@ export function AccountActions() {
           <Button
             onClick={handleVerwijderen}
             disabled={saving || bevestiging !== BEVESTIGINGSTEKST}
-            className="!bg-terracotta"
+            className="!bg-sage"
           >
             {saving ? "Bezig..." : "Verwijder mijn account"}
           </Button>

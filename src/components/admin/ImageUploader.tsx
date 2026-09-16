@@ -48,7 +48,7 @@ export function ImageUploader({ bucket, pathPrefix, value, onUploaded, aspect = 
           handleFile(e.dataTransfer.files?.[0]);
         }}
         className={`relative w-full ${aspectClass[aspect]} rounded-md border-2 border-dashed cursor-pointer overflow-hidden transition-colors flex items-center justify-center group ${
-          dragOver ? "border-terracotta bg-terracotta-50" : "border-lijn bg-cream hover:border-warmgrijs"
+          dragOver ? "border-sage bg-sage-50" : "border-lijn bg-cream hover:border-warmgrijs"
         }`}
       >
         <input
@@ -78,11 +78,11 @@ export function ImageUploader({ bucket, pathPrefix, value, onUploaded, aspect = 
 
         {uploading && (
           <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-            <Spinner size={24} className="animate-spin text-terracotta" />
+            <Spinner size={24} className="animate-spin text-sage" />
           </div>
         )}
       </div>
-      {error && <p className="text-body-xs text-terracotta mt-1.5">{error}</p>}
+      {error && <p className="text-body-xs text-sage mt-1.5">{error}</p>}
     </div>
   );
 }

@@ -161,7 +161,7 @@ export function CommunityEditorClient({
               </div>
 
               <div className="flex-1 min-w-0">
-                <span className="badge badge-terracotta">{TYPE_LABELS[blok.type]}</span>
+                <span className="badge badge-sage">{TYPE_LABELS[blok.type]}</span>
                 <p className="text-body-sm text-warmzwart truncate mt-1">{blockPreview(blok)}</p>
               </div>
 
@@ -174,7 +174,7 @@ export function CommunityEditorClient({
               </button>
               <button
                 onClick={() => handleDelete(blok.id)}
-                className="p-2 text-warmgrijs hover:text-terracotta"
+                className="p-2 text-warmgrijs hover:text-sage"
                 aria-label="Verwijderen"
               >
                 <Trash size={16} />
@@ -202,7 +202,7 @@ export function CommunityEditorClient({
               <button
                 key={type}
                 onClick={() => setAddingType(type)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm border border-lijn text-body-sm font-medium hover:border-terracotta hover:text-terracotta transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm border border-lijn text-body-sm font-medium hover:border-sage hover:text-sage transition-colors"
               >
                 <Plus size={14} weight="bold" />
                 {TYPE_LABELS[type]}

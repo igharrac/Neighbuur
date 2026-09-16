@@ -196,7 +196,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center font-display font-bold text-body-sm transition-colors ${
               step === s
-                ? "bg-terracotta text-white"
+                ? "bg-sage text-white"
                 : step > s
                 ? "bg-groen text-white"
                 : "bg-cream-dark text-warmgrijs"
@@ -276,7 +276,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
               </>
             ) : (
               <div className="text-center">
-                <div className="w-14 h-14 rounded-full bg-terracotta-50 text-terracotta flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 rounded-full bg-sage-50 text-sage flex items-center justify-center mx-auto mb-4">
                   <EnvelopeSimple size={26} weight="fill" />
                 </div>
                 <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.login.checkEmailTitle}</h1>
@@ -285,7 +285,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                 </p>
 
                 <button
-                  className="text-body-sm text-terracotta font-semibold hover:underline disabled:opacity-40 disabled:pointer-events-none"
+                  className="text-body-sm text-sage font-semibold hover:underline disabled:opacity-40 disabled:pointer-events-none"
                   onClick={handleSendLink}
                   disabled={cooldown > 0 || authLoadingLocal}
                 >
@@ -393,13 +393,13 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                   onClick={() => setContactVoorkeur(option.value)}
                   className={`flex items-center gap-3 p-4 rounded-sm border-2 text-left transition-all ${
                     contactVoorkeur === option.value
-                      ? "border-terracotta bg-terracotta-50"
-                      : "border-lijn hover:border-terracotta hover:bg-terracotta-50/50"
+                      ? "border-sage bg-sage-50"
+                      : "border-lijn hover:border-sage hover:bg-sage-50/50"
                   }`}
                 >
                   <span
                     className={`w-4 h-4 rounded-full border-2 shrink-0 ${
-                      contactVoorkeur === option.value ? "border-terracotta bg-terracotta" : "border-lijn"
+                      contactVoorkeur === option.value ? "border-sage bg-sage" : "border-lijn"
                     }`}
                   />
                   <span className="font-semibold text-body-sm">{option.label}</span>
@@ -416,7 +416,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
               />
               <span className="text-body-sm text-warmgrijs">
                 {dict.registratie.termsPrefix}{" "}
-                <a href="/voorwaarden/vakman" target="_blank" rel="noopener noreferrer" className="text-terracotta underline">
+                <a href="/voorwaarden/vakman" target="_blank" rel="noopener noreferrer" className="text-sage underline">
                   {dict.registratie.termsLink}
                 </a>{" "}
                 {dict.registratie.termsSuffix}

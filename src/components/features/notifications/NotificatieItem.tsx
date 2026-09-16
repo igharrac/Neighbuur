@@ -27,7 +27,7 @@ const KLEUREN: Record<Notification["type"], string> = {
   booking: "bg-blauw-light text-blauw",
   message: "bg-groen-light text-groen",
   invitation: "bg-lavendel-light text-lavendel",
-  group_discount: "bg-terracotta-100 text-terracotta",
+  group_discount: "bg-sage-100 text-sage",
   system: "bg-sand text-warmgrijs-dark",
   premium: "bg-gradient-to-br from-amber-400 to-amber-600 text-white",
 };
@@ -47,7 +47,7 @@ export function NotificatieItem({ notificatie, onClick }: NotificatieItemProps) 
     <button
       onClick={() => onClick(notificatie)}
       className={`w-full flex items-start gap-3 text-left px-4 py-3.5 rounded transition-colors hover:bg-warmzwart/[0.03] ${
-        notificatie.read ? "" : "bg-terracotta-50/60"
+        notificatie.read ? "" : "bg-sage-50/60"
       }`}
     >
       <span className={`w-9 h-9 shrink-0 rounded-sm flex items-center justify-center ${KLEUREN[notificatie.type]}`}>
@@ -58,7 +58,7 @@ export function NotificatieItem({ notificatie, onClick }: NotificatieItemProps) 
           <span className={`text-body-sm ${notificatie.read ? "font-medium text-warmzwart" : "font-bold text-warmzwart"}`}>
             {titel}
           </span>
-          {!notificatie.read && <span className="w-2 h-2 rounded-full bg-terracotta mt-1.5 shrink-0" />}
+          {!notificatie.read && <span className="w-2 h-2 rounded-full bg-sage mt-1.5 shrink-0" />}
         </span>
         {inhoud && <span className="block text-body-sm text-warmgrijs mt-0.5">{inhoud}</span>}
         <span className="block text-body-xs text-warmgrijs-light mt-1">{timeAgo(notificatie.created_at)}</span>

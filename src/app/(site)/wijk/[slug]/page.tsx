@@ -39,7 +39,7 @@ export default async function WijkPage({ params }: { params: { slug: string } })
   return (
     <div className="bg-cream-warm min-h-screen">
       <div className="max-w-[1000px] mx-auto px-6 py-14">
-        <Link href="/wijk" className="font-body text-[13px] text-warmgrijs hover:text-terracotta no-underline">
+        <Link href="/wijk" className="font-body text-[13px] text-warmgrijs hover:text-sage no-underline">
           ← Alle wijken
         </Link>
         <div className="mt-3 mb-10">

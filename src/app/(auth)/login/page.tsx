@@ -94,7 +94,7 @@ export default function LoginPage() {
           <p className="text-body text-warmgrijs mb-6">{dict.login.subtitle}</p>
 
           <label className="text-body-sm font-semibold block mb-1.5">
-            {dict.login.emailLabel} <span className="text-terracotta">*</span>
+            {dict.login.emailLabel} <span className="text-sage">*</span>
           </label>
           <input
             type="email"
@@ -147,7 +147,7 @@ export default function LoginPage() {
 
       {step === "checking-email" && (
         <div className="animate-fade-in text-center">
-          <div className="w-14 h-14 rounded-full bg-terracotta-50 text-terracotta flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 rounded-full bg-sage-50 text-sage flex items-center justify-center mx-auto mb-4">
             <EnvelopeSimple size={26} weight="fill" />
           </div>
           <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.login.checkEmailTitle}</h1>
@@ -157,7 +157,7 @@ export default function LoginPage() {
           </p>
 
           <button
-            className="text-body-sm text-terracotta font-semibold hover:underline disabled:opacity-40 disabled:pointer-events-none"
+            className="text-body-sm text-sage font-semibold hover:underline disabled:opacity-40 disabled:pointer-events-none"
             onClick={handleSendLink}
             disabled={cooldown > 0 || loading}
           >

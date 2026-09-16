@@ -323,7 +323,7 @@ export function CategorieEditor({ initialCategories }: { initialCategories: Cate
             <button onClick={() => startEdit(cat)} className="p-2 text-warmgrijs hover:text-warmzwart" aria-label="Bewerken">
               <PencilSimple size={16} />
             </button>
-            <button onClick={() => handleDelete(cat)} className="p-2 text-warmgrijs hover:text-terracotta" aria-label="Verwijderen">
+            <button onClick={() => handleDelete(cat)} className="p-2 text-warmgrijs hover:text-sage" aria-label="Verwijderen">
               <Trash size={16} />
             </button>
           </div>

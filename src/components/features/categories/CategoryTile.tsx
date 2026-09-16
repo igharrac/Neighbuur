@@ -25,7 +25,7 @@ export function CategoryTile({ category }: { category: Category }) {
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full bg-terracotta-50" />
+          <div className="w-full h-full bg-sage-50" />
         )}
       </div>
       <div className="flex items-end justify-between gap-2 px-4 pt-3.5 pb-4">
@@ -35,7 +35,7 @@ export function CategoryTile({ category }: { category: Category }) {
             <p className="text-body-xs text-warmgrijs mt-0.5 leading-snug line-clamp-2">{beschrijving}</p>
           )}
         </div>
-        <span className="shrink-0 w-7 h-7 rounded-full bg-terracotta-100 text-terracotta flex items-center justify-center transition-colors group-hover:bg-terracotta group-hover:text-white">
+        <span className="shrink-0 w-7 h-7 rounded-full bg-sage-100 text-sage flex items-center justify-center transition-colors group-hover:bg-sage group-hover:text-white">
           <ArrowRight size={14} weight="bold" />
         </span>
       </div>

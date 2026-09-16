@@ -4,8 +4,8 @@ export default function PrivacyPage() {
   return (
     <div className="bg-cream-warm min-h-screen">
       <div className="max-w-[760px] mx-auto px-6 py-14">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ffdbcf] px-4 py-1 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#a73400]" />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C4DAB9] px-4 py-1 mb-4">
+          <span className="w-2 h-2 rounded-full bg-[#385729]" />
           <span className="font-body font-semibold text-[12px] tracking-[0.6px] uppercase text-[#390c00]">
             Privacy
           </span>
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
             </InvullenVoorPublicatie>
             <p>
               Vragen over deze privacyverklaring of over je gegevens? Mail naar{" "}
-              <a href="mailto:privacy@neighbuur.nl" className="text-terracotta underline">
+              <a href="mailto:privacy@neighbuur.nl" className="text-sage underline">
                 privacy@neighbuur.nl
               </a>
               .
@@ -121,7 +121,7 @@ export default function PrivacyPage() {
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 Naam, telefoon, taal en foto pas je zelf aan via{" "}
-                <a href="/profiel" className="text-terracotta underline">
+                <a href="/profiel" className="text-sage underline">
                   je profiel
                 </a>
                 .
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 Voor overige verzoeken (bijvoorbeeld een volledig overzicht van je gegevens) mail je naar{" "}
-                <a href="mailto:privacy@neighbuur.nl" className="text-terracotta underline">
+                <a href="mailto:privacy@neighbuur.nl" className="text-sage underline">
                   privacy@neighbuur.nl
                 </a>
                 .
@@ -142,7 +142,7 @@ export default function PrivacyPage() {
                   href="https://www.autoriteitpersoonsgegevens.nl"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-terracotta underline"
+                  className="text-sage underline"
                 >
                   Autoriteit Persoonsgegevens
                 </a>

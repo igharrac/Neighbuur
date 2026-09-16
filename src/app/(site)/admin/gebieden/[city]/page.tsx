@@ -172,7 +172,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
-      <Link href="/admin/gebieden" className="text-body-sm text-warmgrijs hover:text-terracotta inline-flex items-center gap-1.5 mb-4">
+      <Link href="/admin/gebieden" className="text-body-sm text-warmgrijs hover:text-sage inline-flex items-center gap-1.5 mb-4">
         <ArrowLeft size={14} weight="bold" />
         Alle gebieden
       </Link>
@@ -207,7 +207,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
       </div>
 
       <h2 className="font-display font-bold text-[19px] text-warmzwart mb-4 flex items-center gap-2">
-        <Buildings size={18} className="text-terracotta" weight="fill" />
+        <Buildings size={18} className="text-sage" weight="fill" />
         Residential clusters
       </h2>
       {clusters.length === 0 ? (
@@ -231,7 +231,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
                       {c.new_residences_30d > 0 && ` · +${c.new_residences_30d} laatste 30d`}
                     </p>
                     {c.topCategorie && (
-                      <p className="text-body-xs text-terracotta mt-1 flex items-center gap-1">
+                      <p className="text-body-xs text-sage mt-1 flex items-center gap-1">
                         <ChartBar size={12} weight="bold" />
                         Populair: {c.topCategorie.categorieNaam} ({c.topCategorie.aantal}×)
                       </p>
@@ -259,7 +259,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
       )}
 
       <h2 className="font-display font-bold text-[19px] text-warmzwart mb-4 flex items-center gap-2 mt-6">
-        <Users size={18} className="text-terracotta" weight="fill" />
+        <Users size={18} className="text-sage" weight="fill" />
         Communities
       </h2>
       {communities.length === 0 ? (
@@ -298,7 +298,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
       )}
 
       <h2 className="font-display font-bold text-[19px] text-warmzwart mb-2 flex items-center gap-2 mt-6">
-        <ChartBar size={18} className="text-terracotta" weight="fill" />
+        <ChartBar size={18} className="text-sage" weight="fill" />
         Meest gevraagde diensten
       </h2>
       <p className="text-body-xs text-warmgrijs flex items-start gap-1.5 mb-4 max-w-[560px]">
@@ -316,7 +316,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
                 <div key={d.categorieNaam} className="flex items-center gap-3">
                   <span className="text-body-sm text-warmzwart w-32 shrink-0 truncate">{d.categorieNaam}</span>
                   <div className="flex-1 h-2 rounded-full bg-sand overflow-hidden">
-                    <div className="h-full rounded-full bg-terracotta" style={{ width: `${(d.aantal / maxAantal) * 100}%` }} />
+                    <div className="h-full rounded-full bg-sage" style={{ width: `${(d.aantal / maxAantal) * 100}%` }} />
                   </div>
                   <span className="text-body-sm font-semibold text-warmzwart w-6 text-right shrink-0">{d.aantal}</span>
                 </div>

@@ -28,7 +28,7 @@ export function KvkInput({ value, onChange, label = "KvK-nummer" }: KvkInputProp
           onChange={(e) => onChange(e.target.value.replace(/[^\d\s]/g, ""))}
           placeholder="12345678"
           className={`input pr-11 ${
-            touched ? (valid ? "!border-groen" : "!border-terracotta") : ""
+            touched ? (valid ? "!border-groen" : "!border-sage") : ""
           }`}
         />
         {touched && (
@@ -36,13 +36,13 @@ export function KvkInput({ value, onChange, label = "KvK-nummer" }: KvkInputProp
             {valid ? (
               <CheckCircle size={20} weight="fill" className="text-groen" />
             ) : (
-              <WarningCircle size={20} weight="fill" className="text-terracotta" />
+              <WarningCircle size={20} weight="fill" className="text-sage" />
             )}
           </span>
         )}
       </div>
       {touched && !valid && (
-        <p className="text-body-xs text-terracotta mt-1">Vul exact 8 cijfers in, zonder letters.</p>
+        <p className="text-body-xs text-sage mt-1">Vul exact 8 cijfers in, zonder letters.</p>
       )}
     </div>
   );

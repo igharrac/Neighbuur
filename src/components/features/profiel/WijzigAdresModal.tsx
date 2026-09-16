@@ -134,7 +134,7 @@ export function WijzigAdresModal({ open, onClose }: WijzigAdresModalProps) {
           </div>
 
           {nietGevonden && (
-            <p className="text-body-xs text-terracotta mb-4">Dit adres kunnen we niet vinden. Controleer de postcode en het huisnummer.</p>
+            <p className="text-body-xs text-sage mb-4">Dit adres kunnen we niet vinden. Controleer de postcode en het huisnummer.</p>
           )}
 
           {kandidaten && kandidaten.length > 0 && (
@@ -145,7 +145,7 @@ export function WijzigAdresModal({ open, onClose }: WijzigAdresModalProps) {
                   <button
                     key={k.huisNlt}
                     onClick={() => handleKiesKandidaat(k)}
-                    className="p-3 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 text-left text-body-sm"
+                    className="p-3 rounded-sm border-2 border-lijn hover:border-sage hover:bg-sage-50/50 text-left text-body-sm"
                   >
                     {k.formatted}
                   </button>

@@ -30,14 +30,14 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
           <div className="rounded-2xl overflow-hidden bg-[#f4ece8] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]">
             <img src={dict.community.image} alt={dict.community.imageAlt} className="w-full h-[200px] sm:h-[253px] object-cover block" />
           </div>
-          <div className="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-xl bg-[#a73400] px-4 py-3 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)]">
+          <div className="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-xl bg-[#385729] px-4 py-3 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)]">
             <Medal size={18} weight="fill" className="text-white shrink-0" />
             <span className="font-body font-bold text-[14px] text-white whitespace-nowrap">{dict.community.activeBadge}</span>
           </div>
         </div>
 
         <div className="lg:col-span-7">
-          <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#a73400] mb-1">
+          <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#385729] mb-1">
             {dict.community.eyebrow}
           </p>
           <h2 className="font-display font-bold text-[32px] sm:text-[38px] leading-[40px] sm:leading-[46px] tracking-[-0.38px] text-[#1e1b19] mb-2">
@@ -83,7 +83,7 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
             </div>
             <div className="flex items-center justify-between gap-2">
               <span className="font-body text-[13px] text-[#594139]">{dict.community.sampleKlussen}</span>
-              <span className="font-body font-semibold text-[13px] text-[#a73400] whitespace-nowrap">
+              <span className="font-body font-semibold text-[13px] text-[#385729] whitespace-nowrap">
                 {dict.community.sampleVoordeel}
               </span>
             </div>

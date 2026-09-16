@@ -70,7 +70,7 @@ export function CommunityHeader({
     <div className="mb-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-body-xs font-semibold uppercase tracking-wider text-terracotta mb-1">
+          <p className="text-body-xs font-semibold uppercase tracking-wider text-sage mb-1">
             {type}
             {developmentName && ` · ${developmentName}`}
           </p>

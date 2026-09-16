@@ -60,7 +60,7 @@ export function DatumKiezer({ beschikbaarheid, waarde, onChange }: DatumKiezerPr
                   onClick={() => onChange(key)}
                   className={`aspect-square min-h-11 min-w-11 rounded-sm flex items-center justify-center text-body-sm font-medium transition-colors ${
                     geselecteerd
-                      ? "bg-terracotta text-white"
+                      ? "bg-sage text-white"
                       : beschikbaar
                       ? "bg-groen-light text-groen hover:bg-groen hover:text-white cursor-pointer"
                       : "bg-cream-dark text-warmgrijs-light cursor-not-allowed"

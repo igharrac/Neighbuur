@@ -70,7 +70,7 @@ export function ChatInput({ conversationId, onSend }: ChatInputProps) {
         type="button"
         onClick={handleSend}
         disabled={sending || tekst.trim().length === 0}
-        className="min-w-11 min-h-11 flex items-center justify-center bg-terracotta text-white rounded-sm disabled:opacity-40 disabled:pointer-events-none shrink-0"
+        className="min-w-11 min-h-11 flex items-center justify-center bg-sage text-white rounded-sm disabled:opacity-40 disabled:pointer-events-none shrink-0"
         aria-label="Verstuur bericht"
       >
         <PaperPlaneRight size={18} weight="fill" />

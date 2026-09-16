@@ -367,16 +367,16 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
-      <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-terracotta/[0.04] blur-3xl pointer-events-none" />
+      <div className="absolute -top-72 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-sage/[0.04] blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-[440px] relative">
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center gap-2.5 no-underline">
-            <span className="w-10 h-10 bg-terracotta rounded-lg flex items-center justify-center text-white">
+            <span className="w-10 h-10 bg-sage rounded-lg flex items-center justify-center text-white">
               <House weight="fill" size={22} />
             </span>
             <span className="font-display font-black text-[26px] text-warmzwart">
-              Neigh<span className="text-terracotta">buur</span>
+              Neigh<span className="text-sage">buur</span>
             </span>
           </Link>
         </div>
@@ -412,8 +412,8 @@ export default function OnboardingPage() {
                         onClick={() => setRol(option.value)}
                         className={`flex items-center gap-3.5 p-4 rounded-sm border-2 text-left transition-all ${
                           rol === option.value
-                            ? "border-terracotta bg-terracotta-50"
-                            : "border-lijn hover:border-terracotta hover:bg-terracotta-50/50"
+                            ? "border-sage bg-sage-50"
+                            : "border-lijn hover:border-sage hover:bg-sage-50/50"
                         }`}
                       >
                         <span className="text-[22px]">{option.icon}</span>
@@ -437,7 +437,7 @@ export default function OnboardingPage() {
                   />
                   <span className="text-body-sm text-warmgrijs">
                     Ik ga akkoord met de{" "}
-                    <a href="/voorwaarden/bewoner" target="_blank" rel="noopener noreferrer" className="text-terracotta underline">
+                    <a href="/voorwaarden/bewoner" target="_blank" rel="noopener noreferrer" className="text-sage underline">
                       voorwaarden voor bewoners
                     </a>{" "}
                     van Neighbuur
@@ -491,7 +491,7 @@ export default function OnboardingPage() {
               </div>
 
               {nietGevonden && (
-                <p className="text-body-xs text-terracotta mb-4">
+                <p className="text-body-xs text-sage mb-4">
                   Dit adres kunnen we niet vinden. Controleer de postcode en het huisnummer, of gebruik hieronder de
                   nieuwbouw-optie als je nog geen definitief adres hebt.
                 </p>
@@ -505,7 +505,7 @@ export default function OnboardingPage() {
                       <button
                         key={k.huisNlt}
                         onClick={() => handleKiesKandidaat(k)}
-                        className="p-3 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 text-left text-body-sm"
+                        className="p-3 rounded-sm border-2 border-lijn hover:border-sage hover:bg-sage-50/50 text-left text-body-sm"
                       >
                         {k.formatted}
                       </button>
@@ -535,8 +535,8 @@ export default function OnboardingPage() {
           {/* ── Stap: adres bevestigen ── */}
           {step === "adres-bevestiging" && adresResultaat && (
             <div className="text-center">
-              <div className="w-14 h-14 rounded-full bg-terracotta-50 flex items-center justify-center mx-auto mb-4">
-                <MapPin size={22} className="text-terracotta" weight="fill" />
+              <div className="w-14 h-14 rounded-full bg-sage-50 flex items-center justify-center mx-auto mb-4">
+                <MapPin size={22} className="text-sage" weight="fill" />
               </div>
               <h1 className="font-display text-display-sm mb-1.5">Is dit jouw adres?</h1>
               <p className="text-body text-warmgrijs mb-6">{adresResultaat.formatted}</p>
@@ -583,7 +583,7 @@ export default function OnboardingPage() {
                       <button
                         key={project.id}
                         onClick={() => handleKiesProject(project)}
-                        className="flex items-center justify-between gap-2 p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 transition-all text-left"
+                        className="flex items-center justify-between gap-2 p-3.5 rounded-sm border-2 border-lijn hover:border-sage hover:bg-sage-50/50 transition-all text-left"
                       >
                         <div>
                           <div className="font-semibold text-body-sm">{project.name}</div>
@@ -605,7 +605,7 @@ export default function OnboardingPage() {
                         <button
                           key={fase.id}
                           onClick={() => setGekozenFase(fase)}
-                          className="p-3.5 rounded-sm border-2 border-lijn hover:border-terracotta hover:bg-terracotta-50/50 text-left text-body-sm font-semibold"
+                          className="p-3.5 rounded-sm border-2 border-lijn hover:border-sage hover:bg-sage-50/50 text-left text-body-sm font-semibold"
                         >
                           {fase.name}
                         </button>
@@ -651,11 +651,11 @@ export default function OnboardingPage() {
           {/* ── Stap: detectie-resultaat ── */}
           {step === "detectie" && (
             <div className="text-center">
-              <div className="w-14 h-14 rounded-full bg-terracotta-50 flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 rounded-full bg-sage-50 flex items-center justify-center mx-auto mb-4">
                 {bestaandeCommunity || clusterTelling >= threshold ? (
-                  <Users size={22} className="text-terracotta" weight="fill" />
+                  <Users size={22} className="text-sage" weight="fill" />
                 ) : (
-                  <Sparkle size={22} className="text-terracotta" weight="fill" />
+                  <Sparkle size={22} className="text-sage" weight="fill" />
                 )}
               </div>
 

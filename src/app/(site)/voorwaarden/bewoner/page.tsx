@@ -4,8 +4,8 @@ export default function VoorwaardenBewonerPage() {
   return (
     <div className="bg-cream-warm min-h-screen">
       <div className="max-w-[760px] mx-auto px-6 py-14">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ffdbcf] px-4 py-1 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#a73400]" />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C4DAB9] px-4 py-1 mb-4">
+          <span className="w-2 h-2 rounded-full bg-[#385729]" />
           <span className="font-body font-semibold text-[12px] tracking-[0.6px] uppercase text-[#390c00]">
             Voorwaarden — bewoners
           </span>
@@ -98,7 +98,7 @@ export default function VoorwaardenBewonerPage() {
             <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">9. Privacy en cookies</h2>
             <p>
               Hoe we met je persoonsgegevens omgaan staat in onze{" "}
-              <a href="/privacy" className="text-terracotta underline">
+              <a href="/privacy" className="text-sage underline">
                 privacyverklaring
               </a>
               . We gebruiken alleen functionele cookies, geen tracking- of advertentiecookies.
@@ -110,7 +110,7 @@ export default function VoorwaardenBewonerPage() {
             <p>
               Op deze voorwaarden is Nederlands recht van toepassing. Geschillen leggen we bij voorkeur eerst
               samen op, bijvoorbeeld via{" "}
-              <a href="mailto:support@neighbuur.nl" className="text-terracotta underline">
+              <a href="mailto:support@neighbuur.nl" className="text-sage underline">
                 support@neighbuur.nl
               </a>
               . Komen we er niet uit, dan is de bevoegde Nederlandse rechter aangewezen — tenzij dwingend

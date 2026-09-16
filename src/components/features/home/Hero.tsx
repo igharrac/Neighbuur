@@ -62,8 +62,8 @@ export function Hero() {
       <div className="relative max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         <div className="lg:col-span-7">
           <div className="pb-4 inline-flex">
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#ffdbcf]/95 backdrop-blur-[6px] px-4 py-1">
-              <span className="w-2 h-2 rounded-full bg-[#a73400]" />
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#C4DAB9]/95 backdrop-blur-[6px] px-4 py-1">
+              <span className="w-2 h-2 rounded-full bg-[#385729]" />
               <span className="font-body font-semibold text-[12px] tracking-[0.6px] uppercase text-[#390c00]">
                 {dict.hero.eyebrow}
               </span>
@@ -72,7 +72,7 @@ export function Hero() {
 
           <h1 className="font-display font-bold text-[40px] leading-[48px] sm:text-[84px] sm:leading-[92px] tracking-[-1.12px] text-[#1e1b19] pb-6 pr-0 lg:pr-[96px]">
             <span className="block">{dict.hero.title}</span>
-            <span className="block font-display italic font-normal text-[#a73400]">{dict.hero.titleAccent}</span>
+            <span className="block font-display italic font-normal text-[#385729]">{dict.hero.titleAccent}</span>
           </h1>
 
           <p className="font-body text-[17px] leading-[26px] text-[#594139] max-w-[576px] pb-20">
@@ -107,7 +107,7 @@ export function Hero() {
             </div>
             <button
               onClick={handleZoeken}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#a73400] px-8 py-3.5 font-body font-semibold text-[14px] text-white whitespace-nowrap drop-shadow-[0px_4px_7px_rgba(167,52,0,0.3)]"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#385729] px-8 py-3.5 font-body font-semibold text-[14px] text-white whitespace-nowrap drop-shadow-[0px_4px_7px_rgba(56,87,41,0.3)]"
             >
               {dict.hero.searchButton}
               <ArrowRight size={12} weight="bold" />

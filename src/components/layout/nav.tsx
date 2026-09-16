@@ -22,11 +22,11 @@ import { NotificatieBadge } from "@/components/features/notifications/Notificati
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2 no-underline">
-      <span className="w-8 h-8 bg-terracotta rounded-lg flex items-center justify-center text-white">
+      <span className="w-8 h-8 bg-sage rounded-lg flex items-center justify-center text-white">
         <House weight="fill" size={18} />
       </span>
       <span className="font-display font-black text-[22px] text-warmzwart tracking-tight">
-        Neigh<span className="text-terracotta">buur</span>
+        Neigh<span className="text-sage">buur</span>
       </span>
     </Link>
   );
@@ -114,7 +114,7 @@ export function Nav() {
                     await signOut();
                     router.push("/");
                   }}
-                  className="py-2 text-body font-medium text-terracotta text-left"
+                  className="py-2 text-body font-medium text-sage text-left"
                 >
                   Uitloggen
                 </button>
@@ -171,13 +171,13 @@ export function MobileBar() {
               key={item.label}
               href={item.href}
               className={`min-h-11 min-w-11 flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-lg text-body-xs font-semibold transition-colors ${
-                active ? "text-terracotta" : "text-warmgrijs"
+                active ? "text-sage" : "text-warmgrijs"
               }`}
             >
               <span className="relative">
                 <item.icon size={22} weight={active ? "fill" : "regular"} />
                 {!!item.badge && (
-                  <span className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-terracotta text-white text-[10px] font-bold flex items-center justify-center leading-none">
+                  <span className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-sage text-white text-[10px] font-bold flex items-center justify-center leading-none">
                     {item.badge > 9 ? "9+" : item.badge}
                   </span>
                 )}
@@ -201,15 +201,15 @@ export function Footer() {
       </div>
       <p className="text-body-sm text-warmgrijs">
         {dict.footer.tagline}{" "}
-        <Link href="#" className="text-terracotta hover:underline">{dict.footer.about}</Link>
+        <Link href="#" className="text-sage hover:underline">{dict.footer.about}</Link>
         {" · "}
-        <Link href="#" className="text-terracotta hover:underline">{dict.footer.forPros}</Link>
+        <Link href="#" className="text-sage hover:underline">{dict.footer.forPros}</Link>
         {" · "}
-        <Link href="#" className="text-terracotta hover:underline">{dict.footer.contact}</Link>
+        <Link href="#" className="text-sage hover:underline">{dict.footer.contact}</Link>
         {" · "}
-        <Link href="/voorwaarden/bewoner" className="text-terracotta hover:underline">{dict.footer.terms}</Link>
+        <Link href="/voorwaarden/bewoner" className="text-sage hover:underline">{dict.footer.terms}</Link>
         {" · "}
-        <Link href="/privacy" className="text-terracotta hover:underline">{dict.footer.privacy}</Link>
+        <Link href="/privacy" className="text-sage hover:underline">{dict.footer.privacy}</Link>
       </p>
       <p className="text-body-xs text-warmgrijs-light mt-2">
         © {new Date().getFullYear()} Neighbuur

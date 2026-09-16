@@ -33,7 +33,7 @@ export function DienstenGrid({ categories }: { categories: Category[] }) {
             <div className="p-5">
               <div className="flex items-start justify-between gap-2 mb-1.5">
                 <h3 className="font-display font-bold text-[19px] text-warmzwart">{naam}</h3>
-                <span className="shrink-0 w-8 h-8 rounded-full bg-terracotta-100 text-terracotta flex items-center justify-center transition-colors group-hover:bg-terracotta group-hover:text-white">
+                <span className="shrink-0 w-8 h-8 rounded-full bg-sage-100 text-sage flex items-center justify-center transition-colors group-hover:bg-sage group-hover:text-white">
                   <ArrowRight size={14} weight="bold" />
                 </span>
               </div>

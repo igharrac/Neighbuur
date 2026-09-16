@@ -12,7 +12,7 @@ interface CommunityCardProps {
 export function CommunityCard({ name, type, slug, memberCount, reviewCount }: CommunityCardProps) {
   return (
     <div className="bg-white rounded-2xl shadow-[0px_4px_10px_rgba(92,64,40,0.04)] p-6 flex flex-col">
-      <p className="font-body text-[12px] font-semibold uppercase tracking-[0.6px] text-terracotta mb-1 capitalize">{type}</p>
+      <p className="font-body text-[12px] font-semibold uppercase tracking-[0.6px] text-sage mb-1 capitalize">{type}</p>
       <h3 className="font-display font-bold text-[19px] text-warmzwart mb-4">{name}</h3>
 
       <div className="flex items-center gap-4 font-body text-[13px] text-warmgrijs mb-5">

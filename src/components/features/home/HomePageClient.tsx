@@ -22,7 +22,7 @@ const DEMO_REVIEWS = [
       { label: "5.0 kwaliteit", kleur: "badge-groen" },
       { label: "stipt op tijd", kleur: "badge-blauw" },
     ],
-    kleur: "bg-terracotta",
+    kleur: "bg-sage",
   },
   {
     naam: "Jeroen K.",
@@ -43,7 +43,7 @@ const DEMO_REVIEWS = [
     tekst: "Met 8 buren samen een hovenier geboekt via de groepskorting. Mooie tuinen voor een prijs waar je normaal alleen gazon voor krijgt.",
     upvotes: 31,
     tags: [
-      { label: "groepskorting", kleur: "badge-terracotta" },
+      { label: "groepskorting", kleur: "badge-sage" },
       { label: "5.0 top", kleur: "badge-groen" },
     ],
     kleur: "bg-groen",

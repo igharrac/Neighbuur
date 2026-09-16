@@ -194,7 +194,7 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
                   key={opt}
                   onClick={() => setContactVoorkeur(opt)}
                   className={`px-4 py-2 rounded-sm text-body-sm font-semibold border-2 transition-colors ${
-                    contactVoorkeur === opt ? "border-terracotta bg-terracotta-50 text-terracotta" : "border-lijn text-warmgrijs"
+                    contactVoorkeur === opt ? "border-sage bg-sage-50 text-sage" : "border-lijn text-warmgrijs"
                   }`}
                 >
                   {CONTACT_VOORKEUR_LABELS[opt]}

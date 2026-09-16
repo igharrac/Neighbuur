@@ -15,19 +15,24 @@ const config: Config = {
         cream:       { DEFAULT: "#FAF7F2", dark: "#F3EDE4", warm: "#FFF8F5" },
         sand:        { DEFAULT: "#F0EAE0", dark: "#E5DDD0", light: "#FAF2EE" },
 
-        /* Merk */
-        terracotta:  {
-          DEFAULT: "#E8572A",
-          50:  "#FFF5F0",
-          100: "#FFE8DE",
-          200: "#FFCBB3",
-          300: "#FFA47D",
-          400: "#F47A4A",
-          500: "#E8572A",
-          600: "#C94420",
-          700: "#A63518",
-          800: "#802912",
-          900: "#5C1E0D",
+        /* Merk — bosgroen/salie i.p.v. terracotta: differentieert van de
+           oranje-verzadigde home-services-categorie (Werkspot e.d.) en
+           past beter bij "buurt/groei/duurzame nieuwbouw". Bewust een
+           andere hoek (~100°, olijf/salie) dan het bestaande semantische
+           groen (~149°, teal-groen) hierbeneden, zodat merk-accent en
+           succes-status niet door elkaar gaan lopen. */
+        sage:  {
+          DEFAULT: "#578042",
+          50:  "#F4F8F1",
+          100: "#E3EEDD",
+          200: "#C4DAB9",
+          300: "#A0C28E",
+          400: "#78A960",
+          500: "#578042",
+          600: "#466A34",
+          700: "#385729",
+          800: "#2A431E",
+          900: "#1D2E15",
         },
 
         /* Semantisch */

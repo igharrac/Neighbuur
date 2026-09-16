@@ -1,19 +1,19 @@
 import { HTMLAttributes } from "react";
 
-type Color = "terracotta" | "groen" | "blauw" | "lavendel" | "oker";
+type Color = "sage" | "groen" | "blauw" | "lavendel" | "oker";
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   color?: Color;
 }
 
 const colorClass: Record<Color, string> = {
-  terracotta: "badge-terracotta",
+  sage: "badge-sage",
   groen: "badge-groen",
   blauw: "badge-blauw",
   lavendel: "badge-lavendel",
   oker: "bg-oker-light text-oker",
 };
 
-export function Badge({ color = "terracotta", className = "", ...props }: BadgeProps) {
+export function Badge({ color = "sage", className = "", ...props }: BadgeProps) {
   return <span className={`badge ${colorClass[color]} ${className}`} {...props} />;
 }

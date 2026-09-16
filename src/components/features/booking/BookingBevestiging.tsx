@@ -28,7 +28,7 @@ export function BookingBevestiging({
           {logoUrl ? (
             <img src={logoUrl} alt="" className="w-11 h-11 rounded-sm object-cover" />
           ) : (
-            <div className="w-11 h-11 rounded-sm bg-gradient-to-br from-terracotta to-terracotta-700 flex items-center justify-center text-white font-display font-bold">
+            <div className="w-11 h-11 rounded-sm bg-gradient-to-br from-sage to-sage-700 flex items-center justify-center text-white font-display font-bold">
               {companyName.charAt(0).toUpperCase()}
             </div>
           )}

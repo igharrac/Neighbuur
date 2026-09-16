@@ -19,12 +19,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`input ${error ? "!border-terracotta" : ""} ${className}`}
+          className={`input ${error ? "!border-sage" : ""} ${className}`}
           aria-invalid={!!error}
           {...props}
         />
         {hint && !error && <p className="text-body-xs text-warmgrijs mt-1">{hint}</p>}
-        {error && <p className="text-body-xs text-terracotta mt-1">{error}</p>}
+        {error && <p className="text-body-xs text-sage mt-1">{error}</p>}
       </div>
     );
   }
@@ -50,12 +50,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           ref={ref}
           id={inputId}
-          className={`input min-h-[120px] resize-y ${error ? "!border-terracotta" : ""} ${className}`}
+          className={`input min-h-[120px] resize-y ${error ? "!border-sage" : ""} ${className}`}
           aria-invalid={!!error}
           {...props}
         />
         {hint && !error && <p className="text-body-xs text-warmgrijs mt-1">{hint}</p>}
-        {error && <p className="text-body-xs text-terracotta mt-1">{error}</p>}
+        {error && <p className="text-body-xs text-sage mt-1">{error}</p>}
       </div>
     );
   }

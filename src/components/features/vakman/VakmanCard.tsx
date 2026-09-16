@@ -20,7 +20,7 @@ export function VakmanCard({ professional, categoryNames }: VakmanCardProps) {
       {professional.logo_url ? (
         <img src={professional.logo_url} alt="" className="w-14 h-14 rounded-lg object-cover shrink-0" />
       ) : (
-        <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-terracotta to-terracotta-700 flex items-center justify-center text-white font-display font-black text-xl shrink-0">
+        <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-sage to-sage-700 flex items-center justify-center text-white font-display font-black text-xl shrink-0">
           {initiaal}
         </div>
       )}

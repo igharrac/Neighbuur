@@ -48,7 +48,7 @@ export function NotificatieCentrum({ initialNotificaties }: { initialNotificatie
     <div>
       {ongelezenAantal > 0 && (
         <div className="flex justify-end mb-2">
-          <button onClick={handleMarkAllRead} className="text-body-sm font-semibold text-terracotta hover:underline">
+          <button onClick={handleMarkAllRead} className="text-body-sm font-semibold text-sage hover:underline">
             {dict.notificaties.markAllRead}
           </button>
         </div>

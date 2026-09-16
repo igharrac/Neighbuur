@@ -26,22 +26,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {isAdmin && (
         <nav className="flex items-center gap-5 px-6 py-3 border-b border-lijn bg-white">
           <span className="text-body-xs font-semibold uppercase tracking-wider text-warmgrijs">Admin</span>
-          <Link href="/admin" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+          <Link href="/admin" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Cijfers
           </Link>
-          <Link href="/admin/gebieden" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+          <Link href="/admin/gebieden" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Gebieden
           </Link>
-          <Link href="/admin/bewoners" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+          <Link href="/admin/bewoners" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Bewoners
           </Link>
-          <Link href="/admin/vakmensen" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+          <Link href="/admin/vakmensen" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Vakmensen
           </Link>
-          <Link href="/admin/categorieen" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+          <Link href="/admin/categorieen" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Categorieën
           </Link>
-          <Link href="/admin/auth-fotos" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+          <Link href="/admin/auth-fotos" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Login-foto's
           </Link>
         </nav>

@@ -131,7 +131,7 @@ export function VakmanProfielClient({
             className="w-[100px] h-[100px] rounded-xl object-cover flex-shrink-0"
           />
         ) : (
-          <div className="w-[100px] h-[100px] rounded-xl bg-gradient-to-br from-terracotta to-terracotta-700 flex items-center justify-center text-white font-display font-black text-4xl flex-shrink-0">
+          <div className="w-[100px] h-[100px] rounded-xl bg-gradient-to-br from-sage to-sage-700 flex items-center justify-center text-white font-display font-black text-4xl flex-shrink-0">
             {initiaal}
           </div>
         )}
@@ -189,7 +189,7 @@ export function VakmanProfielClient({
             onClick={() => setTab(t.id)}
             className={`flex items-center gap-2 px-5 py-3 text-body-sm font-semibold whitespace-nowrap border-b-2 -mb-[2px] transition-colors min-h-11 ${
               tab === t.id
-                ? "text-terracotta border-terracotta"
+                ? "text-sage border-sage"
                 : "text-warmgrijs border-transparent hover:text-warmzwart"
             }`}
           >
@@ -243,7 +243,7 @@ export function VakmanProfielClient({
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {WERKFOTOS.map((foto) => (
               <div key={foto.titel} className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer group">
-                <div className="w-full h-full bg-sand flex flex-col items-center justify-center gap-2 group-hover:bg-terracotta-50 transition-colors">
+                <div className="w-full h-full bg-sand flex flex-col items-center justify-center gap-2 group-hover:bg-sage-50 transition-colors">
                   <Camera size={28} className="text-warmgrijs" />
                   <span className="text-body-xs text-warmgrijs text-center px-2 font-medium">{foto.titel}</span>
                 </div>

@@ -93,7 +93,7 @@ export function InstallBanner() {
   return (
     <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-[360px] z-[90] animate-slide-up">
       <div className="bg-white rounded-xl shadow-strong border border-lijn p-4 flex items-start gap-3">
-        <span className="w-10 h-10 shrink-0 bg-terracotta rounded-lg flex items-center justify-center text-white">
+        <span className="w-10 h-10 shrink-0 bg-sage rounded-lg flex items-center justify-center text-white">
           {showIOSHint ? <ShareFat size={20} weight="fill" /> : <DownloadSimple size={20} weight="bold" />}
         </span>
         <div className="flex-1 min-w-0">

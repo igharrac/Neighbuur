@@ -20,9 +20,9 @@ interface ContentBlockEditorProps {
   saving: boolean;
 }
 
-const KLEUR_OPTIONS = ["terracotta", "groen", "blauw", "oker"] as const;
+const KLEUR_OPTIONS = ["sage", "groen", "blauw", "oker"] as const;
 const KLEUR_CLASS: Record<(typeof KLEUR_OPTIONS)[number], string> = {
-  terracotta: "bg-terracotta-100 text-terracotta",
+  sage: "bg-sage-100 text-sage",
   groen: "bg-groen-light text-groen",
   blauw: "bg-blauw-light text-blauw",
   oker: "bg-oker-light text-oker",
@@ -180,7 +180,7 @@ export function ContentBlockEditor({
                 <span className="text-body-sm font-medium">{professionalName ?? "Geselecteerd"}</span>
                 <button
                   type="button"
-                  className="text-body-xs text-terracotta font-semibold"
+                  className="text-body-xs text-sage font-semibold"
                   onClick={() => {
                     set("vakman_id", undefined);
                     setProfessionalName(null);

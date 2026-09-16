@@ -247,7 +247,7 @@ export default async function PlanPage() {
         {/* ── Hero-banner ── */}
         <div className="bg-white rounded-[24px] p-6 sm:p-8 lg:p-10 shadow-[0px_8px_15px_rgba(92,64,40,0.06)] mb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           <div className="lg:col-span-8">
-            <span className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.6px] text-terracotta mb-2">
+            <span className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.6px] text-sage mb-2">
               <Sparkle size={14} weight="fill" />
               Jouw persoonlijke plan
             </span>
@@ -264,13 +264,13 @@ export default async function PlanPage() {
             <div className="lg:col-span-4 bg-sand-light rounded-2xl p-5">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-body font-semibold text-[13px] text-warmzwart">Voortgang</span>
-                <span className="font-display font-bold text-[15px] text-terracotta">
+                <span className="font-display font-bold text-[15px] text-sage">
                   {geregeld} van {totaal} geregeld
                 </span>
               </div>
               <div className="h-2 w-full rounded-full bg-white overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-terracotta transition-all"
+                  className="h-full rounded-full bg-sage transition-all"
                   style={{ width: `${totaal ? Math.round((geregeld / totaal) * 100) : 0}%` }}
                 />
               </div>
@@ -295,7 +295,7 @@ export default async function PlanPage() {
         {groepskortingen.length > 0 && (
           <div className="mb-8 max-w-[720px]">
             <div className="flex items-center gap-2 mb-4">
-              <Tag size={18} className="text-terracotta" weight="fill" />
+              <Tag size={18} className="text-sage" weight="fill" />
               <h2 className="font-display font-bold text-[20px] text-warmzwart">Collectieve wijkdeals</h2>
             </div>
             <div className="flex flex-col gap-3">
@@ -311,7 +311,7 @@ export default async function PlanPage() {
                       {deal.prijsGroep != null && ` · groepsprijs €${(deal.prijsGroep / 100).toFixed(0)}`}
                     </p>
                   </div>
-                  <span className="shrink-0 font-body font-semibold text-[13px] text-terracotta whitespace-nowrap">
+                  <span className="shrink-0 font-body font-semibold text-[13px] text-sage whitespace-nowrap">
                     {deal.meegedaan ? "Je doet mee ✓" : "Bekijk wijkdeal →"}
                   </span>
                 </div>
@@ -324,7 +324,7 @@ export default async function PlanPage() {
         {leeg && (
           <div className="bg-white rounded-[24px] p-10 sm:p-16 text-center shadow-[0px_8px_15px_rgba(92,64,40,0.06)]">
             <div className="w-14 h-14 rounded-full bg-sand-light flex items-center justify-center mx-auto mb-4">
-              <Sparkle size={22} className="text-terracotta" weight="fill" />
+              <Sparkle size={22} className="text-sage" weight="fill" />
             </div>
             <h2 className="font-display font-bold text-[24px] text-warmzwart mb-2">Je plan is nog leeg</h2>
             <p className="font-body text-[15px] text-warmgrijs max-w-[420px] mx-auto mb-6">
@@ -344,9 +344,9 @@ export default async function PlanPage() {
               {inAfwachting.length > 0 && (
                 <section>
                   <div className="flex items-center gap-2 mb-4">
-                    <Clock size={18} className="text-terracotta" weight="fill" />
+                    <Clock size={18} className="text-sage" weight="fill" />
                     <h2 className="font-display font-bold text-[20px] text-warmzwart">In afwachting</h2>
-                    <span className="badge badge-terracotta">{inAfwachting.length}</span>
+                    <span className="badge badge-sage">{inAfwachting.length}</span>
                   </div>
                   <div className="flex flex-col gap-3">
                     {inAfwachting.map((b) => (
@@ -387,7 +387,7 @@ export default async function PlanPage() {
                         {b.vakman && (
                           <Link
                             href={`/vakman/${b.vakman.slug}`}
-                            className="font-body font-semibold text-[13px] text-terracotta whitespace-nowrap no-underline hover:underline"
+                            className="font-body font-semibold text-[13px] text-sage whitespace-nowrap no-underline hover:underline"
                           >
                             Bekijk vakman →
                           </Link>
@@ -453,7 +453,7 @@ export default async function PlanPage() {
                   )}
                   <Link
                     href={`/berichten/${recentGesprek.id}`}
-                    className="inline-block mt-2 font-body font-semibold text-[13px] text-terracotta no-underline hover:underline"
+                    className="inline-block mt-2 font-body font-semibold text-[13px] text-sage no-underline hover:underline"
                   >
                     Open gesprek →
                   </Link>
@@ -469,7 +469,7 @@ export default async function PlanPage() {
                   <p className="font-body text-[13px] text-warmgrijs mb-3">{community.aantal_leden} buren aangesloten</p>
                   <Link
                     href={`/community/${community.slug}`}
-                    className="font-body font-semibold text-[13px] text-terracotta no-underline hover:underline"
+                    className="font-body font-semibold text-[13px] text-sage no-underline hover:underline"
                   >
                     Bekijk je wijk →
                   </Link>
@@ -484,7 +484,7 @@ export default async function PlanPage() {
           <p className="font-body text-[14px] text-warmgrijs">
             Mis je nog buren? Hoe meer buren meedoen, hoe voordeliger de wijkdeals.
           </p>
-          <Link href="/profiel/uitnodigen" className="font-body font-semibold text-[14px] text-terracotta no-underline hover:underline whitespace-nowrap">
+          <Link href="/profiel/uitnodigen" className="font-body font-semibold text-[14px] text-sage no-underline hover:underline whitespace-nowrap">
             Deel uitnodigingslink →
           </Link>
         </div>

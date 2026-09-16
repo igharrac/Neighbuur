@@ -42,10 +42,10 @@ export async function VakmanSpotlight({ data }: { data: VakmanSpotlightData }) {
 
   return (
     <div>
-      <p className="text-body-xs font-semibold uppercase tracking-wider text-terracotta mb-3">Uitgelicht</p>
+      <p className="text-body-xs font-semibold uppercase tracking-wider text-sage mb-3">Uitgelicht</p>
       <Link
         href={`/vakman/${v.slug}`}
-        className="flex items-center gap-4 border border-lijn rounded-md p-4 no-underline transition-colors hover:border-terracotta group"
+        className="flex items-center gap-4 border border-lijn rounded-md p-4 no-underline transition-colors hover:border-sage group"
       >
         <Avatar naam={v.company_name} src={v.logo_url} size="lg" />
         <div className="flex-1 min-w-0">
@@ -60,7 +60,7 @@ export async function VakmanSpotlight({ data }: { data: VakmanSpotlightData }) {
             <span className="text-body-xs text-warmgrijs">({v.review_count} reviews)</span>
           </div>
         </div>
-        <ArrowRight size={18} className="text-lijn group-hover:text-terracotta transition-colors shrink-0" />
+        <ArrowRight size={18} className="text-lijn group-hover:text-sage transition-colors shrink-0" />
       </Link>
     </div>
   );

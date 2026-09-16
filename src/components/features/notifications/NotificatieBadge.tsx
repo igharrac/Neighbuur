@@ -15,7 +15,7 @@ export function NotificatieBadge() {
     >
       <Bell size={22} />
       {aantal > 0 && (
-        <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-terracotta text-white text-[10px] font-bold flex items-center justify-center leading-none">
+        <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-sage text-white text-[10px] font-bold flex items-center justify-center leading-none">
           {aantal > 9 ? "9+" : aantal}
         </span>
       )}

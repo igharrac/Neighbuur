@@ -101,7 +101,7 @@ export function ProfielForm({ profile: initialProfile, adres }: ProfielFormProps
               onClick={() => handleTaalWijzigen(taal)}
               disabled={savingTaal}
               className={`px-4 py-2 rounded-sm text-body-sm font-semibold border-2 transition-colors ${
-                profile.language === taal ? "border-terracotta bg-terracotta-50 text-terracotta" : "border-lijn text-warmgrijs"
+                profile.language === taal ? "border-sage bg-sage-50 text-sage" : "border-lijn text-warmgrijs"
               }`}
             >
               {taal === "nl" ? "Nederlands" : "English"}
@@ -116,7 +116,7 @@ export function ProfielForm({ profile: initialProfile, adres }: ProfielFormProps
           <h2 className="font-display text-display-sm text-warmzwart mb-4">Mijn adres</h2>
           {adres ? (
             <p className="flex items-start gap-2 text-body text-warmzwart mb-4">
-              <MapPin size={18} className="text-terracotta shrink-0 mt-0.5" />
+              <MapPin size={18} className="text-sage shrink-0 mt-0.5" />
               {adres}
             </p>
           ) : (

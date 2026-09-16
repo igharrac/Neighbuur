@@ -56,7 +56,7 @@ export function PullToRefresh({ children }: { children: React.ReactNode }) {
         <ArrowClockwise
           size={20}
           weight="bold"
-          className={`text-terracotta ${refreshing ? "animate-spin" : ""}`}
+          className={`text-sage ${refreshing ? "animate-spin" : ""}`}
           style={refreshing ? undefined : { transform: `rotate(${pull * 3}deg)` }}
         />
       </div>

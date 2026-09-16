@@ -13,7 +13,7 @@ function GrowthBadge({ value }: { value: number | null }) {
   if (value === null) return null;
   const positive = value >= 0;
   return (
-    <span className={`text-body-xs font-semibold ${positive ? "text-groen" : "text-terracotta"}`}>
+    <span className={`text-body-xs font-semibold ${positive ? "text-groen" : "text-sage"}`}>
       {positive ? "+" : ""}
       {value}
     </span>

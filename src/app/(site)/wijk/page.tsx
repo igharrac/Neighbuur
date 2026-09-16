@@ -177,15 +177,15 @@ export default async function WijkIndexPage() {
     <div className="bg-cream-warm min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 py-14">
         <div className="max-w-[640px] mb-10">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ffdbcf] px-4 py-1 mb-4">
-            <span className="w-2 h-2 rounded-full bg-[#a73400]" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C4DAB9] px-4 py-1 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#385729]" />
             <span className="font-body font-semibold text-[12px] tracking-[0.6px] uppercase text-[#390c00]">
               Mijn wijk
             </span>
           </span>
           <h1 className="font-display font-bold text-[38px] sm:text-[48px] leading-[44px] sm:leading-[54px] text-warmzwart mb-3">
             Wat gebeurt er al rondom{" "}
-            <span className="italic text-terracotta">jouw woning</span>?
+            <span className="italic text-sage">jouw woning</span>?
           </h1>
           <p className="font-body text-[16px] leading-[24px] text-warmgrijs-dark mb-6">
             Zoek je postcode, buurt of nieuwbouwproject en ontdek welke buren er al zijn — in een nieuwbouwproject,
@@ -211,7 +211,7 @@ export default async function WijkIndexPage() {
               >
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-display font-bold text-[20px] text-warmzwart">{eigenPlekje.name}</h3>
-                  <ArrowRight size={16} className="text-terracotta shrink-0 mt-1" weight="bold" />
+                  <ArrowRight size={16} className="text-sage shrink-0 mt-1" weight="bold" />
                 </div>
                 {(eigenPlekje.street || eigenPlekje.city) && (
                   <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-4">
@@ -241,7 +241,7 @@ export default async function WijkIndexPage() {
             ) : eigenPlekje.telling <= 1 ? (
               <div className="bg-white rounded-2xl p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] max-w-[560px]">
                 <div className="flex items-center gap-2 mb-2">
-                  <HandWaving size={18} className="text-terracotta" weight="fill" />
+                  <HandWaving size={18} className="text-sage" weight="fill" />
                   <h3 className="font-display font-bold text-[18px] text-warmzwart">Goed om je erbij te hebben</h3>
                 </div>
                 {(eigenPlekje.street || eigenPlekje.city) && (
@@ -262,7 +262,7 @@ export default async function WijkIndexPage() {
             ) : (
               <div className="bg-white rounded-2xl p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] max-w-[560px]">
                 <div className="flex items-center gap-2 mb-2">
-                  <House size={18} className="text-terracotta" weight="fill" />
+                  <House size={18} className="text-sage" weight="fill" />
                   <h3 className="font-display font-bold text-[18px] text-warmzwart">Je buurt begint te groeien</h3>
                 </div>
                 {(eigenPlekje.street || eigenPlekje.city) && (
@@ -274,7 +274,7 @@ export default async function WijkIndexPage() {
                 <p className="font-body text-[15px] text-warmzwart">
                   Er zijn inmiddels {eigenPlekje.telling} woningen uit jouw omgeving actief op Neighbuur. Zodra er
                   genoeg buren zijn, kunnen jullie samen een community starten via{" "}
-                  <Link href="/plan" className="text-terracotta underline">
+                  <Link href="/plan" className="text-sage underline">
                     Mijn Plan
                   </Link>
                   .
@@ -298,7 +298,7 @@ export default async function WijkIndexPage() {
               >
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <h3 className="font-display font-bold text-[19px] text-warmzwart">{k.title}</h3>
-                  <ArrowRight size={16} className="text-terracotta shrink-0 mt-1" weight="bold" />
+                  <ArrowRight size={16} className="text-sage shrink-0 mt-1" weight="bold" />
                 </div>
                 {(k.city || k.postalCode) && (
                   <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-1">
@@ -313,7 +313,7 @@ export default async function WijkIndexPage() {
                     {k.homeCount} woningen
                   </p>
                 )}
-                <p className="font-body font-semibold text-[13px] text-terracotta mt-3">{k.subMetric}</p>
+                <p className="font-body font-semibold text-[13px] text-sage mt-3">{k.subMetric}</p>
               </Link>
             ))}
           </div>

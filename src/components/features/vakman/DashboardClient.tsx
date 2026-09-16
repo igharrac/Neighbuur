@@ -99,7 +99,7 @@ export function DashboardClient({
         <div>
           <h2 className="font-display text-display-sm text-warmzwart mb-3">
             Nieuwe aanvragen
-            <span className="badge badge-terracotta ml-2">{nieuweAanvragen.length}</span>
+            <span className="badge badge-sage ml-2">{nieuweAanvragen.length}</span>
           </h2>
           <div className="flex flex-col gap-3">
             {nieuweAanvragen.map((boeking) => (

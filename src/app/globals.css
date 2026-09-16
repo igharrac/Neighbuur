@@ -36,9 +36,9 @@
     color: inherit;
   }
 
-  /* Focus ring — terracotta glow */
+  /* Focus ring — sage glow */
   :focus-visible {
-    @apply outline-none ring-2 ring-terracotta-300 ring-offset-2 ring-offset-cream;
+    @apply outline-none ring-2 ring-sage-300 ring-offset-2 ring-offset-cream;
   }
 
   /* Scrollbar */
@@ -62,8 +62,8 @@
   }
 
   .btn-primary {
-    @apply btn bg-terracotta text-white px-7 py-3.5 text-body
-           hover:bg-terracotta-600 hover:shadow-medium hover:-translate-y-0.5;
+    @apply btn bg-sage text-white px-7 py-3.5 text-body
+           hover:bg-sage-600 hover:shadow-medium hover:-translate-y-0.5;
   }
 
   .btn-secondary {
@@ -92,7 +92,7 @@
   .card-flat {
     @apply bg-white border-[1.5px] border-lijn rounded
            transition-all duration-200
-           hover:border-terracotta hover:-translate-y-0.5;
+           hover:border-sage hover:-translate-y-0.5;
   }
 
   /* ── Badges ── */
@@ -100,7 +100,7 @@
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full
            text-body-xs font-semibold;
   }
-  .badge-terracotta { @apply bg-terracotta-100 text-terracotta; }
+  .badge-sage { @apply bg-sage-100 text-sage; }
   .badge-groen      { @apply bg-groen-light text-groen; }
   .badge-blauw      { @apply bg-blauw-light text-blauw; }
   .badge-lavendel   { @apply bg-lavendel-light text-lavendel; }
@@ -112,7 +112,7 @@
            bg-white outline-none
            transition-all duration-200
            placeholder:text-warmgrijs
-           focus:border-terracotta focus:shadow-glow;
+           focus:border-sage focus:shadow-glow;
   }
 
   /* ── Illustration containers ── */
@@ -120,7 +120,7 @@
     @apply flex items-center justify-center rounded-xl overflow-hidden;
   }
   .illus-cream  { @apply bg-cream-dark; }
-  .illus-warm   { @apply bg-terracotta-50; }
+  .illus-warm   { @apply bg-sage-50; }
   .illus-groen  { @apply bg-groen-light; }
   .illus-blauw  { @apply bg-blauw-light; }
 
@@ -130,11 +130,11 @@
            bg-white border-[1.5px] border-lijn rounded-xl
            p-6 cursor-pointer
            transition-all duration-200
-           hover:border-terracotta hover:bg-terracotta-50 hover:-translate-y-1;
+           hover:border-sage hover:bg-sage-50 hover:-translate-y-1;
   }
   .service-card-illus {
     @apply w-full aspect-square rounded-lg mb-4
-           bg-terracotta-50 flex items-center justify-center
+           bg-sage-50 flex items-center justify-center
            overflow-hidden;
   }
 }

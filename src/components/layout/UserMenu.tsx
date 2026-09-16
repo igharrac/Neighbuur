@@ -86,7 +86,7 @@ export function UserMenu() {
           <div className="border-t border-lijn py-1.5">
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-2.5 text-body-sm text-terracotta font-medium hover:bg-terracotta-50 transition-colors w-full text-left"
+              className="flex items-center gap-3 px-4 py-2.5 text-body-sm text-sage font-medium hover:bg-sage-50 transition-colors w-full text-left"
             >
               <SignOut size={17} />
               Uitloggen

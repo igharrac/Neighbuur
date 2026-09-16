@@ -5,7 +5,7 @@ import { Buildings, UploadSimple } from "@phosphor-icons/react";
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
 import { Avatar } from "@/components/ui/Avatar";
 
-const CONFETTI_COLORS = ["bg-terracotta", "bg-groen", "bg-blauw", "bg-lavendel", "bg-oker"];
+const CONFETTI_COLORS = ["bg-sage", "bg-groen", "bg-blauw", "bg-lavendel", "bg-oker"];
 
 function Confetti() {
   const pieces = Array.from({ length: 24 }, (_, i) => ({
@@ -54,19 +54,19 @@ export function LogoPrompt({ professionalId, companyName, onUploaded }: LogoProm
   }
 
   return (
-    <div className="relative bg-terracotta-50 rounded p-6 md:p-7 overflow-hidden">
+    <div className="relative bg-sage-50 rounded p-6 md:p-7 overflow-hidden">
       {celebrating && <Confetti />}
 
       {celebrating ? (
         <div className="text-center py-6">
-          <p className="font-display text-display-sm text-terracotta mb-1">Profiel 20% completer!</p>
+          <p className="font-display text-display-sm text-sage mb-1">Profiel 20% completer!</p>
           <p className="text-body-sm text-warmgrijs">Je logo staat live op je profiel.</p>
         </div>
       ) : (
         <>
           <h3 className="font-bold text-body mb-1">📸 Voeg je logo toe</h3>
           <p className="text-body-sm text-warmgrijs mb-5">
-            Vakmensen met een logo krijgen <span className="font-semibold text-terracotta">3x meer aanvragen</span>
+            Vakmensen met een logo krijgen <span className="font-semibold text-sage">3x meer aanvragen</span>
           </p>
 
           <div className="flex items-center justify-center gap-6 mb-5">
@@ -75,11 +75,11 @@ export function LogoPrompt({ professionalId, companyName, onUploaded }: LogoProm
               <p className="text-body-xs text-warmgrijs mt-2">Zonder logo</p>
             </div>
             <div className="text-center relative">
-              <div className="w-16 h-16 rounded-full bg-white shadow-medium ring-2 ring-terracotta/30 flex items-center justify-center mx-auto">
-                <Buildings size={28} weight="fill" className="text-terracotta" />
+              <div className="w-16 h-16 rounded-full bg-white shadow-medium ring-2 ring-sage/30 flex items-center justify-center mx-auto">
+                <Buildings size={28} weight="fill" className="text-sage" />
               </div>
               <p className="text-body-xs font-semibold text-groen mt-2">Met logo</p>
-              <span className="absolute -top-2 -right-2 badge badge-terracotta">3x meer</span>
+              <span className="absolute -top-2 -right-2 badge badge-sage">3x meer</span>
             </div>
           </div>
 

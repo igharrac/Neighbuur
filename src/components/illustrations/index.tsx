@@ -6,7 +6,7 @@
  * AI-gegenereerde illustraties in de warme editorial stijl.
  *
  * Alle illustraties gebruiken enkel merkkleurenL
- * - terracotta (#E8572A)
+ * - sage (#E8572A)
  * - groen (#2A8C5A)
  * - blauw (#2A6BE8)
  * - oker (#C4871A)

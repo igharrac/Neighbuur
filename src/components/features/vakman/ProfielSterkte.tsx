@@ -35,11 +35,11 @@ export function ProfielSterkte({ professional, werkFotoCount, heeftBeschikbaarhe
     <div className="bg-white rounded-md shadow-soft p-6">
       <div className="flex items-center justify-between mb-2">
         <h2 className="font-bold text-body">Profiel vervolledigen</h2>
-        <span className="font-display font-bold text-body text-terracotta">{pct}%</span>
+        <span className="font-display font-bold text-body text-sage">{pct}%</span>
       </div>
       <div className="h-2.5 rounded-full bg-cream-dark overflow-hidden mb-5">
         <div
-          className="h-full bg-terracotta rounded-full transition-all duration-500"
+          className="h-full bg-sage rounded-full transition-all duration-500"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -60,7 +60,7 @@ export function ProfielSterkte({ professional, werkFotoCount, heeftBeschikbaarhe
               {item.label}
             </span>
             {!item.done && (
-              <span className="text-body-xs font-semibold text-terracotta shrink-0">+{item.punten}pt</span>
+              <span className="text-body-xs font-semibold text-sage shrink-0">+{item.punten}pt</span>
             )}
           </Link>
         ))}

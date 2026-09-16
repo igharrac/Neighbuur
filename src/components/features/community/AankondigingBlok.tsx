@@ -3,18 +3,18 @@ import { Megaphone } from "@phosphor-icons/react/dist/ssr";
 interface AankondigingBlokData {
   titel?: string;
   inhoud?: string;
-  kleur?: "terracotta" | "groen" | "blauw" | "oker";
+  kleur?: "sage" | "groen" | "blauw" | "oker";
 }
 
 const colorClass: Record<string, string> = {
-  terracotta: "bg-terracotta-50 text-terracotta border-terracotta-200",
+  sage: "bg-sage-50 text-sage border-sage-200",
   groen: "bg-groen-light text-groen border-groen/20",
   blauw: "bg-blauw-light text-blauw border-blauw/20",
   oker: "bg-oker-light text-oker border-oker/20",
 };
 
 export function AankondigingBlok({ data }: { data: AankondigingBlokData }) {
-  const kleur = data.kleur && colorClass[data.kleur] ? data.kleur : "terracotta";
+  const kleur = data.kleur && colorClass[data.kleur] ? data.kleur : "sage";
 
   return (
     <div className={`rounded-md border p-5 flex gap-3.5 ${colorClass[kleur]}`}>

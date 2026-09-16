@@ -15,7 +15,7 @@ interface AuthSplitScreenProps {
  * Gedeelde shell voor alle auth-schermen (inloggen, check-je-mail,
  * vakman-registratiestappen): links het formulier, rechts een foto met
  * een optioneel badge/kaart-overlay. Puur presentationeel — bouwt op
- * bestaande designtokens (terracotta/warmzwart/warmgrijs/cream/lijn,
+ * bestaande designtokens (sage/warmzwart/warmgrijs/cream/lijn,
  * .btn-primary/.input/shadow-*) voort, introduceert geen nieuwe stijlen.
  * backLabel is een prop (i.p.v. hardcoded) zodat elke caller 'm zelf kan
  * vertalen via haar eigen i18n-dict.
@@ -37,7 +37,7 @@ export function AuthSplitScreen({ photoUrl, photoAlt, topBadge, bottomCard, back
         </div>
 
         <p className="text-center mt-6">
-          <Link href="/" className="text-body-sm text-warmgrijs hover:text-terracotta">
+          <Link href="/" className="text-body-sm text-warmgrijs hover:text-sage">
             {backLabel}
           </Link>
         </p>

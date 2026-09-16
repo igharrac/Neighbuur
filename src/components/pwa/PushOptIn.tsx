@@ -37,7 +37,7 @@ export function PushOptIn() {
 
   return (
     <div className="relative rounded bg-white border border-lijn p-5 mb-4 flex items-start gap-3">
-      <div className="w-10 h-10 shrink-0 rounded-sm bg-terracotta-100 text-terracotta flex items-center justify-center">
+      <div className="w-10 h-10 shrink-0 rounded-sm bg-sage-100 text-sage flex items-center justify-center">
         <BellRinging size={18} weight="fill" />
       </div>
       <div className="min-w-0 flex-1">

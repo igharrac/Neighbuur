@@ -89,8 +89,8 @@ export default async function AdminGebiedenPage() {
                   className="card-flat p-5 flex items-center justify-between gap-4 no-underline hover:-translate-y-0.5 hover:shadow-medium transition-all"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="w-10 h-10 rounded-full bg-terracotta-50 flex items-center justify-center shrink-0">
-                      <MapPin size={18} className="text-terracotta" weight="fill" />
+                    <span className="w-10 h-10 rounded-full bg-sage-50 flex items-center justify-center shrink-0">
+                      <MapPin size={18} className="text-sage" weight="fill" />
                     </span>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default async function AdminGebiedenPage() {
                         +{s.new_residences_7d} / +{s.new_residences_30d} / +{s.new_residences_90d}
                       </p>
                     </div>
-                    <ArrowRight size={16} className="text-terracotta" weight="bold" />
+                    <ArrowRight size={16} className="text-sage" weight="bold" />
                   </div>
                 </Link>
               );

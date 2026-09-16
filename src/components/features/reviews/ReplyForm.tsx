@@ -57,7 +57,7 @@ export function ReplyForm({ reviewId, professionalId, companyName, isOwner, init
                 setTekst(savedTekst);
                 setEditing(true);
               }}
-              className="text-body-xs text-terracotta font-semibold min-h-11 flex items-center"
+              className="text-body-xs text-sage font-semibold min-h-11 flex items-center"
             >
               Bewerken
             </button>

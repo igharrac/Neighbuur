@@ -13,12 +13,12 @@ export function VakmanBanner() {
     <section className="bg-cream-warm px-6 pt-6 pb-16 lg:px-[72px] lg:pt-6 lg:pb-[72px]">
       <div className="max-w-[1200px] mx-auto bg-[#f4ece8] rounded-[24px] p-8 lg:p-12 drop-shadow-[0px_8px_15px_rgba(92,64,40,0.06)] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-8">
-          <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#a73400] mb-1">
+          <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#385729] mb-1">
             {dict.proCta.eyebrow}
           </p>
           <h2 className="font-display font-bold text-[32px] sm:text-[38px] leading-[40px] sm:leading-[46px] tracking-[-0.38px] text-[#1e1b19] mb-2">
             {dict.proCta.title}{" "}
-            <span className="text-[#a73400]">{dict.proCta.titleAccent}</span>
+            <span className="text-[#385729]">{dict.proCta.titleAccent}</span>
           </h2>
           <p className="font-body text-[15px] leading-[22px] text-[#594139] max-w-[672px] mb-6">
             {dict.proCta.subtitle}
@@ -35,7 +35,7 @@ export function VakmanBanner() {
 
           <Link
             href="/registreer/vakman"
-            className="inline-flex items-center gap-2 rounded-full bg-[#a73400] px-10 py-4 font-body font-semibold text-[14px] text-white no-underline whitespace-nowrap drop-shadow-[0px_4px_8px_rgba(167,52,0,0.3)]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#385729] px-10 py-4 font-body font-semibold text-[14px] text-white no-underline whitespace-nowrap drop-shadow-[0px_4px_8px_rgba(56,87,41,0.3)]"
           >
             {dict.proCta.button}
             <ArrowRight size={12} weight="bold" />

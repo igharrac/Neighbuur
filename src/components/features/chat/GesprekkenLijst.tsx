@@ -32,7 +32,7 @@ export function GesprekkenLijst({ gesprekken }: { gesprekken: ConversationWithLa
             </p>
           </div>
           {g.unreadCount > 0 && (
-            <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-terracotta text-white text-body-xs font-bold flex items-center justify-center shrink-0">
+            <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-sage text-white text-body-xs font-bold flex items-center justify-center shrink-0">
               {g.unreadCount}
             </span>
           )}

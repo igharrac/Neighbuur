@@ -14,7 +14,7 @@ const sizeClass: Record<Size, string> = {
   lg: "w-16 h-16 text-display-sm",
 };
 
-const colors = ["bg-terracotta", "bg-groen", "bg-blauw", "bg-lavendel", "bg-oker"];
+const colors = ["bg-sage", "bg-groen", "bg-blauw", "bg-lavendel", "bg-oker"];
 
 function colorForNaam(naam: string) {
   const code = naam.charCodeAt(0) || 0;

@@ -18,7 +18,7 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 
 const icon: Record<ToastVariant, ReactNode> = {
   success: <CheckCircle size={18} weight="fill" className="text-groen" />,
-  error: <WarningCircle size={18} weight="fill" className="text-terracotta" />,
+  error: <WarningCircle size={18} weight="fill" className="text-sage" />,
   info: <Info size={18} weight="fill" className="text-blauw" />,
 };
 

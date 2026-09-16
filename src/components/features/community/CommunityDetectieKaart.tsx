@@ -87,8 +87,8 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
     return (
       <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
         <div className="flex items-center gap-3 mb-3">
-          <span className="w-10 h-10 rounded-full bg-terracotta-50 flex items-center justify-center shrink-0">
-            <Users size={18} className="text-terracotta" weight="fill" />
+          <span className="w-10 h-10 rounded-full bg-sage-50 flex items-center justify-center shrink-0">
+            <Users size={18} className="text-sage" weight="fill" />
           </span>
           <div>
             <h3 className="font-body font-bold text-[15px] text-warmzwart">
@@ -115,8 +115,8 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
 
   return (
     <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] flex items-start gap-3">
-      <span className="w-10 h-10 rounded-full bg-terracotta-50 flex items-center justify-center shrink-0">
-        <Sparkle size={18} className="text-terracotta" weight="fill" />
+      <span className="w-10 h-10 rounded-full bg-sage-50 flex items-center justify-center shrink-0">
+        <Sparkle size={18} className="text-sage" weight="fill" />
       </span>
       <div className="flex-1 min-w-0">
         <h3 className="font-body font-bold text-[15px] text-warmzwart">Je bent een van de eerste bewoners uit dit blok op Neighbuur</h3>

@@ -4,7 +4,7 @@ import { MagnifyingGlass, UsersThree, CheckCircle, type IconProps } from "@phosp
 import { useLang } from "@/lib/hooks/useLang";
 
 const STAP_STIJL: { bg: string; iconColor: string; labelColor: string; Icon: React.ComponentType<IconProps> }[] = [
-  { bg: "#ffdbcf", iconColor: "#a73400", labelColor: "#a73400", Icon: MagnifyingGlass },
+  { bg: "#C4DAB9", iconColor: "#385729", labelColor: "#385729", Icon: MagnifyingGlass },
   { bg: "#b1f0ce", iconColor: "#2c694e", labelColor: "#2c694e", Icon: UsersThree },
   { bg: "#ffddbb", iconColor: "#7d531f", labelColor: "#7d531f", Icon: CheckCircle },
 ];
@@ -16,7 +16,7 @@ export function HoeHetWerkt() {
     <section className="bg-sand-light px-6 py-16 lg:px-10 lg:py-24">
       <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-12 lg:gap-[72px]">
         <div className="max-w-[672px] flex flex-col items-center gap-2 text-center">
-          <span className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#a73400]">
+          <span className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#385729]">
             {dict.steps.eyebrow}
           </span>
           <h2 className="font-display font-bold text-[32px] sm:text-[38px] leading-[40px] sm:leading-[46px] tracking-[-0.38px] text-[#1e1b19]">

@@ -76,7 +76,7 @@ export function BeschikbaarheidEditor({
                   ? "bg-groen text-white"
                   : status === "booked"
                   ? "bg-cream-dark text-warmgrijs line-through"
-                  : "bg-white border border-lijn text-warmzwart hover:border-terracotta"
+                  : "bg-white border border-lijn text-warmzwart hover:border-sage"
               }`}
             >
               {dag.getDate()}

@@ -50,7 +50,7 @@ export async function GroepskortingenBlok({ community_id, lang }: { community_id
                 <div className="flex justify-between items-start gap-2 mb-1">
                   <h4 className="font-bold text-body-sm">{lang === "nl" ? k.title_nl : k.title_en}</h4>
                   {k.price_group != null && (
-                    <span className="text-body-sm font-bold text-terracotta shrink-0">
+                    <span className="text-body-sm font-bold text-sage shrink-0">
                       €{(k.price_group / 100).toFixed(0)}
                     </span>
                   )}
@@ -61,7 +61,7 @@ export async function GroepskortingenBlok({ community_id, lang }: { community_id
                   </p>
                 )}
                 <div className="h-1.5 rounded-full bg-cream-dark overflow-hidden mb-1.5">
-                  <div className="h-full bg-terracotta rounded-full transition-all" style={{ width: `${pct}%` }} />
+                  <div className="h-full bg-sage rounded-full transition-all" style={{ width: `${pct}%` }} />
                 </div>
                 <span className="flex items-center gap-1.5 text-body-xs text-warmgrijs">
                   <Users size={13} />
