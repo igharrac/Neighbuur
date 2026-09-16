@@ -172,6 +172,14 @@ const functionsBlock = `      calculate_profile_strength: {
       anonymize_and_ban_account: {
         Args: { p_user_id: string };
         Returns: void;
+      };
+      count_residences_in_cluster_public: {
+        Args: { p_cluster_id: string };
+        Returns: number;
+      };
+      residential_cluster_city_public: {
+        Args: { p_cluster_id: string };
+        Returns: string | null;
       };`;
 
 const output = `/**

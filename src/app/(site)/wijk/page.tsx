@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, MapPin, House, Users, Star, Tag } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, MapPin, House, Users, Star, Tag, HandWaving } from "@phosphor-icons/react/dist/ssr";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { WijkZoeken } from "@/components/features/community/WijkZoeken";
 
@@ -10,6 +10,7 @@ type EigenPlekje =
       slug: string;
       street: string | null;
       city: string | null;
+      residenceCount: number;
       memberCount: number;
       reviewCount: number;
       activeDeals: number;
@@ -31,9 +32,32 @@ interface WijkRow {
 }
 
 interface CommunityRow {
+  id: string;
   name: string;
   slug: string;
+  type: string;
   development_id: string | null;
+  city: string | null;
+  residence_count: number;
+  member_count: number;
+}
+
+/**
+ * Eén kaart in de "Actieve gebieden"-grid — kan een development zijn
+ * (bestaand gedrag) óf een community zonder development (nieuw, additief).
+ * Beide krijgen hetzelfde kaart-uiterlijk, alleen de bestemming verschilt:
+ * een development linkt naar /wijk/[slug] (kan meerdere communities
+ * bevatten), een standalone community linkt direct naar /community/[slug]
+ * (er is geen /wijk-equivalent voor een los cluster).
+ */
+interface GebiedKaart {
+  key: string;
+  href: string;
+  title: string;
+  city: string | null;
+  postalCode: string | null;
+  homeCount: number | null;
+  subMetric: string;
 }
 
 export default async function WijkIndexPage() {
@@ -71,7 +95,7 @@ export default async function WijkIndexPage() {
       if (bewonerProfiel.community_id) {
         const { data: community } = await supabase
           .from("community_overview")
-          .select("name, slug, member_count, review_count, active_deals")
+          .select("name, slug, member_count, review_count, active_deals, residence_count")
           .eq("id", bewonerProfiel.community_id)
           .maybeSingle();
         if (community?.name && community.slug) {
@@ -81,6 +105,7 @@ export default async function WijkIndexPage() {
             slug: community.slug,
             street,
             city,
+            residenceCount: Number(community.residence_count ?? 0),
             memberCount: Number(community.member_count ?? 0),
             reviewCount: Number(community.review_count ?? 0),
             activeDeals: Number(community.active_deals ?? 0),
@@ -101,16 +126,52 @@ export default async function WijkIndexPage() {
   const wijken = (wijkenData ?? []) as WijkRow[];
 
   const { data: communitiesData } = await supabase
-    .from("communities")
-    .select("name, slug, development_id")
+    .from("community_overview")
+    .select("id, name, slug, type, development_id, city, residence_count, member_count")
     .eq("active", true);
-  const communities = (communitiesData ?? []) as CommunityRow[];
+  const communities = (communitiesData ?? []).map((c) => ({
+    id: c.id!,
+    name: c.name!,
+    slug: c.slug!,
+    type: c.type!,
+    development_id: c.development_id,
+    city: c.city,
+    residence_count: Number(c.residence_count ?? 0),
+    member_count: Number(c.member_count ?? 0),
+  })) as CommunityRow[];
 
   const communitiesPerWijk = new Map<string, number>();
   communities.forEach((c) => {
     if (!c.development_id) return;
     communitiesPerWijk.set(c.development_id, (communitiesPerWijk.get(c.development_id) ?? 0) + 1);
   });
+
+  // ── Gebieden-grid: bestaande developments + communities zonder
+  // development (bestaande flats/complexen/blokken) — additief naast
+  // elkaar, geen van beide vervangt de ander.
+  const developmentKaarten: GebiedKaart[] = wijken.map((w) => ({
+    key: `dev-${w.id}`,
+    href: `/wijk/${w.slug}`,
+    title: w.name,
+    city: w.city,
+    postalCode: w.postal_code,
+    homeCount: w.home_count,
+    subMetric: `${communitiesPerWijk.get(w.id) ?? 0} ${communitiesPerWijk.get(w.id) === 1 ? "actief blok" : "actieve blokken"}`,
+  }));
+
+  const standaloneKaarten: GebiedKaart[] = communities
+    .filter((c) => !c.development_id)
+    .map((c) => ({
+      key: `comm-${c.id}`,
+      href: `/community/${c.slug}`,
+      title: c.name,
+      city: c.city,
+      postalCode: null,
+      homeCount: c.residence_count || null,
+      subMetric: `${c.member_count} ${c.member_count === 1 ? "bewoner" : "bewoners"} aangesloten`,
+    }));
+
+  const gebiedenKaarten = [...developmentKaarten, ...standaloneKaarten];
 
   return (
     <div className="bg-cream-warm min-h-screen">
@@ -124,14 +185,11 @@ export default async function WijkIndexPage() {
           </span>
           <h1 className="font-display font-bold text-[38px] sm:text-[48px] leading-[44px] sm:leading-[54px] text-warmzwart mb-3">
             Wat gebeurt er al rondom{" "}
-            <span className="italic text-terracotta [text-decoration-line:underline] [text-decoration-style:wavy] [text-decoration-color:#ffdbcf] [text-underline-position:from-font]">
-              jouw nieuwe woning
-            </span>
-            ?
+            <span className="italic text-terracotta">jouw woning</span>?
           </h1>
           <p className="font-body text-[16px] leading-[24px] text-warmgrijs-dark mb-6">
-            Zoek je postcode, wijk of nieuwbouwproject en ontdek welke buren er al zijn, welke vakmensen actief zijn
-            en welke wijkdeals lopen.
+            Zoek je postcode, buurt of nieuwbouwproject en ontdek welke buren er al zijn — in een nieuwbouwproject,
+            een bestaande flat, een appartementencomplex of gewoon jouw straat.
           </p>
           <WijkZoeken
             districts={wijken.map((w) => ({ name: w.name, slug: w.slug, stad: w.city, postcode: w.postal_code }))}
@@ -145,7 +203,7 @@ export default async function WijkIndexPage() {
 
         {eigenPlekje && (
           <div className="mb-10">
-            <h2 className="font-display font-bold text-[22px] text-warmzwart mb-5">Rondom jouw huis</h2>
+            <h2 className="font-display font-bold text-[22px] text-warmzwart mb-5">Jouw omgeving</h2>
             {eigenPlekje.type === "community" ? (
               <Link
                 href={`/community/${eigenPlekje.slug}`}
@@ -161,7 +219,11 @@ export default async function WijkIndexPage() {
                     {[eigenPlekje.street, eigenPlekje.city].filter(Boolean).join(", ")}
                   </p>
                 )}
-                <div className="flex items-center gap-5 font-body text-[13px] text-warmgrijs">
+                <div className="flex flex-wrap items-center gap-5 font-body text-[13px] text-warmgrijs">
+                  <span className="flex items-center gap-1.5">
+                    <House size={15} />
+                    {eigenPlekje.residenceCount} {eigenPlekje.residenceCount === 1 ? "woning" : "woningen"}
+                  </span>
                   <span className="flex items-center gap-1.5">
                     <Users size={15} />
                     {eigenPlekje.memberCount} bewoners
@@ -176,19 +238,42 @@ export default async function WijkIndexPage() {
                   </span>
                 </div>
               </Link>
+            ) : eigenPlekje.telling <= 1 ? (
+              <div className="bg-white rounded-2xl p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] max-w-[560px]">
+                <div className="flex items-center gap-2 mb-2">
+                  <HandWaving size={18} className="text-terracotta" weight="fill" />
+                  <h3 className="font-display font-bold text-[18px] text-warmzwart">Goed om je erbij te hebben</h3>
+                </div>
+                {(eigenPlekje.street || eigenPlekje.city) && (
+                  <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-3">
+                    <MapPin size={14} />
+                    {[eigenPlekje.street, eigenPlekje.city].filter(Boolean).join(", ")}
+                  </p>
+                )}
+                <p className="font-body text-[15px] text-warmzwart mb-4">
+                  Je bent een van de eerste Neighbuur-bewoners in jouw omgeving. Je kunt Neighbuur gewoon gebruiken —
+                  zodra meer buren aansluiten, laten we je zien wat jullie samen kunnen regelen.
+                </p>
+                <Link href="/diensten" className="btn-secondary inline-flex">
+                  Ontdek diensten
+                  <ArrowRight size={14} weight="bold" />
+                </Link>
+              </div>
             ) : (
               <div className="bg-white rounded-2xl p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] max-w-[560px]">
+                <div className="flex items-center gap-2 mb-2">
+                  <House size={18} className="text-terracotta" weight="fill" />
+                  <h3 className="font-display font-bold text-[18px] text-warmzwart">Je buurt begint te groeien</h3>
+                </div>
                 {(eigenPlekje.street || eigenPlekje.city) && (
-                  <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-2">
+                  <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-3">
                     <MapPin size={14} />
                     {[eigenPlekje.street, eigenPlekje.city].filter(Boolean).join(", ")}
                   </p>
                 )}
                 <p className="font-body text-[15px] text-warmzwart">
-                  {eigenPlekje.telling === 1
-                    ? "Je bent de eerste bewoner uit jouw gebouw op Neighbuur."
-                    : `Er zijn al ${eigenPlekje.telling} woningen uit jouw gebouw actief op Neighbuur.`}{" "}
-                  Zodra er genoeg buren zijn, kun je samen een community starten via{" "}
+                  Er zijn inmiddels {eigenPlekje.telling} woningen uit jouw omgeving actief op Neighbuur. Zodra er
+                  genoeg buren zijn, kunnen jullie samen een community starten via{" "}
                   <Link href="/plan" className="text-terracotta underline">
                     Mijn Plan
                   </Link>
@@ -199,36 +284,36 @@ export default async function WijkIndexPage() {
           </div>
         )}
 
-        <h2 className="font-display font-bold text-[22px] text-warmzwart mb-5">Actieve wijken</h2>
+        <h2 className="font-display font-bold text-[22px] text-warmzwart mb-5">Actieve gebieden</h2>
 
-        {wijken.length === 0 ? (
-          <p className="font-body text-[15px] text-warmgrijs">Nog geen actieve wijken bekend.</p>
+        {gebiedenKaarten.length === 0 ? (
+          <p className="font-body text-[15px] text-warmgrijs">Nog geen actieve gebieden bekend.</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {wijken.map((w) => (
+            {gebiedenKaarten.map((k) => (
               <Link
-                key={w.id}
-                href={`/wijk/${w.slug}`}
+                key={k.key}
+                href={k.href}
                 className="bg-white rounded-2xl p-6 no-underline shadow-[0px_4px_10px_rgba(92,64,40,0.04)] hover:-translate-y-0.5 hover:shadow-[0px_8px_15px_rgba(92,64,40,0.08)] transition-all"
               >
                 <div className="flex items-start justify-between gap-2 mb-3">
-                  <h3 className="font-display font-bold text-[19px] text-warmzwart">{w.name}</h3>
+                  <h3 className="font-display font-bold text-[19px] text-warmzwart">{k.title}</h3>
                   <ArrowRight size={16} className="text-terracotta shrink-0 mt-1" weight="bold" />
                 </div>
-                <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-1">
-                  <MapPin size={14} />
-                  {w.city}
-                  {w.postal_code && ` · ${w.postal_code}`}
-                </p>
-                {w.home_count != null && (
-                  <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5">
-                    <House size={14} />
-                    {w.home_count} woningen
+                {(k.city || k.postalCode) && (
+                  <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5 mb-1">
+                    <MapPin size={14} />
+                    {k.city}
+                    {k.postalCode && ` · ${k.postalCode}`}
                   </p>
                 )}
-                <p className="font-body font-semibold text-[13px] text-terracotta mt-3">
-                  {communitiesPerWijk.get(w.id) ?? 0} {communitiesPerWijk.get(w.id) === 1 ? "actief blok" : "actieve blokken"}
-                </p>
+                {k.homeCount != null && (
+                  <p className="font-body text-[13px] text-warmgrijs flex items-center gap-1.5">
+                    <House size={14} />
+                    {k.homeCount} woningen
+                  </p>
+                )}
+                <p className="font-body font-semibold text-[13px] text-terracotta mt-3">{k.subMetric}</p>
               </Link>
             ))}
           </div>

@@ -29,6 +29,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
             Cijfers
           </Link>
+          <Link href="/admin/gebieden" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
+            Gebieden
+          </Link>
           <Link href="/admin/bewoners" className="text-body-sm font-medium text-warmzwart hover:text-terracotta">
             Bewoners
           </Link>

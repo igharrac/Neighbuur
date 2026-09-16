@@ -253,6 +253,42 @@ export interface Database {
           { foreignKeyName: "community_content_blocks_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
       };
+      admin_cluster_overview: {
+        Row: {
+          cluster_id: string | null;
+          cluster_name: string | null;
+          cluster_type: string | null;
+          city: string | null;
+          development_name: string | null;
+          residence_count: string | null;
+          resident_account_count: string | null;
+          community_count: string | null;
+          new_residences_30d: string | null;
+        };
+        Insert: {
+          cluster_id?: string | null;
+          cluster_name?: string | null;
+          cluster_type?: string | null;
+          city?: string | null;
+          development_name?: string | null;
+          residence_count?: string | null;
+          resident_account_count?: string | null;
+          community_count?: string | null;
+          new_residences_30d?: string | null;
+        };
+        Update: {
+          cluster_id?: string | null;
+          cluster_name?: string | null;
+          cluster_type?: string | null;
+          city?: string | null;
+          development_name?: string | null;
+          residence_count?: string | null;
+          resident_account_count?: string | null;
+          community_count?: string | null;
+          new_residences_30d?: string | null;
+        };
+        Relationships: [];
+      };
       auth_photos: {
         Row: {
           id: string;
@@ -697,6 +733,39 @@ export interface Database {
           { foreignKeyName: "group_discount_participants_group_discount_id_fkey"; columns: ["group_discount_id"]; isOneToOne: false; referencedRelation: "group_discounts"; referencedColumns: ["id"] },
           { foreignKeyName: "group_discount_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
+      };
+      admin_city_overview: {
+        Row: {
+          city: string | null;
+          residence_count: string | null;
+          resident_account_count: string | null;
+          cluster_count: string | null;
+          community_count: string | null;
+          new_residences_7d: string | null;
+          new_residences_30d: string | null;
+          new_residences_90d: string | null;
+        };
+        Insert: {
+          city?: string | null;
+          residence_count?: string | null;
+          resident_account_count?: string | null;
+          cluster_count?: string | null;
+          community_count?: string | null;
+          new_residences_7d?: string | null;
+          new_residences_30d?: string | null;
+          new_residences_90d?: string | null;
+        };
+        Update: {
+          city?: string | null;
+          residence_count?: string | null;
+          resident_account_count?: string | null;
+          cluster_count?: string | null;
+          community_count?: string | null;
+          new_residences_7d?: string | null;
+          new_residences_30d?: string | null;
+          new_residences_90d?: string | null;
+        };
+        Relationships: [];
       };
       residences: {
         Row: {
@@ -1186,6 +1255,7 @@ export interface Database {
         Row: {
           id: string | null;
           development_id: string | null;
+          residential_cluster_id: string | null;
           name: string | null;
           slug: string | null;
           type: string | null;
@@ -1195,12 +1265,15 @@ export interface Database {
           created_at: string | null;
           development_name: string | null;
           development_city: string | null;
+          city: string | null;
           member_count: string | null;
           review_count: string | null;
           active_deals: string | null;
+          residence_count: number | null;
         };
         Relationships: [
           { foreignKeyName: "community_overview_development_id_fkey"; columns: ["development_id"]; isOneToOne: false; referencedRelation: "developments"; referencedColumns: ["id"] },
+          { foreignKeyName: "community_overview_residential_cluster_id_fkey"; columns: ["residential_cluster_id"]; isOneToOne: false; referencedRelation: "residential_clusters"; referencedColumns: ["id"] },
         ];
       };
       professional_overview: {
@@ -1313,6 +1386,14 @@ export interface Database {
       anonymize_and_ban_account: {
         Args: { p_user_id: string };
         Returns: void;
+      };
+      count_residences_in_cluster_public: {
+        Args: { p_cluster_id: string };
+        Returns: number;
+      };
+      residential_cluster_city_public: {
+        Args: { p_cluster_id: string };
+        Returns: string | null;
       };
     };
     Enums: {
