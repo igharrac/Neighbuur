@@ -28,14 +28,14 @@ export function CategoryTile({ category }: { category: Category }) {
           <div className="w-full h-full bg-sage-50" />
         )}
       </div>
-      <div className="flex items-end justify-between gap-2 px-4 pt-3.5 pb-4">
-        <div className="min-w-0">
+      <div className="relative min-h-[88px] px-4 pt-3.5 pb-4">
+        <div className="min-w-0 pr-9">
           <h4 className="font-bold text-body-sm text-warmzwart leading-tight truncate">{naam}</h4>
           {beschrijving && (
             <p className="text-body-xs text-warmgrijs mt-0.5 leading-snug line-clamp-2">{beschrijving}</p>
           )}
         </div>
-        <span className="shrink-0 w-7 h-7 rounded-full bg-sage-100 text-sage flex items-center justify-center transition-colors group-hover:bg-sage group-hover:text-white">
+        <span className="absolute bottom-4 right-4 shrink-0 w-7 h-7 rounded-full bg-sage-100 text-sage flex items-center justify-center transition-colors group-hover:bg-sage group-hover:text-white">
           <ArrowRight size={14} weight="bold" />
         </span>
       </div>
