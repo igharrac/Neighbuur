@@ -3,6 +3,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { getOrCreateConversation } from "@/lib/gesprekken";
 import { notifyUser } from "@/lib/notify";
+import { meldBehoefteBijDrempel } from "@/lib/demand";
 
 export async function POST(request: Request) {
   const supabase = createServerSupabase();
@@ -79,6 +80,32 @@ export async function POST(request: Request) {
 
   if (boekingError || !boeking) {
     return NextResponse.json({ error: boekingError?.message ?? "Aanvraag opslaan is niet gelukt" }, { status: 500 });
+  }
+
+  // Behoefte-clustering: alleen relevant als de klant een bevestigde
+  // woning heeft binnen een cluster, en de boeking een categorie heeft.
+  // Faalt bewust stil — een notificatieprobleem mag de boeking nooit
+  // blokkeren, die is hierboven al succesvol opgeslagen.
+  if (body?.categorieId) {
+    try {
+      const { data: bewonerProfiel } = await admin
+        .from("resident_profiles")
+        .select("current_residence_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (bewonerProfiel?.current_residence_id) {
+        const { data: residence } = await admin
+          .from("residences")
+          .select("residential_cluster_id")
+          .eq("id", bewonerProfiel.current_residence_id)
+          .maybeSingle();
+        if (residence?.residential_cluster_id) {
+          await meldBehoefteBijDrempel(admin, { clusterId: residence.residential_cluster_id, categoryId: body.categorieId });
+        }
+      }
+    } catch (err) {
+      console.error("meldBehoefteBijDrempel mislukt:", err);
+    }
   }
 
   const gesprekId = await getOrCreateConversation(admin, user.id, vakman.user_id);

@@ -811,7 +811,7 @@ export interface Database {
       group_discounts: {
         Row: {
           id: string;
-          community_id: string;
+          community_id: string | null;
           category_id: string | null;
           title_nl: string;
           title_en: string;
@@ -822,10 +822,11 @@ export interface Database {
           price_group: number | null;
           active: boolean | null;
           created_at: string | null;
+          residential_cluster_id: string | null;
         };
         Insert: {
           id?: string;
-          community_id: string;
+          community_id?: string | null;
           category_id?: string | null;
           title_nl: string;
           title_en: string;
@@ -836,10 +837,11 @@ export interface Database {
           price_group?: number | null;
           active?: boolean | null;
           created_at?: string | null;
+          residential_cluster_id?: string | null;
         };
         Update: {
           id?: string;
-          community_id?: string;
+          community_id?: string | null;
           category_id?: string | null;
           title_nl?: string;
           title_en?: string;
@@ -850,10 +852,12 @@ export interface Database {
           price_group?: number | null;
           active?: boolean | null;
           created_at?: string | null;
+          residential_cluster_id?: string | null;
         };
         Relationships: [
           { foreignKeyName: "group_discounts_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
           { foreignKeyName: "group_discounts_category_id_fkey"; columns: ["category_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
+          { foreignKeyName: "group_discounts_residential_cluster_id_fkey"; columns: ["residential_cluster_id"]; isOneToOne: false; referencedRelation: "residential_clusters"; referencedColumns: ["id"] },
         ];
       };
       work_photos: {
@@ -1394,6 +1398,10 @@ export interface Database {
       residential_cluster_city_public: {
         Args: { p_cluster_id: string };
         Returns: string | null;
+      };
+      count_residences_with_category_booking: {
+        Args: { p_cluster_id: string; p_category_id: string };
+        Returns: number;
       };
     };
     Enums: {

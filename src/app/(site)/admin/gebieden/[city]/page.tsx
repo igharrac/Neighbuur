@@ -14,6 +14,7 @@ interface ClusterRow {
   resident_account_count: number;
   community_count: number;
   new_residences_30d: number;
+  topCategorie: DienstTelling | null;
 }
 
 interface CommunityRow {
@@ -71,6 +72,19 @@ async function laadMeestGevraagdeDiensten(residenceIds: string[]): Promise<Diens
     .slice(0, 6);
 }
 
+/**
+ * Zelfde bron als laadMeestGevraagdeDiensten, maar op cluster- i.p.v.
+ * stad-niveau — de granulariteit die de roadmap bedoelt met "3 buren
+ * willen een hovenier" (Fase 2). Alleen de populairste categorie, voor
+ * een compacte hint per cluster-rij.
+ */
+async function laadTopCategorieVoorCluster(clusterId: string): Promise<DienstTelling | null> {
+  const admin = createAdminSupabase();
+  const { data: residences } = await admin.from("residences").select("id").eq("residential_cluster_id", clusterId);
+  const top = await laadMeestGevraagdeDiensten((residences ?? []).map((r) => r.id));
+  return top[0] ?? null;
+}
+
 export default async function AdminGebiedPage({ params }: { params: { city: string } }) {
   const supabase = createServerSupabase();
   const {
@@ -98,7 +112,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
   };
 
   const { data: clusterData } = await supabase.from("admin_cluster_overview").select("*").eq("city", cityName);
-  const clusters: ClusterRow[] = ((clusterData ?? []) as unknown as Record<string, string | number | null>[])
+  const clustersZonderVraag = ((clusterData ?? []) as unknown as Record<string, string | number | null>[])
     .map((c) => ({
       cluster_id: String(c.cluster_id),
       cluster_name: c.cluster_name as string | null,
@@ -110,6 +124,10 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
       new_residences_30d: Number(c.new_residences_30d ?? 0),
     }))
     .sort((a, b) => b.residence_count - a.residence_count);
+
+  const clusters: ClusterRow[] = await Promise.all(
+    clustersZonderVraag.map(async (c) => ({ ...c, topCategorie: await laadTopCategorieVoorCluster(c.cluster_id) }))
+  );
 
   const overigeWoningen = Math.max(0, cityRow.residence_count - clusters.reduce((s, c) => s + c.residence_count, 0));
 
@@ -212,6 +230,12 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
                       {c.community_count} {c.community_count === 1 ? "community" : "communities"}
                       {c.new_residences_30d > 0 && ` · +${c.new_residences_30d} laatste 30d`}
                     </p>
+                    {c.topCategorie && (
+                      <p className="text-body-xs text-terracotta mt-1 flex items-center gap-1">
+                        <ChartBar size={12} weight="bold" />
+                        Populair: {c.topCategorie.categorieNaam} ({c.topCategorie.aantal}×)
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <span className={`text-body-xs font-semibold px-2 py-0.5 rounded-full ${ACTIVITEIT_KLASSE[clusterNiveau]}`}>

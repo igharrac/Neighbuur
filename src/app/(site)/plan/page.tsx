@@ -49,6 +49,19 @@ export default async function PlanPage() {
     .eq("user_id", user.id)
     .maybeSingle();
 
+  // Eén keer opgehaald, hergebruikt door zowel de buren-detectie als de
+  // cluster-gebonden wijkdeals hieronder — allebei onafhankelijk van of
+  // er al een community is.
+  let residentClusterId: string | null = null;
+  if (bewonerProfiel?.current_residence_id) {
+    const { data: residenceVoorCluster } = await supabase
+      .from("residences")
+      .select("residential_cluster_id")
+      .eq("id", bewonerProfiel.current_residence_id)
+      .maybeSingle();
+    residentClusterId = residenceVoorCluster?.residential_cluster_id ?? null;
+  }
+
   let community: { naam: string; slug: string; aantal_leden: number; wijk_naam: string | null } | null = null;
   if (bewonerProfiel?.community_id) {
     const { data: c } = await supabase
@@ -63,45 +76,37 @@ export default async function PlanPage() {
   // communityvorming) — alleen mogelijk als de woning al een cluster heeft
   // (bv. geen gebouwrelatie gevonden, of nog geen adres bevestigd).
   let detectie: DetectieResultaat | null = null;
-  if (!community && bewonerProfiel?.current_residence_id && bewonerProfiel.show_community_suggestions !== false) {
-    const { data: residence } = await supabase
-      .from("residences")
-      .select("residential_cluster_id")
-      .eq("id", bewonerProfiel.current_residence_id)
+  if (!community && residentClusterId && bewonerProfiel?.show_community_suggestions !== false) {
+    const clusterId = residentClusterId;
+    const { data: bestaande } = await supabase
+      .from("communities")
+      .select("id, name, slug")
+      .eq("residential_cluster_id", clusterId)
+      .neq("status", "dormant")
       .maybeSingle();
-    const clusterId = residence?.residential_cluster_id;
 
-    if (clusterId) {
-      const { data: bestaande } = await supabase
-        .from("communities")
-        .select("id, name, slug")
-        .eq("residential_cluster_id", clusterId)
-        .neq("status", "dormant")
+    if (bestaande) {
+      detectie = { type: "bestaande", name: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
+    } else {
+      const { data: cluster } = await supabase
+        .from("residential_clusters")
+        .select("community_threshold, development_id")
+        .eq("id", clusterId)
         .maybeSingle();
-
-      if (bestaande) {
-        detectie = { type: "bestaande", name: bestaande.name, slug: bestaande.slug, communityId: bestaande.id };
-      } else {
-        const { data: cluster } = await supabase
-          .from("residential_clusters")
-          .select("community_threshold, development_id")
-          .eq("id", clusterId)
+      let threshold = cluster?.community_threshold ?? undefined;
+      if (threshold == null && cluster?.development_id) {
+        const { data: development } = await supabase
+          .from("developments")
+          .select("community_threshold")
+          .eq("id", cluster.development_id)
           .maybeSingle();
-        let threshold = cluster?.community_threshold ?? undefined;
-        if (threshold == null && cluster?.development_id) {
-          const { data: development } = await supabase
-            .from("developments")
-            .select("community_threshold")
-            .eq("id", cluster.development_id)
-            .maybeSingle();
-          threshold = development?.community_threshold ?? undefined;
-        }
-        threshold = threshold ?? 3;
-
-        const { data: telling } = await supabase.rpc("count_residences_in_cluster", { p_cluster_id: clusterId });
-        const count = typeof telling === "number" ? telling : 1;
-        detectie = count >= threshold ? { type: "drempel", telling: count, threshold, clusterId } : { type: "vroeg", threshold };
+        threshold = development?.community_threshold ?? undefined;
       }
+      threshold = threshold ?? 3;
+
+      const { data: telling } = await supabase.rpc("count_residences_in_cluster", { p_cluster_id: clusterId });
+      const count = typeof telling === "number" ? telling : 1;
+      detectie = count >= threshold ? { type: "drempel", telling: count, threshold, clusterId } : { type: "vroeg", threshold };
     }
   }
 
@@ -146,12 +151,24 @@ export default async function PlanPage() {
     deelnemers: number;
     meegedaan: boolean;
   }[] = [];
-  if (bewonerProfiel?.community_id) {
-    const { data: gk } = await supabase
+  // Community-gebonden wijkdeals (bestaand) + cluster-gebonden wijkdeals
+  // (nieuw, Fase 2) — een bewoner zonder community kan ook al bij een
+  // deal horen die voor zijn/haar gebouw/blok is aangemaakt.
+  if (bewonerProfiel?.community_id || residentClusterId) {
+    let query = supabase
       .from("group_discounts")
       .select("id, title_nl, description_nl, min_participants, price_normal, price_group")
-      .eq("community_id", bewonerProfiel.community_id)
       .eq("active", true);
+
+    if (bewonerProfiel?.community_id && residentClusterId) {
+      query = query.or(`community_id.eq.${bewonerProfiel.community_id},residential_cluster_id.eq.${residentClusterId}`);
+    } else if (bewonerProfiel?.community_id) {
+      query = query.eq("community_id", bewonerProfiel.community_id);
+    } else if (residentClusterId) {
+      query = query.eq("residential_cluster_id", residentClusterId);
+    }
+
+    const { data: gk } = await query;
 
     for (const deal of gk ?? []) {
       const { count } = await supabase
@@ -271,6 +288,38 @@ export default async function PlanPage() {
           </div>
         )}
 
+        {/* ── Collectieve wijkdeals — bewust BUITEN de lege-staat-check.
+            Een community- of clusterdeal is relevant zodra je een
+            residence hebt, ook vóórdat je zelf ooit iets geboekt hebt
+            (Fase 2: cluster-gebonden deals, geen community meer nodig). ── */}
+        {groepskortingen.length > 0 && (
+          <div className="mb-8 max-w-[720px]">
+            <div className="flex items-center gap-2 mb-4">
+              <Tag size={18} className="text-terracotta" weight="fill" />
+              <h2 className="font-display font-bold text-[20px] text-warmzwart">Collectieve wijkdeals</h2>
+            </div>
+            <div className="flex flex-col gap-3">
+              {groepskortingen.map((deal) => (
+                <div key={deal.id} className="bg-white rounded-2xl p-5 flex items-center justify-between gap-4 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                  <div className="min-w-0">
+                    <p className="font-body font-bold text-[15px] text-warmzwart">{deal.titel}</p>
+                    {deal.beschrijving && (
+                      <p className="font-body text-[13px] text-warmgrijs-dark mt-0.5">{deal.beschrijving}</p>
+                    )}
+                    <p className="font-body text-[12px] text-warmgrijs mt-1">
+                      {deal.deelnemers} van {deal.minDeelnemers} buren aangemeld
+                      {deal.prijsGroep != null && ` · groepsprijs €${(deal.prijsGroep / 100).toFixed(0)}`}
+                    </p>
+                  </div>
+                  <span className="shrink-0 font-body font-semibold text-[13px] text-terracotta whitespace-nowrap">
+                    {deal.meegedaan ? "Je doet mee ✓" : "Bekijk wijkdeal →"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Lege staat ── */}
         {leeg && (
           <div className="bg-white rounded-[24px] p-10 sm:p-16 text-center shadow-[0px_8px_15px_rgba(92,64,40,0.06)]">
@@ -343,34 +392,6 @@ export default async function PlanPage() {
                             Bekijk vakman →
                           </Link>
                         )}
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {groepskortingen.length > 0 && (
-                <section>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Tag size={18} className="text-terracotta" weight="fill" />
-                    <h2 className="font-display font-bold text-[20px] text-warmzwart">Collectieve wijkdeals</h2>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {groepskortingen.map((deal) => (
-                      <div key={deal.id} className="bg-sand-light rounded-2xl p-5 flex items-center justify-between gap-4">
-                        <div className="min-w-0">
-                          <p className="font-body font-bold text-[15px] text-warmzwart">{deal.titel}</p>
-                          {deal.beschrijving && (
-                            <p className="font-body text-[13px] text-warmgrijs-dark mt-0.5">{deal.beschrijving}</p>
-                          )}
-                          <p className="font-body text-[12px] text-warmgrijs mt-1">
-                            {deal.deelnemers} van {deal.minDeelnemers} buren aangemeld
-                            {deal.prijsGroep != null && ` · groepsprijs €${(deal.prijsGroep / 100).toFixed(0)}`}
-                          </p>
-                        </div>
-                        <span className="shrink-0 font-body font-semibold text-[13px] text-terracotta whitespace-nowrap">
-                          {deal.meegedaan ? "Je doet mee ✓" : "Bekijk wijkdeal →"}
-                        </span>
                       </div>
                     ))}
                   </div>

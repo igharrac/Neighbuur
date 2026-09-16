@@ -180,6 +180,10 @@ const functionsBlock = `      calculate_profile_strength: {
       residential_cluster_city_public: {
         Args: { p_cluster_id: string };
         Returns: string | null;
+      };
+      count_residences_with_category_booking: {
+        Args: { p_cluster_id: string; p_category_id: string };
+        Returns: number;
       };`;
 
 const output = `/**
