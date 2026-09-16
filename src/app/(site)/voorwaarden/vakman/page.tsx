@@ -81,13 +81,13 @@ export default function VoorwaardenVakmanPage() {
           </section>
 
           <section>
-            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">7. Betalingen en commissie</h2>
+            <h2 className="font-display font-bold text-[20px] text-warmzwart mb-2">7. Betalingen</h2>
             <p>
-              Betalingen via het platform verlopen via onze betaaldienstverlener (Mollie). Neighbuur brengt een
-              commissie in rekening op boekingen die via het platform worden afgerond; de hoogte hiervan
-              communiceren we vooraf en kan per periode of categorie verschillen. Bij boekingen die je buiten het
-              platform om afrondt met een bewoner die je via Neighbuur hebt gevonden, gelden de voorwaarden die op
-              dat moment gecommuniceerd zijn.
+              Neighbuur is op dit moment gratis te gebruiken. Indien en zodra betaalde functies beschikbaar komen
+              (zoals het Pro-abonnement uit artikel 5), verlopen betalingen via een externe betaaldienstverlener
+              (bijvoorbeeld Mollie of Stripe). Prijzen, betaalvoorwaarden en eventuele commissie op boekingen
+              worden vóórdat je ervoor betaalt apart en duidelijk gecommuniceerd, en gelden pas nadat je daarmee
+              hebt ingestemd.
             </p>
           </section>
 
