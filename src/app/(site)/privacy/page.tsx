@@ -54,9 +54,8 @@ export default function PrivacyPage() {
                 (indien ingeschakeld) een pushnotificatie-abonnement van je browser.
               </li>
               <li>
-                <b>Betalingen:</b> Neighbuur is op dit moment gratis te gebruiken. Zodra betaalde functies
-                beschikbaar komen, verwerken wij transactiegegevens (bedrag, status) — je kaart- of bankgegevens
-                zelf verwerken we niet, dat gebeurt rechtstreeks bij een externe betaaldienstverlener.
+                <b>Betalingen:</b> transactiegegevens (bedrag, status) — je kaart- of bankgegevens zelf verwerken
+                wij niet; dat gebeurt rechtstreeks bij onze betaaldienstverlener (Mollie).
               </li>
             </ul>
           </section>
@@ -87,9 +86,8 @@ export default function PrivacyPage() {
             <p className="mb-3">We verkopen je gegevens nooit. We delen ze wel met:</p>
             <ul className="list-disc pl-5 space-y-2">
               <li>
-                <b>Verwerkers die het platform draaiend houden:</b> onze hostingpartij en database (Supabase, EU)
-                en onze e-maildienst voor transactionele mails (Resend). Zodra betaalde functies beschikbaar
-                komen, voegen we daar een betaaldienstverlener aan toe.
+                <b>Verwerkers die het platform draaiend houden:</b> onze hostingpartij en database (Supabase, EU),
+                onze e-maildienst voor transactionele mails (Resend), en onze betaaldienstverlener (Mollie).
               </li>
               <li>
                 <b>Andere gebruikers, alleen voor zover nodig:</b> een vakman die je boekt ziet je naam,
