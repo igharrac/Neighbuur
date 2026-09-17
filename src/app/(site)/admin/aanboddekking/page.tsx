@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Buildings, Users, Warning } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, Buildings, Users, Warning, SealCheck, MapPin } from "@phosphor-icons/react/dist/ssr";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 
@@ -8,6 +8,8 @@ interface CityRow {
   city: string;
   provider_count: number;
   category_count: number;
+  providers_with_local_experience: number;
+  providers_with_reviews: number;
 }
 
 export default async function AdminAanboddekkingPage() {
@@ -28,6 +30,8 @@ export default async function AdminAanboddekkingPage() {
     city: String(c.city),
     provider_count: Number(c.provider_count ?? 0),
     category_count: Number(c.category_count ?? 0),
+    providers_with_local_experience: Number(c.providers_with_local_experience ?? 0),
+    providers_with_reviews: Number(c.providers_with_reviews ?? 0),
   }));
 
   const { count: categorieCount } = await supabase
@@ -133,7 +137,7 @@ export default async function AdminAanboddekkingPage() {
                 </span>
                 <div className="min-w-0">
                   <h3 className="font-display font-bold text-[17px] text-warmzwart truncate">{s.city}</h3>
-                  <div className="flex items-center gap-4 text-body-xs text-warmgrijs mt-0.5">
+                  <div className="flex items-center gap-4 text-body-xs text-warmgrijs mt-0.5 flex-wrap">
                     <span className="flex items-center gap-1">
                       <Users size={13} />
                       {s.provider_count} providers
@@ -141,6 +145,18 @@ export default async function AdminAanboddekkingPage() {
                     <span>
                       {s.category_count}/{categorieCount ?? "?"} diensten vertegenwoordigd
                     </span>
+                    {s.providers_with_local_experience > 0 && (
+                      <span className="flex items-center gap-1">
+                        <MapPin size={13} />
+                        {s.providers_with_local_experience} met lokale ervaring
+                      </span>
+                    )}
+                    {s.providers_with_reviews > 0 && (
+                      <span className="flex items-center gap-1">
+                        <SealCheck size={13} />
+                        {s.providers_with_reviews} met reviews
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

@@ -78,6 +78,13 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
   const isOwner = !!user && user.id === professional.user_id;
   const heeftAlGereviewed = !!user && alleReviews.some((r) => r.author_id === user.id);
 
+  // Alleen geverifieerde reviews tellen mee — "opdrachten uitgevoerd",
+  // niet "reviews geschreven". Drempel (magBuurtAantalTonen) zit in de
+  // client-component, hier alleen het rauwe aantal berekenen.
+  const opdrachtenInJouwBuurt = communityId
+    ? alleReviews.filter((r) => r.verified && r.community_id === communityId).length
+    : 0;
+
   const { data: beschikbaarheidRows } = await supabase
     .from("availability")
     .select("date, status")
@@ -100,6 +107,7 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
       isLoggedIn={!!user}
       heeftAlGereviewed={heeftAlGereviewed}
       communityId={communityId}
+      opdrachtenInJouwBuurt={opdrachtenInJouwBuurt}
       beschikbaarheid={beschikbaarheid}
       categories={vakmanCategorieen}
     />

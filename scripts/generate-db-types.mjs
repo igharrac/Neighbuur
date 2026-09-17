@@ -188,6 +188,10 @@ const functionsBlock = `      calculate_profile_strength: {
       distance_km: {
         Args: { lat1: number; lng1: number; lat2: number; lng2: number };
         Returns: number;
+      };
+      provider_local_experience_by_city_public: {
+        Args: Record<string, never>;
+        Returns: { professional_id: string; city: string; completed_jobs: number }[];
       };`;
 
 const output = `/**

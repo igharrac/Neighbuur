@@ -20,6 +20,7 @@ import { ReviewForm } from "@/components/features/reviews/ReviewForm";
 import { ReviewCard } from "@/components/features/reviews/ReviewCard";
 import { BookingFlow } from "@/components/features/booking/BookingFlow";
 import { PremiumBadge } from "@/components/features/premium/PremiumBadge";
+import { magBuurtAantalTonen } from "@/lib/localTrust";
 import type { Category, ReviewComplete, ProfessionalProfile } from "@/types";
 
 type Tab = "beschikbaarheid" | "werk" | "reviews" | "over";
@@ -64,6 +65,7 @@ interface VakmanProfielClientProps {
   isLoggedIn: boolean;
   heeftAlGereviewed: boolean;
   communityId: string | null;
+  opdrachtenInJouwBuurt: number;
   beschikbaarheid: Record<string, "available" | "booked">;
   categories: Category[];
 }
@@ -76,6 +78,7 @@ export function VakmanProfielClient({
   isLoggedIn,
   heeftAlGereviewed,
   communityId,
+  opdrachtenInJouwBuurt,
   beschikbaarheid,
   categories,
 }: VakmanProfielClientProps) {
@@ -162,6 +165,12 @@ export function VakmanProfielClient({
               </div>
             ))}
           </div>
+          {magBuurtAantalTonen(opdrachtenInJouwBuurt) && (
+            <p className="text-body-sm font-semibold text-sage mt-3 flex items-center gap-1.5">
+              <MapPin size={15} weight="fill" />
+              {opdrachtenInJouwBuurt} opdrachten uitgevoerd in jouw buurt
+            </p>
+          )}
         </div>
         <div className="flex md:flex-col gap-3 justify-center flex-shrink-0">
           <button className="btn-primary">

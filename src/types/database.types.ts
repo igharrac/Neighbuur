@@ -214,16 +214,22 @@ export interface Database {
           city: string | null;
           provider_count: string | null;
           category_count: string | null;
+          providers_with_local_experience: string | null;
+          providers_with_reviews: string | null;
         };
         Insert: {
           city?: string | null;
           provider_count?: string | null;
           category_count?: string | null;
+          providers_with_local_experience?: string | null;
+          providers_with_reviews?: string | null;
         };
         Update: {
           city?: string | null;
           provider_count?: string | null;
           category_count?: string | null;
+          providers_with_local_experience?: string | null;
+          providers_with_reviews?: string | null;
         };
         Relationships: [];
       };
@@ -235,11 +241,14 @@ export interface Database {
           profile_strength: number | null;
           has_logo: boolean | null;
           has_description: boolean | null;
+          review_count: number | null;
+          avg_score: number | null;
           category_id: string | null;
           category_name: string | null;
           category_slug: string | null;
           city: string | null;
           distance_km: number | null;
+          local_completed_jobs: string | null;
         };
         Insert: {
           provider_id?: string | null;
@@ -248,11 +257,14 @@ export interface Database {
           profile_strength?: number | null;
           has_logo?: boolean | null;
           has_description?: boolean | null;
+          review_count?: number | null;
+          avg_score?: number | null;
           category_id?: string | null;
           category_name?: string | null;
           category_slug?: string | null;
           city?: string | null;
           distance_km?: number | null;
+          local_completed_jobs?: string | null;
         };
         Update: {
           provider_id?: string | null;
@@ -261,11 +273,14 @@ export interface Database {
           profile_strength?: number | null;
           has_logo?: boolean | null;
           has_description?: boolean | null;
+          review_count?: number | null;
+          avg_score?: number | null;
           category_id?: string | null;
           category_name?: string | null;
           category_slug?: string | null;
           city?: string | null;
           distance_km?: number | null;
+          local_completed_jobs?: string | null;
         };
         Relationships: [];
       };
@@ -1524,6 +1539,10 @@ export interface Database {
       distance_km: {
         Args: { lat1: number; lng1: number; lat2: number; lng2: number };
         Returns: number;
+      };
+      provider_local_experience_by_city_public: {
+        Args: Record<string, never>;
+        Returns: { professional_id: string; city: string; completed_jobs: number }[];
       };
     };
     Enums: {

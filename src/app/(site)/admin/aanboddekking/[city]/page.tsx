@@ -19,6 +19,8 @@ interface ProviderRow {
   has_logo: boolean;
   has_description: boolean;
   category_name: string;
+  local_completed_jobs: number;
+  review_count: number | null;
 }
 
 const PAGINA_GROOTTE = 40;
@@ -64,7 +66,9 @@ export default async function AdminAanboddekkingStadPage({
   // op provider_id omdat een provider met N diensten hier N rijen geeft.
   let providerQuery = supabase
     .from("admin_provider_coverage")
-    .select("provider_id, company_name, verified, profile_strength, has_logo, has_description, category_name, category_slug")
+    .select(
+      "provider_id, company_name, verified, profile_strength, has_logo, has_description, category_name, category_slug, local_completed_jobs, review_count"
+    )
     .eq("city", cityName);
   if (searchParams.categorie) providerQuery = providerQuery.eq("category_slug", searchParams.categorie);
   const { data: providerData } = await providerQuery;
@@ -81,6 +85,8 @@ export default async function AdminAanboddekkingStadPage({
   let providers = [...providersPerId.values()].sort((a, b) => (b.profile_strength ?? 0) - (a.profile_strength ?? 0));
 
   const totaalProviders = providers.length;
+  const metLokaleErvaring = providers.filter((p) => p.local_completed_jobs > 0).length;
+  const metReviews = providers.filter((p) => (p.review_count ?? 0) > 0).length;
 
   if (searchParams.status === "geverifieerd") providers = providers.filter((p) => p.verified);
   if (searchParams.status === "nietgeverifieerd") providers = providers.filter((p) => !p.verified);
@@ -112,7 +118,8 @@ export default async function AdminAanboddekkingStadPage({
       <h1 className="font-display text-display-sm text-warmzwart mb-1">{cityName}</h1>
       <p className="text-body-sm text-warmgrijs mb-8">
         {totaalProviders} providers · {categorieen.length}{" "}
-        {categorieen.length === 1 ? "dienst vertegenwoordigd" : "diensten vertegenwoordigd"}
+        {categorieen.length === 1 ? "dienst vertegenwoordigd" : "diensten vertegenwoordigd"} · {metLokaleErvaring} met lokale ervaring ·{" "}
+        {metReviews} met reviews
       </p>
 
       <h2 className="font-display font-bold text-[19px] text-warmzwart mb-4">Aanbod per dienst</h2>
@@ -229,6 +236,12 @@ export default async function AdminAanboddekkingStadPage({
                 <div className="flex items-center gap-3 shrink-0 text-body-xs text-warmgrijs">
                   {!p.has_logo && <span className="px-2 py-0.5 rounded-full bg-sand">geen logo</span>}
                   {!p.has_description && <span className="px-2 py-0.5 rounded-full bg-sand">geen omschrijving</span>}
+                  {p.local_completed_jobs > 0 && (
+                    <span className="px-2 py-0.5 rounded-full bg-sage-50 text-sage font-medium">{p.local_completed_jobs} opdrachten hier</span>
+                  )}
+                  {(p.review_count ?? 0) > 0 && (
+                    <span className="px-2 py-0.5 rounded-full bg-sage-50 text-sage font-medium">{p.review_count} reviews</span>
+                  )}
                   <span className="font-semibold text-warmzwart">{p.profile_strength ?? 0}%</span>
                 </div>
               </div>
