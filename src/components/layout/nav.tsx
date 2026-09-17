@@ -12,6 +12,7 @@ import {
   UserCircle,
   SignIn,
   Briefcase,
+  Gauge,
 } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -37,8 +38,14 @@ export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { dict } = useLang();
   const { user, profile, signOut } = useAuth();
-  const isProfessional = profile?.role === "professional";
   const router = useRouter();
+
+  const primaryLink =
+    profile?.role === "admin"
+      ? { href: "/admin", label: "Admin" }
+      : profile?.role === "professional"
+        ? { href: "/dashboard", label: "Dashboard" }
+        : { href: "/plan", label: dict.nav.myPlan };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-cream/85 backdrop-blur-xl border-b border-lijn">
@@ -47,14 +54,9 @@ export function Nav() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-6">
-          {user && isProfessional && (
-            <Link href="/dashboard" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
-              Dashboard
-            </Link>
-          )}
-          {user && !isProfessional && (
-            <Link href="/plan" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
-              {dict.nav.myPlan}
+          {user && (
+            <Link href={primaryLink.href} className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
+              {primaryLink.label}
             </Link>
           )}
           <Link href="/wijk" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
@@ -99,14 +101,9 @@ export function Nav() {
       {menuOpen && (
         <div className="md:hidden bg-cream border-b border-lijn px-6 py-4 animate-fade-in">
           <div className="flex flex-col gap-3">
-            {user && isProfessional && (
-              <Link href="/dashboard" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
-                Dashboard
-              </Link>
-            )}
-            {user && !isProfessional && (
-              <Link href="/plan" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
-                {dict.nav.myPlan}
+            {user && (
+              <Link href={primaryLink.href} className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
+                {primaryLink.label}
               </Link>
             )}
             <Link href="/wijk" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
@@ -156,14 +153,18 @@ export function MobileBar() {
   const { dict } = useLang();
   const pathname = usePathname();
   const { user, profile } = useAuth();
-  const isProfessional = profile?.role === "professional";
   const ongelezenBerichten = useOngelezenBerichten();
 
-  const items = user
+  const primaryItem =
+    profile?.role === "admin"
+      ? { href: "/admin", icon: Gauge, label: "Admin" }
+      : profile?.role === "professional"
+        ? { href: "/dashboard", icon: Briefcase, label: "Dashboard" }
+        : { href: "/plan", icon: House, label: dict.nav.myPlan };
+
+  const items: { href: string; icon: typeof House; label: string; badge?: number }[] = user
     ? [
-        isProfessional
-          ? { href: "/dashboard", icon: Briefcase, label: "Dashboard" }
-          : { href: "/plan", icon: House, label: dict.nav.myPlan },
+        primaryItem,
         { href: "/wijk", icon: UserCircle, label: dict.nav.myNeighbourhood },
         { href: "/zoeken", icon: MagnifyingGlass, label: "Zoeken" },
         { href: "/berichten", icon: ChatCircle, label: "Berichten", badge: ongelezenBerichten },
