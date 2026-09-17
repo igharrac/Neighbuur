@@ -11,9 +11,11 @@ import { ImageUploader } from "@/components/admin/ImageUploader";
 import { WerkFotoGrid } from "@/components/features/vakman/WerkFotoGrid";
 import { BeschikbaarheidEditor } from "@/components/features/vakman/BeschikbaarheidEditor";
 import { AccountActions } from "@/components/features/profiel/AccountActions";
+import { CategoryMultiSelect } from "@/components/features/vakman/CategoryMultiSelect";
 import type { Category, ProfessionalProfile } from "@/types";
 
 const STRAAL_OPTIES = [5, 10, 15, 25];
+const MAX_SPECIALTIES = 3;
 
 const CONTACT_VOORKEUR_LABELS: Record<ProfessionalProfile["contact_preference"], string> = {
   phone: "Telefoon",
@@ -41,7 +43,7 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
   const [savingVerrijking, setSavingVerrijking] = useState(false);
 
   const [bedrijfsnaam, setBedrijfsnaam] = useState(professional.company_name);
-  const [hoofdcategorieId, setHoofdcategorieId] = useState(professional.specialties[0] ?? "");
+  const [specialtyIds, setSpecialtyIds] = useState<string[]>(professional.specialties ?? []);
   const [postcode, setPostcode] = useState(professional.service_area_postcode ?? "");
   const [straal, setStraal] = useState(professional.service_area_km);
   const [contactVoorkeur, setContactVoorkeur] = useState(professional.contact_preference);
@@ -107,7 +109,7 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
       .from("professional_profiles")
       .update({
         company_name: bedrijfsnaam,
-        specialties: hoofdcategorieId ? [hoofdcategorieId] : [],
+        specialties: specialtyIds,
         service_area_postcode: postcode || null,
         service_area_km: straal,
         contact_preference: contactVoorkeur,
@@ -188,15 +190,14 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
           </div>
 
           <div>
-            <label className="text-body-sm font-semibold block mb-1.5">Hoofdcategorie</label>
-            <select className="input" value={hoofdcategorieId} onChange={(e) => setHoofdcategorieId(e.target.value)}>
-              <option value="">Kies een categorie...</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name_nl}
-                </option>
-              ))}
-            </select>
+            <label className="text-body-sm font-semibold block mb-1.5">Diensten die je aanbiedt</label>
+            <CategoryMultiSelect
+              categories={categories}
+              selectedIds={specialtyIds}
+              onChange={setSpecialtyIds}
+              max={MAX_SPECIALTIES}
+              countLabelTemplate="{count} van {max} geselecteerd"
+            />
           </div>
 
           <div>

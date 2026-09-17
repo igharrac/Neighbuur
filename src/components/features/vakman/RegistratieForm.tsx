@@ -12,6 +12,7 @@ import { useAuthPhoto } from "@/lib/hooks/useAuthPhoto";
 import { AuthSplitScreen } from "@/components/features/auth/AuthSplitScreen";
 import { AuthQuoteCard, AuthRatingBadge } from "@/components/features/auth/AuthQuoteCard";
 import { KvkInput, isValidKvK } from "@/components/features/vakman/KvkInput";
+import { CategoryMultiSelect } from "@/components/features/vakman/CategoryMultiSelect";
 import { slugify } from "@/lib/utils";
 import type { Category } from "@/types";
 
@@ -20,6 +21,7 @@ type AuthStep = "start" | "checking-email";
 
 const STRAAL_OPTIES = [5, 10, 15, 25];
 const RESEND_COOLDOWN = 30;
+const MAX_SPECIALTIES = 3;
 
 export function RegistratieForm({ refBron }: { refBron?: string }) {
   const router = useRouter();
@@ -41,7 +43,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   const [bedrijfsnaam, setBedrijfsnaam] = useState("");
   const [kvkNummer, setKvkNummer] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [hoofdcategorieId, setHoofdcategorieId] = useState("");
+  const [specialtyIds, setSpecialtyIds] = useState<string[]>([]);
   const [postcode, setPostcode] = useState("");
   const [straal, setStraal] = useState(15);
 
@@ -134,7 +136,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   }
 
   function canContinueStep2() {
-    return bedrijfsnaam.trim().length > 0 && isValidKvK(kvkNummer) && hoofdcategorieId;
+    return bedrijfsnaam.trim().length > 0 && isValidKvK(kvkNummer) && specialtyIds.length > 0;
   }
 
   async function handleFinish() {
@@ -196,7 +198,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       company_name: bedrijfsnaam,
       slug,
       kvk_number: kvkNummer.replace(/\s/g, ""),
-      specialties: [hoofdcategorieId],
+      specialties: specialtyIds,
       contact_preference: contactVoorkeur,
       service_area_postcode: postcode || null,
       service_area_km: straal,
@@ -352,18 +354,15 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
             </div>
 
             <label className="text-body-sm font-semibold block mb-1.5">{dict.registratie.categoryLabel}</label>
-            <select
-              className="input mb-5"
-              value={hoofdcategorieId}
-              onChange={(e) => setHoofdcategorieId(e.target.value)}
-            >
-              <option value="">{dict.registratie.categoryPlaceholder}</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name_nl}
-                </option>
-              ))}
-            </select>
+            <div className="mb-5">
+              <CategoryMultiSelect
+                categories={categories}
+                selectedIds={specialtyIds}
+                onChange={setSpecialtyIds}
+                max={MAX_SPECIALTIES}
+                countLabelTemplate={dict.registratie.categoryCountLabel}
+              />
+            </div>
 
             <label className="text-body-sm font-semibold block mb-1.5">{dict.registratie.areaLabel}</label>
             <div className="flex gap-2 mb-6">
