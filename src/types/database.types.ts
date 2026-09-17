@@ -64,6 +64,9 @@ export interface Database {
           stripe_customer_id: string | null;
           requests_this_month: number | null;
           requests_limit: number | null;
+          service_area_lat: number | null;
+          service_area_lng: number | null;
+          service_area_city: string | null;
         };
         Insert: {
           id?: string;
@@ -95,6 +98,9 @@ export interface Database {
           stripe_customer_id?: string | null;
           requests_this_month?: number | null;
           requests_limit?: number | null;
+          service_area_lat?: number | null;
+          service_area_lng?: number | null;
+          service_area_city?: string | null;
         };
         Update: {
           id?: string;
@@ -126,6 +132,9 @@ export interface Database {
           stripe_customer_id?: string | null;
           requests_this_month?: number | null;
           requests_limit?: number | null;
+          service_area_lat?: number | null;
+          service_area_lng?: number | null;
+          service_area_city?: string | null;
         };
         Relationships: [
           { foreignKeyName: "professional_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
@@ -200,6 +209,66 @@ export interface Database {
           { foreignKeyName: "review_replies_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
         ];
       };
+      admin_provider_coverage_by_city: {
+        Row: {
+          city: string | null;
+          provider_count: string | null;
+          category_count: string | null;
+        };
+        Insert: {
+          city?: string | null;
+          provider_count?: string | null;
+          category_count?: string | null;
+        };
+        Update: {
+          city?: string | null;
+          provider_count?: string | null;
+          category_count?: string | null;
+        };
+        Relationships: [];
+      };
+      admin_provider_coverage: {
+        Row: {
+          provider_id: string | null;
+          company_name: string | null;
+          verified: boolean | null;
+          profile_strength: number | null;
+          has_logo: boolean | null;
+          has_description: boolean | null;
+          category_id: string | null;
+          category_name: string | null;
+          category_slug: string | null;
+          city: string | null;
+          distance_km: number | null;
+        };
+        Insert: {
+          provider_id?: string | null;
+          company_name?: string | null;
+          verified?: boolean | null;
+          profile_strength?: number | null;
+          has_logo?: boolean | null;
+          has_description?: boolean | null;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_slug?: string | null;
+          city?: string | null;
+          distance_km?: number | null;
+        };
+        Update: {
+          provider_id?: string | null;
+          company_name?: string | null;
+          verified?: boolean | null;
+          profile_strength?: number | null;
+          has_logo?: boolean | null;
+          has_description?: boolean | null;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_slug?: string | null;
+          city?: string | null;
+          distance_km?: number | null;
+        };
+        Relationships: [];
+      };
       conversation_participants: {
         Row: {
           conversation_id: string;
@@ -217,6 +286,30 @@ export interface Database {
           { foreignKeyName: "conversation_participants_conversation_id_fkey"; columns: ["conversation_id"]; isOneToOne: false; referencedRelation: "conversations"; referencedColumns: ["id"] },
           { foreignKeyName: "conversation_participants_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
         ];
+      };
+      admin_provider_coverage_by_city_category: {
+        Row: {
+          city: string | null;
+          category_id: string | null;
+          category_name: string | null;
+          category_slug: string | null;
+          provider_count: string | null;
+        };
+        Insert: {
+          city?: string | null;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_slug?: string | null;
+          provider_count?: string | null;
+        };
+        Update: {
+          city?: string | null;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_slug?: string | null;
+          provider_count?: string | null;
+        };
+        Relationships: [];
       };
       community_content_blocks: {
         Row: {
@@ -483,6 +576,27 @@ export interface Database {
           { foreignKeyName: "bookings_category_id_fkey"; columns: ["category_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
           { foreignKeyName: "bookings_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
         ];
+      };
+      provider_city_centroids: {
+        Row: {
+          city: string | null;
+          lat: number | null;
+          lng: number | null;
+          providers_based_here: string | null;
+        };
+        Insert: {
+          city?: string | null;
+          lat?: number | null;
+          lng?: number | null;
+          providers_based_here?: string | null;
+        };
+        Update: {
+          city?: string | null;
+          lat?: number | null;
+          lng?: number | null;
+          providers_based_here?: string | null;
+        };
+        Relationships: [];
       };
       invitations: {
         Row: {
@@ -1401,6 +1515,10 @@ export interface Database {
       };
       count_residences_with_category_booking: {
         Args: { p_cluster_id: string; p_category_id: string };
+        Returns: number;
+      };
+      distance_km: {
+        Args: { lat1: number; lng1: number; lat2: number; lng2: number };
         Returns: number;
       };
     };

@@ -184,6 +184,10 @@ const functionsBlock = `      calculate_profile_strength: {
       count_residences_with_category_booking: {
         Args: { p_cluster_id: string; p_category_id: string };
         Returns: number;
+      };
+      distance_km: {
+        Args: { lat1: number; lng1: number; lat2: number; lng2: number };
+        Returns: number;
       };`;
 
 const output = `/**

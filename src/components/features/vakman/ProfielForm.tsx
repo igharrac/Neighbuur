@@ -76,6 +76,32 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
 
   async function handleSaveBasis() {
     setSavingBasis(true);
+
+    // Postcode gewijzigd? Dan het middelpunt opnieuw opzoeken — nodig
+    // om coverage (vestigingslocatie ≠ werkgebied) uit te kunnen
+    // rekenen. Faalt de lookup, dan slaan we gewoon op zonder
+    // coördinaten (zichtbaar als "onvolledig werkgebied" in admin) i.p.v.
+    // opslaan te blokkeren op een externe dienst die haperde.
+    let geoFields: { service_area_lat: number | null; service_area_lng: number | null; service_area_city: string | null } | null = null;
+    if (postcode && postcode !== (professional.service_area_postcode ?? "")) {
+      try {
+        const res = await fetch("/api/vakman/werkgebied", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postcode }),
+        });
+        const data = await res.json();
+        if (data.found) {
+          geoFields = { service_area_lat: data.lat, service_area_lng: data.lng, service_area_city: data.city };
+        } else {
+          showToast("Postcode niet herkend — werkgebied opgeslagen zonder locatiegegevens.", "error");
+          geoFields = { service_area_lat: null, service_area_lng: null, service_area_city: null };
+        }
+      } catch {
+        showToast("Postcode opzoeken lukte niet, probeer later opnieuw.", "error");
+      }
+    }
+
     const supabase = createClient();
     const { error } = await supabase
       .from("professional_profiles")
@@ -85,6 +111,7 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
         service_area_postcode: postcode || null,
         service_area_km: straal,
         contact_preference: contactVoorkeur,
+        ...(geoFields ?? {}),
       })
       .eq("id", professional.id);
 
@@ -175,7 +202,7 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
           <div>
             <label className="text-body-sm font-semibold block mb-1.5">Werkgebied</label>
             <div className="flex gap-2">
-              <input className="input flex-1" placeholder="Postcode" value={postcode} onChange={(e) => setPostcode(e.target.value)} />
+              <input className="input flex-1" placeholder="Postcode vestiging" value={postcode} onChange={(e) => setPostcode(e.target.value)} />
               <select className="input !w-[110px]" value={straal} onChange={(e) => setStraal(Number(e.target.value))}>
                 {STRAAL_OPTIES.map((km) => (
                   <option key={km} value={km}>
@@ -184,6 +211,9 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
                 ))}
               </select>
             </div>
+            <p className="text-body-xs text-warmgrijs mt-1">
+              Waar je gevestigd bent, plus hoe ver je daar vandaan werkt — dat bepaalt in welke plaatsen je zichtbaar bent, niet alleen je eigen vestigingsplaats.
+            </p>
           </div>
 
           <div>

@@ -106,6 +106,50 @@ function docToFormatted(doc: LocatieserverDoc): string {
   return doc.weergavenaam;
 }
 
+export interface PostcodeCentroid {
+  city: string | null;
+  municipality: string | null;
+  latitude: number;
+  longitude: number;
+}
+
+/**
+ * Geeft het (gemiddelde) middelpunt van een 4-cijferig postcode-gebied —
+ * voor het vakman-werkgebied, dat bewust geen huisnummer kent (een
+ * provider geeft een gebied op, geen adres). Zelfde PDOK Locatieserver
+ * als resolveAddress, nu met een prefix-wildcard op `type:postcode`
+ * i.p.v. het exacte `type:adres`-pad. Neemt de eerste treffer — de
+ * 6-cijferige postcodes binnen één 4-cijferig gebied liggen typisch
+ * een paar honderd meter uit elkaar, ruim genoeg voor een straal-
+ * berekening op stadsniveau.
+ */
+export async function resolvePostcode4Centroid(postcode4: string): Promise<PostcodeCentroid | null> {
+  const params = new URLSearchParams();
+  params.append("q", "*");
+  params.append("fq", `postcode:${postcode4}*`);
+  params.append("fq", "type:postcode");
+  params.append("fl", "postcode,woonplaatsnaam,gemeentenaam,centroide_ll");
+  params.append("rows", "1");
+
+  const res = await fetch(`${LOCATIESERVER_BASE}/free?${params.toString()}`);
+  if (!res.ok) throw new Error(`Locatieserver gaf status ${res.status}`);
+  const data = await res.json();
+  const doc = data?.response?.docs?.[0] as
+    | { woonplaatsnaam?: string; gemeentenaam?: string; centroide_ll?: string }
+    | undefined;
+  if (!doc) return null;
+
+  const { lat, lng } = parsePoint(doc.centroide_ll ?? null);
+  if (lat === null || lng === null) return null;
+
+  return {
+    city: doc.woonplaatsnaam ?? null,
+    municipality: doc.gemeentenaam ?? null,
+    latitude: lat,
+    longitude: lng,
+  };
+}
+
 /**
  * Zoekt een adres op exacte postcode + huisnummer. Bij meerdere treffers
  * (verschillende toevoegingen op hetzelfde huisnummer) en een opgegeven

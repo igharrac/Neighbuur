@@ -140,6 +140,32 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   async function handleFinish() {
     if (!user) return;
     setSaving(true);
+
+    // Postcode → middelpunt, nodig voor coverage-berekeningen (vestiging
+    // ≠ werkgebied). Faalt de lookup, dan gaat de registratie gewoon
+    // door zonder coördinaten — zichtbaar als "onvolledig werkgebied"
+    // in admin, i.p.v. de registratie te blokkeren op een externe dienst.
+    let geoFields: { service_area_lat: number | null; service_area_lng: number | null; service_area_city: string | null } = {
+      service_area_lat: null,
+      service_area_lng: null,
+      service_area_city: null,
+    };
+    if (postcode) {
+      try {
+        const res = await fetch("/api/vakman/werkgebied", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postcode }),
+        });
+        const data = await res.json();
+        if (data.found) {
+          geoFields = { service_area_lat: data.lat, service_area_lng: data.lng, service_area_city: data.city };
+        }
+      } catch {
+        // Stil falen — postcode zelf is al opgeslagen, de coördinaten zijn een verrijking.
+      }
+    }
+
     const supabase = createClient();
 
     const { error: profielError } = await supabase.from("profiles").insert({
@@ -174,6 +200,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       contact_preference: contactVoorkeur,
       service_area_postcode: postcode || null,
       service_area_km: straal,
+      ...geoFields,
       registration_source: refBron ?? null,
       profile_strength: 20,
     });

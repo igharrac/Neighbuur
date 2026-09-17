@@ -38,6 +38,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/vakmensen" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Vakmensen
           </Link>
+          <Link href="/admin/aanboddekking" className="text-body-sm font-medium text-warmzwart hover:text-sage">
+            Aanboddekking
+          </Link>
           <Link href="/admin/categorieen" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Categorieën
           </Link>
