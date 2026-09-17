@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { House, ArrowLeft, Users, Sparkle, MapPin } from "@phosphor-icons/react";
@@ -33,7 +33,17 @@ interface DevelopmentPhase {
   name: string;
 }
 
+// useSearchParams() vereist een Suspense-boundary zodra de pagina
+// statisch geprerenderd kan worden (zie login/page.tsx voor toelichting).
 export default function OnboardingPage() {
+  return (
+    <Suspense fallback={null}>
+      <OnboardingPageInner />
+    </Suspense>
+  );
+}
+
+function OnboardingPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invite = searchParams.get("invite");

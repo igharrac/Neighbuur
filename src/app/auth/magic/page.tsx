@@ -1,8 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+
+const LADEN = (
+  <div className="min-h-screen flex items-center justify-center px-6">
+    <p className="text-body text-warmgrijs">Bezig met inloggen…</p>
+  </div>
+);
 
 /**
  * Bridge-pagina voor e-mail-inloglinks (signInWithOtp), die bewust de
@@ -12,8 +18,19 @@ import { createClient } from "@/lib/supabase";
  * is nooit zichtbaar voor de server (/auth/callback/route.ts handelt
  * alleen de PKCE ?code=-flow van Google-login af), dus dit is een
  * losse client-pagina die het fragment zelf uitleest en de sessie zet.
+ *
+ * useSearchParams() vereist een Suspense-boundary zodra de pagina
+ * statisch geprerenderd kan worden (zie login/page.tsx voor toelichting).
  */
 export default function MagicLoginPage() {
+  return (
+    <Suspense fallback={LADEN}>
+      <MagicLoginPageInner />
+    </Suspense>
+  );
+}
+
+function MagicLoginPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [fout, setFout] = useState<string | null>(null);

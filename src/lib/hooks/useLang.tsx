@@ -35,6 +35,7 @@ export function LangProvider({
       const stored = localStorage.getItem(STORAGE_KEY) as Lang | null;
       if (stored && stored !== lang && (stored === "nl" || stored === "en")) {
         setLangState(stored);
+        document.documentElement.lang = stored;
       }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps

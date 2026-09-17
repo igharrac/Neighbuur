@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { EnvelopeSimple } from "@phosphor-icons/react";
@@ -14,7 +14,18 @@ type Step = "start" | "checking-email";
 
 const RESEND_COOLDOWN = 30;
 
+// useSearchParams() vereist een Suspense-boundary zodra de pagina
+// (mede dankzij het verwijderen van de globale cookies()-aanroep in de
+// root layout) statisch geprerenderd kan worden — anders faalt de build.
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
+  );
+}
+
+function LoginPageInner() {
   const searchParams = useSearchParams();
   const invite = searchParams.get("invite");
   const next = searchParams.get("next");

@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
 import { LangProvider } from "@/lib/hooks/useLang";
 import { AuthProvider } from "@/lib/hooks/useAuth";
 import { ToastProvider } from "@/components/ui/Toast";
@@ -43,8 +42,12 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieLang = cookies().get("nt_lang")?.value;
-  const initialLang: Lang = cookieLang === "en" ? "en" : "nl";
+  // Geen cookies() hier — dat zou élke pagina in de site dwingen tot
+  // volledig dynamisch renderen (nooit ISR-cachebaar), voor iets dat
+  // toch al client-side gecorrigeerd wordt (zie LangProvider's eigen
+  // localStorage-check op mount). Altijd "nl" server-side, EN-gebruikers
+  // zien heel even NL voordat de bestaande correctie hun voorkeur toepast.
+  const initialLang: Lang = "nl";
 
   return (
     <html lang={initialLang}>

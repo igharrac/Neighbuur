@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -24,6 +24,24 @@ import { magBuurtAantalTonen } from "@/lib/localTrust";
 import type { Category, ReviewComplete, ProfessionalProfile } from "@/types";
 
 type Tab = "beschikbaarheid" | "werk" | "reviews" | "over";
+
+interface Persoonlijk {
+  isLoggedIn: boolean;
+  isOwner: boolean;
+  heeftAlGereviewed: boolean;
+  votedReviewIds: string[];
+  communityId: string | null;
+  opdrachtenInJouwBuurt: number;
+}
+
+const PERSOONLIJK_LEEG: Persoonlijk = {
+  isLoggedIn: false,
+  isOwner: false,
+  heeftAlGereviewed: false,
+  votedReviewIds: [],
+  communityId: null,
+  opdrachtenInJouwBuurt: 0,
+};
 
 const CONTACT_VOORKEUR_LABELS: Record<ProfessionalProfile["contact_preference"], string> = {
   phone: "Telefoon",
@@ -57,53 +75,99 @@ function buildDagen(aantal: number): Date[] {
   return dagen;
 }
 
+/**
+ * Leest ?review={boekingId} uit de URL. Eigen componentje omdat
+ * useSearchParams() een Suspense-boundary vereist zodra de pagina
+ * (dankzij generateStaticParams) statisch geprerenderd wordt — die
+ * boundary hier lokaal houden i.p.v. om de hele pagina, anders zou de
+ * hoofdinhoud niet meer instant uit de ISR-cache getoond worden.
+ */
+function ReviewParamLezer({ onFound }: { onFound: (boekingId: string) => void }) {
+  const searchParams = useSearchParams();
+  const boekingId = searchParams.get("review");
+  useEffect(() => {
+    if (boekingId) onFound(boekingId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boekingId]);
+  return null;
+}
+
 interface VakmanProfielClientProps {
   professional: ProfessionalProfile;
   reviews: ReviewComplete[];
-  votedReviewIds: string[];
-  isOwner: boolean;
-  isLoggedIn: boolean;
-  heeftAlGereviewed: boolean;
-  communityId: string | null;
-  opdrachtenInJouwBuurt: number;
   beschikbaarheid: Record<string, "available" | "booked">;
   categories: Category[];
+  isDeactivated: boolean;
 }
 
 export function VakmanProfielClient({
   professional,
   reviews,
-  votedReviewIds,
-  isOwner,
-  isLoggedIn,
-  heeftAlGereviewed,
-  communityId,
-  opdrachtenInJouwBuurt,
   beschikbaarheid,
   categories,
+  isDeactivated,
 }: VakmanProfielClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [tab, setTab] = useState<Tab>("beschikbaarheid");
   const [alleReviews, setAlleReviews] = useState(reviews);
   const [reviewFormOpen, setReviewFormOpen] = useState(false);
   const [reviewBoekingId, setReviewBoekingId] = useState<string | null>(null);
+  const [pendingReviewBoekingId, setPendingReviewBoekingId] = useState<string | null>(null);
   const [bookingFlowOpen, setBookingFlowOpen] = useState(false);
-  const votedSet = new Set(votedReviewIds);
+  const [persoonlijk, setPersoonlijk] = useState<Persoonlijk>(PERSOONLIJK_LEEG);
+  const [persoonlijkGeladen, setPersoonlijkGeladen] = useState(false);
+  const { isLoggedIn, isOwner, heeftAlGereviewed, communityId, opdrachtenInJouwBuurt } = persoonlijk;
+  const votedSet = new Set(persoonlijk.votedReviewIds);
 
   const initiaal = professional.company_name.charAt(0).toUpperCase();
   const dagen = buildDagen(14);
 
-  // Vanuit het review-verzoek (24u na afronding) komt de gebruiker binnen
-  // met ?review={boeking_id} — open direct het formulier, vooringevuld.
+  // Inlog-afhankelijk deel apart ophalen (zie page.tsx) — houdt de
+  // publieke hoofdinhoud ISR-cachebaar. Wordt in de praktijk vrijwel
+  // altijd binnen een fractie van een seconde na de eerste render
+  // opgehaald; tot die tijd tonen we de uitgelogde/vreemdeling-variant.
   useEffect(() => {
-    const boekingId = searchParams.get("review");
-    if (boekingId && isLoggedIn && !isOwner && !heeftAlGereviewed) {
-      setReviewBoekingId(boekingId);
+    let geannuleerd = false;
+    fetch("/api/vakman/persoonlijk", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ professionalId: professional.id }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (geannuleerd) return;
+        setPersoonlijk({
+          isLoggedIn: !!json.isLoggedIn,
+          isOwner: !!json.isOwner,
+          heeftAlGereviewed: !!json.heeftAlGereviewed,
+          votedReviewIds: json.votedReviewIds ?? [],
+          communityId: json.communityId ?? null,
+          opdrachtenInJouwBuurt: json.opdrachtenInJouwBuurt ?? 0,
+        });
+        setPersoonlijkGeladen(true);
+      })
+      .catch(() => setPersoonlijkGeladen(true));
+    return () => {
+      geannuleerd = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professional.id]);
+
+  // Vanuit het review-verzoek (24u na afronding) komt de gebruiker binnen
+  // met ?review={boeking_id} — pas openen zodra we weten of hij al
+  // gereviewd heeft (anders knippert het formulier soms onnodig open).
+  // pendingReviewBoekingId komt van ReviewParamLezer hieronder (los
+  // component, want useSearchParams() vereist een eigen Suspense-
+  // boundary — die mag niet de hele pagina omvatten, anders verdwijnt
+  // het voordeel van de statisch gecachede hoofdinhoud).
+  useEffect(() => {
+    if (!persoonlijkGeladen || !pendingReviewBoekingId) return;
+    if (isLoggedIn && !isOwner && !heeftAlGereviewed) {
+      setReviewBoekingId(pendingReviewBoekingId);
       setReviewFormOpen(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [persoonlijkGeladen, pendingReviewBoekingId]);
 
   function handleSchrijfReview() {
     if (!isLoggedIn) {
@@ -122,8 +186,24 @@ export function VakmanProfielClient({
     setBookingFlowOpen(true);
   }
 
+  // Gepauzeerd profiel: standaard de neutrale melding tonen (veilige
+  // aanname "bezoeker is geen eigenaar") totdat het persoonlijke deel
+  // bevestigt dat de bezoeker wél de eigenaar is — nooit eerst de volle
+  // inhoud laten zien en die daarna pas verbergen.
+  if (isDeactivated && !(persoonlijkGeladen && isOwner)) {
+    return (
+      <div className="max-w-[480px] mx-auto px-6 py-24 text-center">
+        <h1 className="font-display text-display-sm text-warmzwart mb-2">Dit profiel is tijdelijk niet actief</h1>
+        <p className="text-body text-warmgrijs">Deze vakman heeft zijn profiel gepauzeerd. Kom later nog eens terug.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8">
+      <Suspense fallback={null}>
+        <ReviewParamLezer onFound={setPendingReviewBoekingId} />
+      </Suspense>
       {/* ── Hero card ── */}
       <div className="card p-8 flex flex-col md:flex-row gap-7 mb-7">
         {professional.logo_url ? (
@@ -365,8 +445,12 @@ export function VakmanProfielClient({
         onSuccess={(nieuweReview) => {
           setAlleReviews((prev) => [nieuweReview, ...prev]);
           setTab("reviews");
+          setPersoonlijk((prev) => ({ ...prev, heeftAlGereviewed: true }));
           // Ververst de server-gefetchte hero-stats (gem_score/aantal_reviews)
-          // zodra de update_vakman_stats-trigger die heeft bijgewerkt.
+          // zodra de update_vakman_stats-trigger die heeft bijgewerkt. Met
+          // ISR (revalidate=300) kan dit tot enkele minuten vertraagd zijn
+          // t.o.v. het echte cijfer — de nieuwe review zelf staat wel meteen
+          // in de lijst via de lokale state hierboven.
           router.refresh();
         }}
       />
