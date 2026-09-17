@@ -1428,6 +1428,9 @@ export interface Database {
           contact_preference: Database["public"]["Enums"]["contact_preference"] | null;
           service_area_postcode: string | null;
           service_area_km: number | null;
+          service_area_lat: number | null;
+          service_area_lng: number | null;
+          service_area_city: string | null;
           insured: boolean | null;
           insurance_url: string | null;
           registration_source: string | null;

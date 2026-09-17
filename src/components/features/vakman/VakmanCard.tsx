@@ -1,17 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { Star, CheckCircle, SealCheck, ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { Star, CheckCircle, SealCheck, ArrowRight, Lightning } from "@phosphor-icons/react/dist/ssr";
 import { PremiumBadge } from "@/components/features/premium/PremiumBadge";
+import { magBuurtOpdrachtenBadgeTonen } from "@/lib/localTrust";
 import type { ProfessionalOverview } from "@/types";
 
 interface VakmanCardProps {
   professional: ProfessionalOverview;
   categoryNames: string[];
+  /** Berekende afstand tot een opgegeven zoeklocatie (alleen gezet als er gezocht is op locatie). */
+  distanceKm?: number;
+  /** Naam van de opgegeven zoeklocatie, voor de "buren kozen"-badge. */
+  buurtPlaats?: string | null;
+  /** Aantal afgeronde Neighbuur-opdrachten van deze provider in buurtPlaats. */
+  buurtOpdrachten?: number;
 }
 
-export function VakmanCard({ professional, categoryNames }: VakmanCardProps) {
+export function VakmanCard({ professional, categoryNames, distanceKm, buurtPlaats, buurtOpdrachten }: VakmanCardProps) {
   const initiaal = professional.company_name.charAt(0).toUpperCase();
   const hoofdCategorie = categoryNames[0];
+  const toonBuurtBadge = buurtPlaats && magBuurtOpdrachtenBadgeTonen(buurtOpdrachten ?? 0);
 
   return (
     <Link
@@ -44,7 +52,9 @@ export function VakmanCard({ professional, categoryNames }: VakmanCardProps) {
         </div>
         <p className="text-body-sm text-warmgrijs truncate mt-0.5">
           {categoryNames.length > 0 && `${categoryNames.join(", ")} · `}
-          {professional.service_area_postcode && professional.service_area_postcode}
+          {distanceKm !== undefined
+            ? `${distanceKm < 1 ? "< 1" : distanceKm.toFixed(1)} km`
+            : professional.service_area_postcode}
         </p>
         <div className="flex flex-wrap gap-1.5 mt-1.5">
           {professional.is_premium && <PremiumBadge />}
@@ -56,6 +66,11 @@ export function VakmanCard({ professional, categoryNames }: VakmanCardProps) {
           {professional.profile_strength >= 80 && (
             <span className="badge badge-blauw !text-[10px] !py-0.5 !px-2">
               <SealCheck size={10} weight="fill" /> Profiel compleet
+            </span>
+          )}
+          {toonBuurtBadge && (
+            <span className="badge !bg-sage-100 !text-sage-700 !text-[10px] !py-0.5 !px-2">
+              <Lightning size={10} weight="fill" /> {buurtOpdrachten} buren uit {buurtPlaats} kozen {professional.company_name}
             </span>
           )}
         </div>

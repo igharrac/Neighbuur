@@ -1,6 +1,7 @@
 import { createServerSupabase } from "@/lib/supabase-server";
 import { getCategorieen } from "@/lib/categorieen";
 import { SearchPage } from "@/components/features/search/SearchPage";
+import { distanceKm } from "@/lib/geo";
 import type { ProfessionalOverview } from "@/types";
 
 interface ZoekenSearchParams {
@@ -11,6 +12,9 @@ interface ZoekenSearchParams {
   geverifieerd?: string;
   q?: string;
   pagina?: string;
+  lat?: string;
+  lng?: string;
+  plaats?: string;
 }
 
 const PAGINA_GROOTTE = 20;
@@ -19,6 +23,10 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   const supabase = createServerSupabase();
   const allCategories = await getCategorieen();
   const professionalCategories = allCategories.filter((c) => c.type === "professional");
+
+  const zoekLat = searchParams.lat ? Number(searchParams.lat) : null;
+  const zoekLng = searchParams.lng ? Number(searchParams.lng) : null;
+  const heeftLocatie = zoekLat !== null && zoekLng !== null && !Number.isNaN(zoekLat) && !Number.isNaN(zoekLng);
 
   let query = supabase
     .from("professional_overview")
@@ -29,7 +37,11 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
   if (searchParams.categorie) {
     query = query.contains("category_slugs", [searchParams.categorie]);
   }
-  if (searchParams.afstand) {
+  // "Afstand" betekent, zodra er een locatie is opgegeven, straks een
+  // echte afstand tot die locatie (hieronder in JS berekend) i.p.v. de
+  // straal die de provider zelf claimt — de DB-filter hieronder blijft
+  // dus alleen gelden voor de locatie-loze situatie.
+  if (searchParams.afstand && !heeftLocatie) {
     query = query.gte("service_area_km", Number(searchParams.afstand));
   }
   if (searchParams.rating) {
@@ -42,10 +54,6 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
     query = query.ilike("company_name", `%${searchParams.q}%`);
   }
 
-  // Beschikbaarheid staat los van de andere filters (eigen tabel) — eerst de
-  // beschikbare provider-id's ophalen en als filter meegeven, zodat paginering
-  // (.range hieronder) correct blijft werken over het volledige, al-gefilterde
-  // resultaat i.p.v. alleen over de providers die toevallig op de huidige pagina staan.
   if (searchParams.beschikbaar === "1") {
     const vandaag = new Date();
     const over7Dagen = new Date(vandaag);
@@ -60,32 +68,71 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
       .lte("date", toDateStr(over7Dagen));
 
     const beschikbareIds = [...new Set((beschikbaarheid ?? []).map((b) => b.professional_id as string))];
-    // Lege lijst zou "in.()" opleveren (ongeldig filter) — val terug op een
-    // niet-bestaand id zodat de query gewoon 0 resultaten geeft.
     query = query.in("id", beschikbareIds.length > 0 ? beschikbareIds : ["00000000-0000-0000-0000-000000000000"]);
   }
 
-  query = query.order("is_premium", { ascending: false }).order("avg_score", { ascending: false });
-
   const huidigePagina = Math.max(1, Number(searchParams.pagina ?? "1") || 1);
-  const from = (huidigePagina - 1) * PAGINA_GROOTTE;
-  const to = from + PAGINA_GROOTTE - 1;
-  query = query.range(from, to);
-
-  const { data, count } = await query;
-  const professionals = (data ?? []).map((v) => ({
-    ...v,
-    review_count: Number(v.review_count ?? 0),
-    avg_score: Number(v.avg_score ?? 0),
-    completed_jobs: Number(v.completed_jobs ?? 0),
-  })) as unknown as ProfessionalOverview[];
-
-  const totaalAantal = count ?? 0;
-  const totaalPaginas = Math.max(1, Math.ceil(totaalAantal / PAGINA_GROOTTE));
-
   const categoryNamePerSlug: Record<string, string> = Object.fromEntries(
     allCategories.map((c) => [c.slug, c.name_nl])
   );
+
+  let professionals: (ProfessionalOverview & { distance_km?: number })[];
+  let totaalAantal: number;
+
+  if (heeftLocatie) {
+    // Met een locatie sorteren we op werkelijke afstand — dat is geen
+    // kolom om op te ORDER BY'en, dus hier álle (al door de bovenstaande
+    // filters beperkte) providers ophalen en in JS sorteren/pagineren.
+    // Nooit meer dan de ~370 actieve providers in totaal, dus geen
+    // performanceprobleem op deze schaal.
+    query = query.order("is_premium", { ascending: false });
+    const { data } = await query;
+    let alle = (data ?? []).map((v) => ({
+      ...v,
+      review_count: Number(v.review_count ?? 0),
+      avg_score: Number(v.avg_score ?? 0),
+      completed_jobs: Number(v.completed_jobs ?? 0),
+    })) as unknown as (ProfessionalOverview & { distance_km?: number })[];
+
+    alle = alle
+      .filter((p) => p.service_area_lat != null && p.service_area_lng != null)
+      .map((p) => ({ ...p, distance_km: distanceKm(zoekLat!, zoekLng!, p.service_area_lat!, p.service_area_lng!) }))
+      .filter((p) => (searchParams.afstand ? p.distance_km! <= Number(searchParams.afstand) : true))
+      .sort((a, b) => {
+        if (a.is_premium !== b.is_premium) return a.is_premium ? -1 : 1;
+        return a.distance_km! - b.distance_km!;
+      });
+
+    totaalAantal = alle.length;
+    professionals = alle.slice((huidigePagina - 1) * PAGINA_GROOTTE, huidigePagina * PAGINA_GROOTTE);
+  } else {
+    query = query.order("is_premium", { ascending: false }).order("avg_score", { ascending: false });
+    const from = (huidigePagina - 1) * PAGINA_GROOTTE;
+    query = query.range(from, from + PAGINA_GROOTTE - 1);
+    const { data, count } = await query;
+    professionals = (data ?? []).map((v) => ({
+      ...v,
+      review_count: Number(v.review_count ?? 0),
+      avg_score: Number(v.avg_score ?? 0),
+      completed_jobs: Number(v.completed_jobs ?? 0),
+    })) as unknown as ProfessionalOverview[];
+    totaalAantal = count ?? 0;
+  }
+
+  // "X buren uit [plaats] kozen [provider]" — alleen zinvol met een
+  // opgegeven plaats, en alleen gebaseerd op daadwerkelijk afgeronde
+  // Neighbuur-opdrachten in die stad (nooit verzonnen).
+  let buurtOpdrachtenPerProvider: Record<string, number> = {};
+  if (searchParams.plaats && professionals.length > 0) {
+    const { data: ervaring } = await supabase.rpc("provider_local_experience_by_city_public");
+    buurtOpdrachtenPerProvider = Object.fromEntries(
+      (ervaring ?? [])
+        .filter((r) => r.city?.toLowerCase() === searchParams.plaats!.toLowerCase())
+        .map((r) => [r.professional_id, Number(r.completed_jobs)])
+    );
+  }
+
+  const totaalPaginas = Math.max(1, Math.ceil(totaalAantal / PAGINA_GROOTTE));
 
   return (
     <SearchPage
@@ -95,6 +142,8 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
       totaalAantal={totaalAantal}
       huidigePagina={huidigePagina}
       totaalPaginas={totaalPaginas}
+      plaatsNaam={searchParams.plaats ?? null}
+      buurtOpdrachtenPerProvider={buurtOpdrachtenPerProvider}
     />
   );
 }

@@ -116,6 +116,9 @@ export interface ProfessionalProfile {
   contact_preference: "phone" | "whatsapp" | "app";
   service_area_postcode: string | null;
   service_area_km: number;
+  service_area_lat: number | null;
+  service_area_lng: number | null;
+  service_area_city: string | null;
   insured: boolean;
   insurance_url: string | null;
   registration_source: string | null;

@@ -151,6 +151,39 @@ export async function resolvePostcode4Centroid(postcode4: string): Promise<Postc
 }
 
 /**
+ * Zoekt het middelpunt van een plaatsnaam op ("Amersfoort") — voor het
+ * locatieveld op de zoekpagina, waar iemand vrije tekst intypt i.p.v.
+ * een postcode. Zelfde Locatieserver, nu op `type:woonplaats`. Neemt de
+ * eerste (best scorende) treffer; bij geen match komt gewoon `null`
+ * terug, net als resolvePostcode4Centroid.
+ */
+export async function resolvePlaceCentroid(query: string): Promise<PostcodeCentroid | null> {
+  const params = new URLSearchParams();
+  params.append("q", query);
+  params.append("fq", "type:woonplaats");
+  params.append("fl", "woonplaatsnaam,gemeentenaam,centroide_ll");
+  params.append("rows", "1");
+
+  const res = await fetch(`${LOCATIESERVER_BASE}/free?${params.toString()}`);
+  if (!res.ok) throw new Error(`Locatieserver gaf status ${res.status}`);
+  const data = await res.json();
+  const doc = data?.response?.docs?.[0] as
+    | { woonplaatsnaam?: string; gemeentenaam?: string; centroide_ll?: string }
+    | undefined;
+  if (!doc) return null;
+
+  const { lat, lng } = parsePoint(doc.centroide_ll ?? null);
+  if (lat === null || lng === null) return null;
+
+  return {
+    city: doc.woonplaatsnaam ?? null,
+    municipality: doc.gemeentenaam ?? null,
+    latitude: lat,
+    longitude: lng,
+  };
+}
+
+/**
  * Zoekt een adres op exacte postcode + huisnummer. Bij meerdere treffers
  * (verschillende toevoegingen op hetzelfde huisnummer) en een opgegeven
  * `suffix` wordt geprobeerd die te matchen tegen `huis_nlt`; matcht niets
