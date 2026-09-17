@@ -37,14 +37,20 @@ export default async function VakmanPage({ params }: { params: { slug: string } 
     );
   }
 
+  // author_name/author_avatar worden bewust niet opgehaald — deze pagina
+  // is publiek (ook voor niet-ingelogde bezoekers), en een review mag
+  // geen bewoner identificeerbaar maken. "Buur" hieronder vervangt de
+  // echte naam voordat er ook maar iets naar de client gaat.
   const { data: reviews } = await supabase
     .from("review_complete")
-    .select("*")
+    .select(
+      "id, author_id, professional_id, booking_id, community_id, text, scores, foto_urls, upvote_score, created_at, updated_at, reply_text, reply_date, reply_company, verified"
+    )
     .eq("professional_id", professional.id)
     .order("upvote_score", { ascending: false })
     .order("created_at", { ascending: false });
 
-  const alleReviews = (reviews ?? []) as ReviewComplete[];
+  const alleReviews = (reviews ?? []).map((r) => ({ ...r, author_name: "Buur", author_avatar: null })) as ReviewComplete[];
   const user = viewer;
 
   let votedReviewIds: string[] = [];

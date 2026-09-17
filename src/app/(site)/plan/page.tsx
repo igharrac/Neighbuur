@@ -194,18 +194,19 @@ export default async function PlanPage() {
     }
   }
 
-  let buurtreviews: { id: string; tekst: string; auteur_naam: string; reactie_bedrijf: string | null }[] = [];
+  // author_name bewust niet opgehaald — zie toelichting in
+  // vakman/[slug]/page.tsx: een review mag geen buur identificeerbaar maken.
+  let buurtreviews: { id: string; tekst: string; reactie_bedrijf: string | null }[] = [];
   if (bewonerProfiel?.community_id) {
     const { data: r } = await supabase
       .from("review_complete")
-      .select("id, text, author_name, reply_company, created_at")
+      .select("id, text, reply_company, created_at")
       .eq("community_id", bewonerProfiel.community_id)
       .order("created_at", { ascending: false })
       .limit(3);
     buurtreviews = (r ?? []).map((row) => ({
       id: row.id!,
       tekst: row.text!,
-      auteur_naam: row.author_name!,
       reactie_bedrijf: row.reply_company,
     }));
   }
@@ -432,7 +433,7 @@ export default async function PlanPage() {
                       <div key={r.id} className="border-b border-lijn-light last:border-0 pb-3 last:pb-0">
                         <p className="font-body text-[13px] text-warmgrijs-dark leading-[19px] line-clamp-2">&ldquo;{r.tekst}&rdquo;</p>
                         <p className="font-body text-[12px] text-warmgrijs mt-1">
-                          {r.auteur_naam}
+                          Buur
                           {r.reactie_bedrijf && ` · over ${r.reactie_bedrijf}`}
                         </p>
                       </div>

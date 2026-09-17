@@ -29,17 +29,19 @@ interface ReviewCardProps {
   companyName: string;
   isProfessionalOwner: boolean;
   initialVoted: boolean;
+  /** True als de bezoeker zelf in dezelfde community/woonomgeving zit als deze review. */
+  isEigenBuurt?: boolean;
 }
 
-export function ReviewCard({ review, professionalId, companyName, isProfessionalOwner, initialVoted }: ReviewCardProps) {
+export function ReviewCard({ review, professionalId, companyName, isProfessionalOwner, initialVoted, isEigenBuurt = false }: ReviewCardProps) {
   return (
     <div className="card-flat p-6">
       <div className="flex justify-between items-start gap-3 mb-3">
         <div className="flex items-center gap-3">
-          <Avatar naam={review.author_name} src={review.author_avatar} size="md" />
+          <Avatar naam="Buur" size="md" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-body-sm">{review.author_name}</span>
+              <span className="font-semibold text-body-sm">Buur</span>
               {review.verified && (
                 <span className="badge badge-groen !text-[9px] !py-0 !px-2">
                   <SealCheck size={10} weight="fill" /> Geverifieerde klus
@@ -47,7 +49,7 @@ export function ReviewCard({ review, professionalId, companyName, isProfessional
               )}
             </div>
             <div className="text-body-xs text-warmgrijs">
-              {review.community_name ? `${review.community_name} · ` : ""}
+              {isEigenBuurt ? "In jouw woonomgeving · " : ""}
               {relatief(review.created_at)}
             </div>
           </div>

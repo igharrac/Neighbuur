@@ -533,6 +533,7 @@ export interface Database {
           created_at: string | null;
           updated_at: string | null;
           review_request_sent_at: string | null;
+          residence_id: string | null;
         };
         Insert: {
           id?: string;
@@ -551,6 +552,7 @@ export interface Database {
           created_at?: string | null;
           updated_at?: string | null;
           review_request_sent_at?: string | null;
+          residence_id?: string | null;
         };
         Update: {
           id?: string;
@@ -569,12 +571,14 @@ export interface Database {
           created_at?: string | null;
           updated_at?: string | null;
           review_request_sent_at?: string | null;
+          residence_id?: string | null;
         };
         Relationships: [
           { foreignKeyName: "bookings_customer_id_fkey"; columns: ["customer_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "bookings_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
           { foreignKeyName: "bookings_category_id_fkey"; columns: ["category_id"]; isOneToOne: false; referencedRelation: "categories"; referencedColumns: ["id"] },
           { foreignKeyName: "bookings_community_id_fkey"; columns: ["community_id"]; isOneToOne: false; referencedRelation: "communities"; referencedColumns: ["id"] },
+          { foreignKeyName: "bookings_residence_id_fkey"; columns: ["residence_id"]; isOneToOne: false; referencedRelation: "residences"; referencedColumns: ["id"] },
         ];
       };
       provider_city_centroids: {

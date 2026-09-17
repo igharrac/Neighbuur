@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/Input";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useToast } from "@/components/ui/Toast";
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
-import { createClient } from "@/lib/supabase";
 import type { ReviewComplete, ReviewScores } from "@/types";
 
 const SCORE_LABELS: { key: keyof ReviewScores; label: string }[] = [
@@ -93,27 +92,26 @@ export function ReviewForm({
     if (!user || !canSubmit) return;
     setSubmitting(true);
 
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from("reviews")
-      .insert({
-        author_id: user.id,
-        professional_id: professionalId,
-        booking_id: boekingId,
-        community_id: communityId,
+    const res = await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        professionalId,
+        bookingId: boekingId,
         text: tekst.trim(),
         scores,
-        foto_urls: fotoUrls,
-      })
-      .select("*")
-      .single();
+        fotoUrls,
+      }),
+    });
+    const json = await res.json().catch(() => null);
 
     setSubmitting(false);
 
-    if (error || !data) {
-      showToast(error?.message ?? "Review plaatsen is niet gelukt.", "error");
+    if (!res.ok || !json?.review) {
+      showToast(json?.error ?? "Review plaatsen is niet gelukt.", "error");
       return;
     }
+    const data = json.review;
 
     // review_complete (de view die ReviewComplete typeert) heeft een paar
     // afgeleide/joined velden (author_name, community_name, reply_*) die

@@ -12,8 +12,6 @@ interface ReviewRow {
   text: string;
   scores: Record<string, number>;
   upvote_score: number;
-  author_name: string;
-  author_avatar: string | null;
   verified: boolean;
   created_at: string;
 }
@@ -21,9 +19,11 @@ interface ReviewRow {
 export async function ReviewsBlok({ data, community_id }: { data: ReviewsBlokData; community_id: string }) {
   const aantal = data.aantal ?? 5;
   const supabase = createServerSupabase();
+  // author_name/author_avatar bewust niet opgehaald — zie toelichting in
+  // vakman/[slug]/page.tsx.
   const { data: reviews } = await supabase
     .from("review_complete")
-    .select("id, text, scores, upvote_score, author_name, author_avatar, verified, created_at")
+    .select("id, text, scores, upvote_score, verified, created_at")
     .eq("community_id", community_id)
     .order("upvote_score", { ascending: false })
     .limit(aantal);
@@ -56,10 +56,10 @@ export async function ReviewsBlok({ data, community_id }: { data: ReviewsBlokDat
             <div key={r.id} className="border border-lijn rounded-md p-4">
               <div className="flex justify-between items-start gap-2 mb-2">
                 <div className="flex items-center gap-2.5">
-                  <Avatar naam={r.author_name} src={r.author_avatar} size="sm" />
+                  <Avatar naam="Buur" size="sm" />
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-semibold text-body-sm">{r.author_name}</span>
+                      <span className="font-semibold text-body-sm">Buur</span>
                       {r.verified && <SealCheck size={14} weight="fill" className="text-groen" />}
                     </div>
                     <span className="text-body-xs text-warmgrijs">

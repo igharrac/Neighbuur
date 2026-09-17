@@ -273,7 +273,12 @@ export function VakmanProfielClient({
           )}
 
           {alleReviews.length === 0 ? (
-            <p className="text-body-sm text-warmgrijs">Nog geen reviews voor {professional.company_name}.</p>
+            <div className="text-center py-8">
+              <p className="text-body-sm text-warmgrijs">Nog geen reviews via Neighbuur.</p>
+              <p className="text-body-xs text-warmgrijs mt-1">
+                {professional.company_name} heeft hier nog geen afgeronde opdrachten via Neighbuur.
+              </p>
+            </div>
           ) : (
             alleReviews.map((review) => (
               <ReviewCard
@@ -283,6 +288,7 @@ export function VakmanProfielClient({
                 companyName={professional.company_name}
                 isProfessionalOwner={isOwner}
                 initialVoted={votedSet.has(review.id)}
+                isEigenBuurt={!!communityId && review.community_id === communityId}
               />
             ))
           )}

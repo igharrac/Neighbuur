@@ -64,6 +64,16 @@ export async function POST(request: Request) {
     categorieNaam = categorie?.name_nl ?? null;
   }
 
+  // Woning van de klant op het moment van aanvragen — vastgelegd op de
+  // boeking zelf (snapshot), zodat een latere verhuizing de historische
+  // locatie van deze klus niet verandert. Nodig voor "waar heeft deze
+  // provider daadwerkelijk gewerkt" (los van waar hij wíl werken).
+  const { data: bewonerProfiel } = await admin
+    .from("resident_profiles")
+    .select("current_residence_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
   const { data: boeking, error: boekingError } = await admin
     .from("bookings")
     .insert({
@@ -71,6 +81,7 @@ export async function POST(request: Request) {
       professional_id: vakman.id,
       category_id: body?.categorieId ?? null,
       community_id: body?.communityId ?? null,
+      residence_id: bewonerProfiel?.current_residence_id ?? null,
       description: body?.omschrijving || null,
       foto_urls: body?.fotoUrls ?? [],
       date: body?.datum ?? null,
@@ -86,22 +97,15 @@ export async function POST(request: Request) {
   // woning heeft binnen een cluster, en de boeking een categorie heeft.
   // Faalt bewust stil — een notificatieprobleem mag de boeking nooit
   // blokkeren, die is hierboven al succesvol opgeslagen.
-  if (body?.categorieId) {
+  if (body?.categorieId && bewonerProfiel?.current_residence_id) {
     try {
-      const { data: bewonerProfiel } = await admin
-        .from("resident_profiles")
-        .select("current_residence_id")
-        .eq("user_id", user.id)
+      const { data: residence } = await admin
+        .from("residences")
+        .select("residential_cluster_id")
+        .eq("id", bewonerProfiel.current_residence_id)
         .maybeSingle();
-      if (bewonerProfiel?.current_residence_id) {
-        const { data: residence } = await admin
-          .from("residences")
-          .select("residential_cluster_id")
-          .eq("id", bewonerProfiel.current_residence_id)
-          .maybeSingle();
-        if (residence?.residential_cluster_id) {
-          await meldBehoefteBijDrempel(admin, { clusterId: residence.residential_cluster_id, categoryId: body.categorieId });
-        }
+      if (residence?.residential_cluster_id) {
+        await meldBehoefteBijDrempel(admin, { clusterId: residence.residential_cluster_id, categoryId: body.categorieId });
       }
     } catch (err) {
       console.error("meldBehoefteBijDrempel mislukt:", err);
