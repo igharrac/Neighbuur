@@ -11,6 +11,7 @@ interface VakmanCardProps {
 
 export function VakmanCard({ professional, categoryNames }: VakmanCardProps) {
   const initiaal = professional.company_name.charAt(0).toUpperCase();
+  const hoofdCategorie = categoryNames[0];
 
   return (
     <Link
@@ -18,27 +19,32 @@ export function VakmanCard({ professional, categoryNames }: VakmanCardProps) {
       className="card-flat p-5 flex items-center gap-4 no-underline min-h-11"
     >
       {professional.logo_url ? (
-        <img src={professional.logo_url} alt="" className="w-14 h-14 rounded-lg object-cover shrink-0" />
+        <img src={professional.logo_url} alt="" className="w-16 h-16 rounded-xl object-cover shrink-0" />
       ) : (
-        <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-sage to-sage-700 flex items-center justify-center text-white font-display font-black text-xl shrink-0">
-          {initiaal}
+        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-sage to-sage-700 flex flex-col items-center justify-center text-white shrink-0 px-1">
+          <span className="font-display font-black text-xl leading-none">{initiaal}</span>
+          {hoofdCategorie && (
+            <span className="text-[8px] font-semibold uppercase tracking-wider text-sage-100 mt-1 text-center leading-tight line-clamp-1">
+              {hoofdCategorie}
+            </span>
+          )}
         </div>
       )}
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="font-display font-bold text-body-lg text-warmzwart truncate min-w-0">{professional.company_name}</h3>
+        <div className="flex items-start justify-between gap-2 flex-wrap">
+          <h3 className="font-display font-bold text-body-lg text-warmzwart min-w-0 break-words">{professional.company_name}</h3>
           {professional.review_count > 0 && (
-            <span className="flex items-center gap-1 text-body-sm font-semibold text-warmzwart shrink-0">
-              <Star size={14} weight="fill" className="text-oker" />
+            <span className="flex items-center gap-1 bg-oker-light text-oker text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+              <Star size={11} weight="fill" />
               {professional.avg_score.toFixed(1)}
+              <span className="font-medium opacity-80">({professional.review_count})</span>
             </span>
           )}
         </div>
-        <p className="text-body-sm text-warmgrijs truncate">
+        <p className="text-body-sm text-warmgrijs truncate mt-0.5">
           {categoryNames.length > 0 && `${categoryNames.join(", ")} · `}
-          {professional.service_area_postcode && `${professional.service_area_postcode} · `}
-          {professional.review_count} {professional.review_count === 1 ? "review" : "reviews"}
+          {professional.service_area_postcode && professional.service_area_postcode}
         </p>
         <div className="flex flex-wrap gap-1.5 mt-1.5">
           {professional.is_premium && <PremiumBadge />}

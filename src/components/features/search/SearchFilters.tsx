@@ -19,6 +19,7 @@ export function SearchFilters({ categories }: { categories: Category[] }) {
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set(key, value);
     else params.delete(key);
+    params.delete("pagina");
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
