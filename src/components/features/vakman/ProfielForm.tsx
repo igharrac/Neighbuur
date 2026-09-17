@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Check } from "@phosphor-icons/react";
+import Link from "next/link";
+import { FileText, Check, ArrowLeft } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useToast } from "@/components/ui/Toast";
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
@@ -167,6 +168,10 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
   return (
     <div className="max-w-[680px] mx-auto px-6 py-8 flex flex-col gap-6">
       <div>
+        <Link href="/dashboard" className="text-body-sm text-warmgrijs hover:text-sage inline-flex items-center gap-1.5 mb-3">
+          <ArrowLeft size={14} weight="bold" />
+          Terug naar dashboard
+        </Link>
         <h1 className="font-display text-display-md text-warmzwart">Profiel bewerken</h1>
         <p className="text-body text-warmgrijs mt-1">Profielsterkte: {professional.profile_strength}%</p>
       </div>
