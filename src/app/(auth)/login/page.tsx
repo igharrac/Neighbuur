@@ -9,7 +9,6 @@ import { useLang } from "@/lib/hooks/useLang";
 import { useToast } from "@/components/ui/Toast";
 import { useAuthPhoto } from "@/lib/hooks/useAuthPhoto";
 import { AuthSplitScreen } from "@/components/features/auth/AuthSplitScreen";
-import { AuthQuoteCard } from "@/components/features/auth/AuthQuoteCard";
 
 type Step = "start" | "checking-email";
 
@@ -77,17 +76,7 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthSplitScreen
-      photoUrl={photoUrl}
-      photoAlt="Nieuwbouwwoning met verhuisdozen"
-      backLabel={dict.login.back}
-      bottomCard={
-        <AuthQuoteCard
-          quote="„Samen regelen we stucwerk, tuin en zonnepanelen met burenkorting.”"
-          meta="Vathorst Blok C • Amersfoort"
-        />
-      }
-    >
+    <AuthSplitScreen photoUrl={photoUrl} photoAlt="Nieuwbouwwoning met verhuisdozen" backLabel={dict.login.back}>
       {step === "start" && (
         <div className="animate-fade-in">
           <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.login.welcome}</h1>
