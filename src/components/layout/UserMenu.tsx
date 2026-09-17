@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { CaretDown, House, UsersThree, Gear, SignOut } from "@phosphor-icons/react";
+import { CaretDown, House, UsersThree, Gear, SignOut, Briefcase } from "@phosphor-icons/react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useLang } from "@/lib/hooks/useLang";
 import { Avatar } from "@/components/ui/Avatar";
@@ -58,14 +58,25 @@ export function UserMenu() {
             <p className="font-semibold text-body-sm text-warmzwart truncate">{naam}</p>
           </div>
           <div className="py-1.5">
-            <Link
-              href="/plan"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-body-sm text-warmzwart hover:bg-cream transition-colors no-underline"
-            >
-              <House size={17} className="text-warmgrijs" />
-              {dict.nav.myPlan}
-            </Link>
+            {profile?.role === "professional" ? (
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-body-sm text-warmzwart hover:bg-cream transition-colors no-underline"
+              >
+                <Briefcase size={17} className="text-warmgrijs" />
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/plan"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-body-sm text-warmzwart hover:bg-cream transition-colors no-underline"
+              >
+                <House size={17} className="text-warmgrijs" />
+                {dict.nav.myPlan}
+              </Link>
+            )}
             <Link
               href="/wijk"
               onClick={() => setOpen(false)}

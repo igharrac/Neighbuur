@@ -11,6 +11,7 @@ import {
   ChatCircle,
   UserCircle,
   SignIn,
+  Briefcase,
 } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -35,7 +36,8 @@ export function Logo() {
 export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { dict } = useLang();
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
+  const isProfessional = profile?.role === "professional";
   const router = useRouter();
 
   return (
@@ -45,7 +47,12 @@ export function Nav() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-6">
-          {user && (
+          {user && isProfessional && (
+            <Link href="/dashboard" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
+              Dashboard
+            </Link>
+          )}
+          {user && !isProfessional && (
             <Link href="/plan" className="text-body-sm font-medium text-warmgrijs hover:text-warmzwart transition-colors">
               {dict.nav.myPlan}
             </Link>
@@ -92,7 +99,12 @@ export function Nav() {
       {menuOpen && (
         <div className="md:hidden bg-cream border-b border-lijn px-6 py-4 animate-fade-in">
           <div className="flex flex-col gap-3">
-            {user && (
+            {user && isProfessional && (
+              <Link href="/dashboard" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
+                Dashboard
+              </Link>
+            )}
+            {user && !isProfessional && (
               <Link href="/plan" className="py-2 text-body font-medium text-warmzwart" onClick={() => setMenuOpen(false)}>
                 {dict.nav.myPlan}
               </Link>
@@ -143,12 +155,15 @@ export function Nav() {
 export function MobileBar() {
   const { dict } = useLang();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isProfessional = profile?.role === "professional";
   const ongelezenBerichten = useOngelezenBerichten();
 
   const items = user
     ? [
-        { href: "/plan", icon: House, label: dict.nav.myPlan },
+        isProfessional
+          ? { href: "/dashboard", icon: Briefcase, label: "Dashboard" }
+          : { href: "/plan", icon: House, label: dict.nav.myPlan },
         { href: "/wijk", icon: UserCircle, label: dict.nav.myNeighbourhood },
         { href: "/zoeken", icon: MagnifyingGlass, label: "Zoeken" },
         { href: "/berichten", icon: ChatCircle, label: "Berichten", badge: ongelezenBerichten },
