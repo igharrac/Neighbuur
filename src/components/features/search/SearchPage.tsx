@@ -135,7 +135,7 @@ export function SearchPage({
         </button>
       </form>
 
-      <div className="mb-5 overflow-x-auto scrollbar-none -mx-6 px-6">
+      <div className="mb-6 overflow-x-auto scrollbar-none -mx-6 px-6 py-3">
         <SearchFilters categories={categories} />
       </div>
 
@@ -147,7 +147,7 @@ export function SearchPage({
       {professionals.length === 0 ? (
         <p className="text-body-sm text-warmgrijs">Geen vakmensen gevonden met deze filters.</p>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-5">
           {professionals.map((v) => (
             <VakmanCard
               key={v.id}

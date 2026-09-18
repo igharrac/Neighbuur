@@ -33,10 +33,21 @@ export function SearchFilters({ categories }: { categories: Category[] }) {
   const available = searchParams.get("beschikbaar") === "1";
   const verified = searchParams.get("geverifieerd") === "1";
 
+  /* Native select-pijltje zit browser-bepaald vlak tegen de rand, los van
+     padding — appearance-none + eigen chevron op vaste 24px zetten. */
+  const chevronStyle = {
+    backgroundImage:
+      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238A877F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right 24px center",
+    backgroundSize: "14px",
+  };
+
   return (
     <div className="flex items-center gap-2 min-w-max">
       <select
-        className="input !w-auto !py-2.5 !text-body-sm min-h-11"
+        className="input hard !w-auto !py-2.5 !pr-12 !text-body-sm min-h-11 appearance-none"
+        style={chevronStyle}
         value={category}
         onChange={(e) => setParam("categorie", e.target.value || null)}
       >
@@ -49,7 +60,8 @@ export function SearchFilters({ categories }: { categories: Category[] }) {
       </select>
 
       <select
-        className="input !w-auto !py-2.5 !text-body-sm min-h-11"
+        className="input hard !w-auto !py-2.5 !pr-12 !text-body-sm min-h-11 appearance-none"
+        style={chevronStyle}
         value={distance}
         onChange={(e) => setParam("afstand", e.target.value || null)}
       >
@@ -62,7 +74,8 @@ export function SearchFilters({ categories }: { categories: Category[] }) {
       </select>
 
       <select
-        className="input !w-auto !py-2.5 !text-body-sm min-h-11"
+        className="input hard !w-auto !py-2.5 !pr-12 !text-body-sm min-h-11 appearance-none"
+        style={chevronStyle}
         value={rating}
         onChange={(e) => setParam("rating", e.target.value || null)}
       >
@@ -77,8 +90,8 @@ export function SearchFilters({ categories }: { categories: Category[] }) {
       <button
         type="button"
         onClick={() => toggleParam("beschikbaar")}
-        className={`min-h-11 px-4 rounded-sm text-body-sm font-semibold border whitespace-nowrap transition-colors ${
-          available ? "bg-groen text-white border-groen" : "bg-white text-warmgrijs border-lijn hover:border-warmgrijs-dark"
+        className={`hard min-h-11 px-4 text-body-sm font-semibold whitespace-nowrap ${
+          available ? "bg-groen text-white !border-groen" : "bg-white text-warmgrijs"
         }`}
       >
         Beschikbaar deze week
@@ -87,8 +100,8 @@ export function SearchFilters({ categories }: { categories: Category[] }) {
       <button
         type="button"
         onClick={() => toggleParam("geverifieerd")}
-        className={`min-h-11 px-4 rounded-sm text-body-sm font-semibold border whitespace-nowrap transition-colors ${
-          verified ? "bg-groen text-white border-groen" : "bg-white text-warmgrijs border-lijn hover:border-warmgrijs-dark"
+        className={`hard min-h-11 px-4 text-body-sm font-semibold whitespace-nowrap ${
+          verified ? "bg-groen text-white !border-groen" : "bg-white text-warmgrijs"
         }`}
       >
         Geverifieerd

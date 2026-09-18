@@ -24,7 +24,7 @@ export function VakmanCard({ professional, categoryNames, distanceKm, buurtPlaat
   return (
     <Link
       href={`/vakman/${professional.slug}`}
-      className="card-flat p-5 flex items-center gap-4 no-underline min-h-11"
+      className="card-hard p-5 flex items-center gap-4 no-underline min-h-11"
     >
       {professional.logo_url ? (
         <img src={professional.logo_url} alt="" className="w-16 h-16 rounded-xl object-cover shrink-0" />

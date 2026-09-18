@@ -95,6 +95,35 @@
            hover:border-sage hover:-translate-y-0.5;
   }
 
+  /* ── Hard shadow (neobrutalist) ──
+     Herbruikbaar basisrecept, zie fletchpmm.com/before-after: dikke rand +
+     een harde offset-schaduw die bij hover groeit en het element laat
+     "liften". Alles met !important, zodat het ook een conflicterende class
+     als .input kan overrulen ongeacht brontekstvolgorde.
+       .hard    — kleine elementen: filters, buttons, chips, form inputs.
+       .hard-lg — grotere oppervlakken: cards.
+     Kleur bewust warmzwart, niet oranje — zie het merk-kleurbesluit hierboven
+     (sage i.p.v. terracotta, differentiatie t.o.v. de oranje-verzadigde
+     home-services-categorie). */
+  .hard {
+    @apply !border-2 !border-warmzwart !rounded-sm
+           !transition-all !duration-150
+           !shadow-[2px_2px_0_0_#1A1A18]
+           hover:!shadow-[4px_4px_0_0_#1A1A18]
+           hover:!-translate-x-[2px] hover:!-translate-y-[2px];
+  }
+  .hard-lg {
+    @apply !border-2 !border-warmzwart !rounded
+           !transition-all !duration-150
+           !shadow-[3px_3px_0_0_#1A1A18]
+           hover:!shadow-[5px_5px_0_0_#1A1A18]
+           hover:!-translate-x-[2px] hover:!-translate-y-[2px];
+  }
+
+  .card-hard {
+    @apply hard-lg bg-white;
+  }
+
   /* ── Badges ── */
   .badge {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full
