@@ -20,9 +20,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Expliciete kolomlijst i.p.v. select("*") — profiles.email/phone zijn
+  // sinds de privacy-migratie (0061/0062) niet meer via een gewone select
+  // leesbaar, ook niet voor je eigen rij; select("*") faalt daardoor nu
+  // volledig i.p.v. de twee kolommen stilzwijgend weg te laten. Eigen
+  // e-mail/telefoon komt apart binnen via get_my_contact_info().
+  const PROFIEL_KOLOMMEN = "id, name, role, avatar_url, language, created_at, updated_at, deactivated_at, deleted_at";
+
   async function loadProfile(userId: string) {
     const supabase = createClient();
-    const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+    const { data } = await supabase.from("profiles").select(PROFIEL_KOLOMMEN).eq("id", userId).maybeSingle();
     let profielData = data as Profile | null;
 
     // Gedeactiveerd account: opnieuw inloggen heractiveert automatisch,
@@ -33,9 +40,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .from("profiles")
         .update({ deactivated_at: null })
         .eq("id", userId)
-        .select("*")
+        .select(PROFIEL_KOLOMMEN)
         .maybeSingle();
       if (gereactiveerd) profielData = gereactiveerd as Profile;
+    }
+
+    if (profielData) {
+      const { data: contact } = await supabase.rpc("get_my_contact_info");
+      const eigenContact = contact?.[0];
+      profielData = { ...profielData, email: eigenContact?.email ?? null, phone: eigenContact?.phone ?? null };
     }
 
     setProfile(profielData);

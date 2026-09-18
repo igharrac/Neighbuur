@@ -771,6 +771,33 @@ export interface Database {
           { foreignKeyName: "availability_professional_id_fkey"; columns: ["professional_id"]; isOneToOne: false; referencedRelation: "professional_profiles"; referencedColumns: ["id"] },
         ];
       };
+      admin_profiles_contact: {
+        Row: {
+          id: string | null;
+          name: string | null;
+          email: string | null;
+          phone: string | null;
+          role: Database["public"]["Enums"]["user_role"] | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string | null;
+          name?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          role?: Database["public"]["Enums"]["user_role"] | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string | null;
+          name?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          role?: Database["public"]["Enums"]["user_role"] | null;
+          created_at?: string | null;
+        };
+        Relationships: [];
+      };
       communities: {
         Row: {
           id: string;
@@ -1546,6 +1573,10 @@ export interface Database {
       provider_local_experience_by_city_public: {
         Args: Record<string, never>;
         Returns: { professional_id: string; city: string; completed_jobs: number }[];
+      };
+      get_my_contact_info: {
+        Args: Record<string, never>;
+        Returns: { email: string | null; phone: string | null }[];
       };
     };
     Enums: {

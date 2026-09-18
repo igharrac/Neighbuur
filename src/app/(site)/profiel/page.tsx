@@ -11,8 +11,20 @@ export default async function ProfielPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profiel } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
-  if (!profiel) redirect("/login");
+  // Expliciete kolomlijst i.p.v. select("*") — zie useAuth.tsx voor de
+  // reden (email/phone zijn sinds 0061/0062 niet meer via een gewone
+  // select leesbaar, ook niet voor je eigen rij).
+  const [{ data: profielBasis }, { data: contact }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("id, name, role, avatar_url, language, created_at, updated_at, deactivated_at, deleted_at")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase.rpc("get_my_contact_info"),
+  ]);
+  if (!profielBasis) redirect("/login");
+  const eigenContact = contact?.[0];
+  const profiel = { ...profielBasis, email: eigenContact?.email ?? null, phone: eigenContact?.phone ?? null };
 
   let adres: string | null = null;
   if (profiel.role === "resident") {

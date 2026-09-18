@@ -50,8 +50,12 @@ export function AdminAccountList({ kind }: { kind: Kind }) {
 
     async function load() {
       if (kind === "resident") {
+        // admin_profiles_contact i.p.v. profiles rechtstreeks — profiles.email
+        // is sinds de privacy-migratie (0061/0062) niet meer breed leesbaar;
+        // deze view checkt zelf dat de aanroeper admin is en geeft anders
+        // simpelweg nul rijen terug.
         let query = supabase
-          .from("profiles")
+          .from("admin_profiles_contact")
           .select("id, name, email, created_at", { count: "exact" })
           .eq("role", "resident");
         if (debounced) query = query.or(`name.ilike.%${debounced}%,email.ilike.%${debounced}%`);
@@ -59,29 +63,44 @@ export function AdminAccountList({ kind }: { kind: Kind }) {
         if (cancelled) return;
         setRows(
           (data ?? []).map((r) => ({
-            id: r.id,
-            primary: r.name,
+            id: r.id ?? "",
+            primary: r.name ?? "—",
             secondary: r.email ?? "—",
             createdAt: r.created_at ?? "",
           }))
         );
         setCount(total ?? 0);
       } else {
+        // Geen embedded profiles(name,email) meer — dat leunde op de
+        // FK-relatie naar de (nu afgeschermde) profiles-tabel. In plaats
+        // daarvan user_id meegeven en losstaand tegen admin_profiles_contact
+        // opzoeken, dan in JS samenvoegen.
         let query = supabase
           .from("professional_profiles")
-          .select("id, company_name, verified, created_at, profiles(name, email)", { count: "exact" });
+          .select("id, user_id, company_name, verified, created_at", { count: "exact" });
         if (debounced) query = query.ilike("company_name", `%${debounced}%`);
         if (verifiedOnly) query = query.eq("verified", true);
         const { data, count: total } = await query.order("created_at", { ascending: false }).range(from, to);
         if (cancelled) return;
+
+        const userIds = (data ?? []).map((r) => r.user_id);
+        const { data: contacten } =
+          userIds.length > 0
+            ? await supabase.from("admin_profiles_contact").select("id, name, email").in("id", userIds)
+            : { data: [] as { id: string; name: string; email: string | null }[] };
+        const contactPerUserId = new Map((contacten ?? []).map((c) => [c.id, c]));
+
         setRows(
-          (data ?? []).map((r) => ({
-            id: r.id,
-            primary: r.company_name,
-            secondary: [r.profiles?.name, r.profiles?.email].filter(Boolean).join(" · ") || "—",
-            createdAt: r.created_at ?? "",
-            verified: r.verified ?? false,
-          }))
+          (data ?? []).map((r) => {
+            const contact = contactPerUserId.get(r.user_id);
+            return {
+              id: r.id,
+              primary: r.company_name,
+              secondary: [contact?.name, contact?.email].filter(Boolean).join(" · ") || "—",
+              createdAt: r.created_at ?? "",
+              verified: r.verified ?? false,
+            };
+          })
         );
         setCount(total ?? 0);
       }

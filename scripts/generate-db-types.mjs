@@ -192,6 +192,10 @@ const functionsBlock = `      calculate_profile_strength: {
       provider_local_experience_by_city_public: {
         Args: Record<string, never>;
         Returns: { professional_id: string; city: string; completed_jobs: number }[];
+      };
+      get_my_contact_info: {
+        Args: Record<string, never>;
+        Returns: { email: string | null; phone: string | null }[];
       };`;
 
 const output = `/**
