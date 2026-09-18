@@ -30,7 +30,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[480px] bg-white rounded shadow-strong p-8 relative animate-slide-up"
+        className="w-full max-w-[480px] bg-white rounded border-2 border-warmzwart shadow-[6px_6px_0_0_#1A1A18] p-8 relative animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         <button

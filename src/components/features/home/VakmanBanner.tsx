@@ -11,7 +11,7 @@ export function VakmanBanner() {
 
   return (
     <section className="bg-cream-warm px-6 pt-6 pb-16 lg:px-[72px] lg:pt-6 lg:pb-[72px]">
-      <div className="max-w-[1200px] mx-auto bg-[#f4ece8] rounded-[24px] p-8 lg:p-12 drop-shadow-[0px_8px_15px_rgba(92,64,40,0.06)] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="max-w-[1200px] mx-auto hard-lg bg-[#f4ece8] p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className="lg:col-span-8">
           <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#385729] mb-1">
             {dict.proCta.eyebrow}
@@ -35,7 +35,7 @@ export function VakmanBanner() {
 
           <Link
             href="/registreer/vakman"
-            className="inline-flex items-center gap-2 rounded-full bg-[#385729] px-10 py-4 font-body font-semibold text-[14px] text-white no-underline whitespace-nowrap drop-shadow-[0px_4px_8px_rgba(56,87,41,0.3)]"
+            className="hard inline-flex items-center gap-2 bg-[#385729] px-10 py-4 font-body font-semibold text-[14px] text-white no-underline whitespace-nowrap"
           >
             {dict.proCta.button}
             <ArrowRight size={12} weight="bold" />
@@ -43,7 +43,7 @@ export function VakmanBanner() {
         </div>
 
         <div className="lg:col-span-4">
-          <div className="rounded-2xl overflow-hidden shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] bg-[#eee7e3]">
+          <div className="hard-lg overflow-hidden bg-[#eee7e3]">
             <img src={dict.proCta.image} alt={dict.proCta.imageAlt} className="w-full h-[220px] sm:h-[244px] object-cover block" />
           </div>
         </div>

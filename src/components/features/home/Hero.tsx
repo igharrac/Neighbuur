@@ -81,7 +81,7 @@ export function Hero() {
 
           {/* Zoekcapsule — categorieveld is functioneel (-> /zoeken?q=), locatieveld nog niet
              (er bestaat nog geen postcode/wijk-matching in de backend) */}
-          <div className="bg-white/95 backdrop-blur-[6px] flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 rounded-[28px] sm:rounded-full w-full max-w-[672px] drop-shadow-[0px_8px_30px_rgba(92,64,40,0.08)]">
+          <div className="bg-white/95 backdrop-blur-[6px] flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 rounded-[12px] w-full max-w-[672px] border border-warmzwart">
             <div className="flex items-center gap-2 flex-1 min-w-0 pl-4 py-2">
               <MagnifyingGlass size={17} className="text-[#594139] shrink-0" />
               <input
@@ -107,7 +107,7 @@ export function Hero() {
             </div>
             <button
               onClick={handleZoeken}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#385729] px-8 py-3.5 font-body font-semibold text-[14px] text-white whitespace-nowrap drop-shadow-[0px_4px_7px_rgba(56,87,41,0.3)]"
+              className="hard inline-flex items-center justify-center gap-2 bg-[#385729] px-8 py-3.5 font-body font-semibold text-[14px] text-white whitespace-nowrap"
             >
               {dict.hero.searchButton}
               <ArrowRight size={12} weight="bold" />

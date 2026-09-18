@@ -109,7 +109,7 @@ export function SearchPage({
 
       <form
         onSubmit={handleSearch}
-        className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white border border-lijn rounded-2xl sm:rounded-full shadow-soft mb-4 p-1.5 gap-1.5"
+        className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white border border-warmzwart rounded-[12px] mb-4 p-1.5 gap-1.5"
       >
         <div className="flex items-center flex-1 min-w-0 pl-3.5">
           <MagnifyingGlass size={17} className="text-warmgrijs shrink-0" />
@@ -130,7 +130,7 @@ export function SearchPage({
             className="flex-1 min-w-0 border-none outline-none bg-transparent text-body-sm placeholder:text-warmgrijs py-2.5 px-2.5"
           />
         </div>
-        <button type="submit" disabled={zoekenBezig} className="btn-primary !rounded-full !py-2.5 !px-5 shrink-0 disabled:opacity-60">
+        <button type="submit" disabled={zoekenBezig} className="btn-primary !py-2.5 !px-5 shrink-0 disabled:opacity-60">
           {zoekenBezig ? "Zoeken…" : "Zoeken"} {!zoekenBezig && <ArrowRight size={15} weight="bold" />}
         </button>
       </form>

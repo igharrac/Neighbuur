@@ -52,59 +52,20 @@
 }
 
 @layer components {
-  /* ── Buttons ── */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2
-           font-body font-semibold
-           rounded-sm cursor-pointer
-           transition-all duration-200 ease-out
-           active:scale-[0.98];
-  }
-
-  .btn-primary {
-    @apply btn bg-sage text-white px-7 py-3.5 text-body
-           hover:bg-sage-600 hover:shadow-medium hover:-translate-y-0.5;
-  }
-
-  .btn-secondary {
-    @apply btn bg-transparent text-warmzwart px-7 py-3.5 text-body
-           border-[1.5px] border-lijn
-           hover:border-warmzwart hover:bg-warmzwart/[0.03] hover:-translate-y-0.5;
-  }
-
-  .btn-dark {
-    @apply btn bg-warmzwart text-white px-5 py-2.5 text-body-sm
-           hover:shadow-medium hover:-translate-y-0.5;
-  }
-
-  .btn-ghost {
-    @apply btn bg-transparent text-warmgrijs px-4 py-2.5 text-body-sm
-           hover:text-warmzwart hover:bg-sand;
-  }
-
-  /* ── Cards ── */
-  .card {
-    @apply bg-white rounded shadow-soft
-           transition-all duration-200
-           hover:-translate-y-0.5 hover:shadow-medium;
-  }
-
-  .card-flat {
-    @apply bg-white border-[1.5px] border-lijn rounded
-           transition-all duration-200
-           hover:border-sage hover:-translate-y-0.5;
-  }
-
   /* ── Hard shadow (neobrutalist) ──
      Herbruikbaar basisrecept, zie fletchpmm.com/before-after: dikke rand +
      een harde offset-schaduw die bij hover groeit en het element laat
      "liften". Alles met !important, zodat het ook een conflicterende class
-     als .input kan overrulen ongeacht brontekstvolgorde.
+     als .input kan overrulen ongeacht brontekstvolgorde. Staat bovenaan
+     omdat andere classes hieronder 'm via @apply hergebruiken.
        .hard    — kleine elementen: filters, buttons, chips, form inputs.
        .hard-lg — grotere oppervlakken: cards.
      Kleur bewust warmzwart, niet oranje — zie het merk-kleurbesluit hierboven
      (sage i.p.v. terracotta, differentiatie t.o.v. de oranje-verzadigde
-     home-services-categorie). */
+     home-services-categorie). Bewust NIET toegepast op .btn-dark en Toast:
+     die hebben zelf al een warmzwart achtergrond, dus een warmzwart rand
+     zou onzichtbaar zijn (rand = vulkleur). Ook niet op .btn-ghost — die is
+     bedoeld als ingetogen/tertiaire actie, een dikke rand werkt dat tegen. */
   .hard {
     @apply !border-2 !border-warmzwart !rounded-sm
            !transition-all !duration-150
@@ -120,7 +81,47 @@
            hover:!-translate-x-[2px] hover:!-translate-y-[2px];
   }
 
-  .card-hard {
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           font-body font-semibold
+           rounded-sm cursor-pointer
+           transition-all duration-200 ease-out
+           active:scale-[0.98];
+  }
+
+  .btn-primary {
+    @apply btn hard bg-sage text-white px-7 py-3.5 text-body
+           hover:bg-sage-600;
+  }
+
+  .btn-secondary {
+    @apply btn hard bg-white text-warmzwart px-7 py-3.5 text-body
+           hover:bg-warmzwart/[0.03];
+  }
+
+  /* .btn-dark en .btn-ghost bewust NIET naar hard-shadow overgezet:
+     .btn-dark heeft al een warmzwart achtergrond, dus een warmzwart rand
+     zou onzichtbaar zijn (rand = vulkleur); .btn-ghost is bedoeld als
+     ingetogen/tertiaire actie — een dikke zwarte rand zou dat doel juist
+     tegenwerken. Zie ook de toelichting bij Toast hieronder (zelfde
+     kleur-conflict). */
+  .btn-dark {
+    @apply btn bg-warmzwart text-white px-5 py-2.5 text-body-sm
+           hover:shadow-medium hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-warmgrijs px-4 py-2.5 text-body-sm
+           hover:text-warmzwart hover:bg-sand;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply hard-lg bg-white;
+  }
+
+  .card-flat {
     @apply hard-lg bg-white;
   }
 
@@ -134,14 +135,18 @@
   .badge-blauw      { @apply bg-blauw-light text-blauw; }
   .badge-lavendel   { @apply bg-lavendel-light text-lavendel; }
 
-  /* ── Form inputs ── */
+  /* ── Form inputs ──
+     Hard-shadow op focus i.p.v. hover (zoals .hard) — een tekstveld hover je
+     overheen zonder het te willen "liften", de schaduw hoort bij het actief
+     ermee bezig zijn (focus), niet bij er met de muis overheen bewegen. */
   .input {
-    @apply w-full border-2 border-lijn rounded-sm
+    @apply w-full border-2 border-warmzwart rounded-sm
            px-4 py-3.5 font-body text-body
            bg-white outline-none
-           transition-all duration-200
+           transition-all duration-150
            placeholder:text-warmgrijs
-           focus:border-sage focus:shadow-glow;
+           shadow-[2px_2px_0_0_#1A1A18]
+           focus:shadow-[4px_4px_0_0_#1A1A18] focus:-translate-x-[2px] focus:-translate-y-[2px];
   }
 
   /* ── Illustration containers ── */

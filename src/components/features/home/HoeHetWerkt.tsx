@@ -30,7 +30,7 @@ export function HoeHetWerkt() {
             const stijl = STAP_STIJL[i];
             const Icon = stijl.Icon;
             return (
-              <div key={stap.n} className="bg-white rounded-[24px] p-8 drop-shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+              <div key={stap.n} className="hard-lg bg-white p-8">
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
                   style={{ backgroundColor: stijl.bg }}

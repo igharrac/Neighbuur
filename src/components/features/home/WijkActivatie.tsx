@@ -25,12 +25,12 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
 
   return (
     <section className="bg-sand-light px-6 py-16 lg:p-[72px]">
-      <div className="max-w-[1200px] mx-auto bg-white rounded-[24px] p-6 sm:p-8 lg:p-12 drop-shadow-[0px_8px_15px_rgba(92,64,40,0.06)] grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <div className="max-w-[1200px] mx-auto hard-lg bg-white p-6 sm:p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         <div className="lg:col-span-5 relative">
-          <div className="rounded-2xl overflow-hidden bg-[#f4ece8] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]">
+          <div className="hard-lg overflow-hidden bg-[#f4ece8]">
             <img src={dict.community.image} alt={dict.community.imageAlt} className="w-full h-[200px] sm:h-[253px] object-cover block" />
           </div>
-          <div className="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-xl bg-[#385729] px-4 py-3 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)]">
+          <div className="hard absolute -bottom-4 -right-4 flex items-center gap-2 bg-[#385729] px-4 py-3">
             <Medal size={18} weight="fill" className="text-white shrink-0" />
             <span className="font-body font-bold text-[14px] text-white whitespace-nowrap">{dict.community.activeBadge}</span>
           </div>
@@ -48,7 +48,7 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
           </p>
 
           <form onSubmit={handleSearch} className="flex gap-2 mb-6">
-            <div className="flex-1 min-w-0 flex items-center gap-2 rounded-full bg-sand-light px-4 py-3">
+            <div className="flex-1 min-w-0 flex items-center gap-2 rounded-[12px] border border-warmzwart bg-sand-light px-4 py-3">
               <MagnifyingGlass size={16} className="text-[#8d7168] shrink-0" />
               <input
                 type="text"
@@ -60,7 +60,7 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
             </div>
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1e1b19] px-8 py-3.5 font-body font-semibold text-[14px] text-cream-warm whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 rounded-sm bg-[#1e1b19] px-8 py-3.5 font-body font-semibold text-[14px] text-cream-warm whitespace-nowrap shadow-[2px_2px_0_0_#1A1A18] hover:shadow-[4px_4px_0_0_#1A1A18] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all duration-150"
             >
               {dict.community.cta}
               <ArrowRight size={11} weight="bold" />

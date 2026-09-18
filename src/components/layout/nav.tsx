@@ -211,7 +211,7 @@ export function Footer() {
   const { dict } = useLang();
 
   return (
-    <footer className="text-center py-10 px-6 border-t border-lijn">
+    <footer className="hidden md:block text-center py-10 px-6 border-t border-lijn">
       <div className="flex justify-center mb-3">
         <Logo />
       </div>
