@@ -53,7 +53,7 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-md shadow-strong border border-lijn overflow-hidden animate-fade-in z-50">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-sm border-2 border-warmzwart shadow-[3px_3px_0_0_#1A1A18] overflow-hidden animate-fade-in z-50">
           <div className="px-4 py-3 border-b border-lijn">
             <p className="font-semibold text-body-sm text-warmzwart truncate">{naam}</p>
           </div>

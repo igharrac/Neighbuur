@@ -20,7 +20,7 @@ export function WhatsappCommunityCta() {
 
   return (
     <section className="bg-cream-warm px-6 py-8 lg:px-[72px]">
-      <div className="max-w-[1200px] mx-auto hard-lg bg-sand-light p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div className="max-w-[1200px] mx-auto hard-lg bg-sand-light p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 hover:!shadow-[3px_3px_0_0_#1A1A18] hover:!translate-x-0 hover:!translate-y-0">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
           <div className="w-16 h-16 shrink-0 rounded-2xl bg-[#2c694e] flex items-center justify-center">
             <ChatCircleText size={30} weight="fill" className="text-white" />

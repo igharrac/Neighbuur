@@ -43,7 +43,7 @@ export function AuthSplitScreen({ photoUrl, photoAlt, topBadge, bottomCard, back
           <span className="w-9" aria-hidden />
         </div>
 
-        <div className="bg-white md:rounded-2xl md:shadow-strong md:border md:border-lijn overflow-hidden grid grid-cols-1 md:grid-cols-2 md:min-h-[640px]">
+        <div className="bg-white md:rounded md:border-2 md:border-warmzwart md:shadow-[3px_3px_0_0_#1A1A18] overflow-hidden grid grid-cols-1 md:grid-cols-2 md:min-h-[640px]">
           <div className="px-6 pb-10 sm:p-10 md:p-12 flex flex-col md:justify-center">{children}</div>
 
           <div className="hidden md:flex relative flex-col justify-between p-6">

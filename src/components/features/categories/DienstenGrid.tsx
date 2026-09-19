@@ -19,7 +19,7 @@ export function DienstenGrid({ categories }: { categories: Category[] }) {
           <Link
             key={category.id}
             href={`/zoeken?categorie=${category.slug}`}
-            className="group no-underline bg-white rounded-2xl overflow-hidden shadow-[0px_4px_10px_rgba(92,64,40,0.04)] hover:-translate-y-1 hover:shadow-[0px_12px_24px_rgba(92,64,40,0.1)] transition-all duration-300"
+            className="group no-underline card-flat overflow-hidden"
           >
             <div className="w-full aspect-[4/3] overflow-hidden bg-sand-light">
               {category.image_url ? (

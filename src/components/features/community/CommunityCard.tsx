@@ -11,7 +11,7 @@ interface CommunityCardProps {
 
 export function CommunityCard({ name, type, slug, memberCount, reviewCount }: CommunityCardProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-[0px_4px_10px_rgba(92,64,40,0.04)] p-6 flex flex-col">
+    <div className="card-flat p-6 flex flex-col">
       <p className="font-body text-[12px] font-semibold uppercase tracking-[0.6px] text-sage mb-1 capitalize">{type}</p>
       <h3 className="font-display font-bold text-[19px] text-warmzwart mb-4">{name}</h3>
 
@@ -26,7 +26,7 @@ export function CommunityCard({ name, type, slug, memberCount, reviewCount }: Co
         </span>
       </div>
 
-      <Link href={`/community/${slug}`} className="btn-secondary !rounded-full !text-body-sm mt-auto self-start">
+      <Link href={`/community/${slug}`} className="btn-secondary !text-body-sm mt-auto self-start">
         Bekijk
         <ArrowRight size={15} weight="bold" />
       </Link>

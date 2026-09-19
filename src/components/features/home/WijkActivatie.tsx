@@ -25,7 +25,7 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
 
   return (
     <section className="bg-sand-light px-6 py-16 lg:p-[72px]">
-      <div className="max-w-[1200px] mx-auto hard-lg bg-white p-6 sm:p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <div className="max-w-[1200px] mx-auto hard-lg bg-white p-6 sm:p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center hover:!shadow-[3px_3px_0_0_#1A1A18] hover:!translate-x-0 hover:!translate-y-0">
         <div className="lg:col-span-5 relative">
           <div className="hard-lg overflow-hidden bg-[#f4ece8]">
             <img src={dict.community.image} alt={dict.community.imageAlt} className="w-full h-[200px] sm:h-[253px] object-cover block" />

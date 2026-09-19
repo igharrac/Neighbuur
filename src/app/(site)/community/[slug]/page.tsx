@@ -92,7 +92,7 @@ export default async function CommunityPage({ params }: { params: { slug: string
               <p className="font-body text-[14px] text-warmgrijs">Deze community-pagina heeft nog geen content.</p>
             ) : (
               overigeBlokken.map((blok) => (
-                <div key={blok.id} className="bg-white rounded-2xl shadow-[0px_4px_10px_rgba(92,64,40,0.04)] p-6 md:p-8">
+                <div key={blok.id} className="card-flat p-6 md:p-8">
                   <ContentBlock type={blok.type} data={blok.data} community_id={c.id} lang={lang} />
                 </div>
               ))

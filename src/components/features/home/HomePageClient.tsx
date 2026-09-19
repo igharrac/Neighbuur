@@ -99,7 +99,7 @@ export function HomePageClient({ categories, communities }: HomePageClientProps)
 
           <div className="grid md:grid-cols-3 gap-5">
             {DEMO_REVIEWS.map((review) => (
-              <div key={review.naam} className="card p-7">
+              <div key={review.naam} className="card !bg-transparent p-7">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
                     <span className={`w-10 h-10 rounded-full ${review.kleur} text-white flex items-center justify-center font-bold text-body`}>

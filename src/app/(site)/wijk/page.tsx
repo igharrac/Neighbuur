@@ -207,7 +207,7 @@ export default async function WijkIndexPage() {
             {eigenPlekje.type === "community" ? (
               <Link
                 href={`/community/${eigenPlekje.slug}`}
-                className="block bg-white rounded-2xl p-6 no-underline shadow-[0px_4px_10px_rgba(92,64,40,0.04)] hover:-translate-y-0.5 hover:shadow-[0px_8px_15px_rgba(92,64,40,0.08)] transition-all max-w-[560px]"
+                className="block card-flat p-6 no-underline max-w-[560px]"
               >
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-display font-bold text-[20px] text-warmzwart">{eigenPlekje.name}</h3>
@@ -239,7 +239,7 @@ export default async function WijkIndexPage() {
                 </div>
               </Link>
             ) : eigenPlekje.telling <= 1 ? (
-              <div className="bg-white rounded-2xl p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] max-w-[560px]">
+              <div className="card-flat p-6 max-w-[560px]">
                 <div className="flex items-center gap-2 mb-2">
                   <HandWaving size={18} className="text-sage" weight="fill" />
                   <h3 className="font-display font-bold text-[18px] text-warmzwart">Goed om je erbij te hebben</h3>
@@ -260,7 +260,7 @@ export default async function WijkIndexPage() {
                 </Link>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] max-w-[560px]">
+              <div className="card-flat p-6 max-w-[560px]">
                 <div className="flex items-center gap-2 mb-2">
                   <House size={18} className="text-sage" weight="fill" />
                   <h3 className="font-display font-bold text-[18px] text-warmzwart">Je buurt begint te groeien</h3>
@@ -294,7 +294,7 @@ export default async function WijkIndexPage() {
               <Link
                 key={k.key}
                 href={k.href}
-                className="bg-white rounded-2xl p-6 no-underline shadow-[0px_4px_10px_rgba(92,64,40,0.04)] hover:-translate-y-0.5 hover:shadow-[0px_8px_15px_rgba(92,64,40,0.08)] transition-all"
+                className="card-flat p-6 no-underline"
               >
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <h3 className="font-display font-bold text-[19px] text-warmzwart">{k.title}</h3>

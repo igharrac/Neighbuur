@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MagnifyingGlass, MapPin, ArrowRight, Tag } from "@phosphor-icons/react";
+import { MagnifyingGlass, MapPin, ArrowRight } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 
 export function Hero() {
@@ -39,22 +39,11 @@ export function Hero() {
             />
             <div className="absolute inset-0 rounded-tr-[24px] rounded-br-[24px] bg-gradient-to-t from-cream-warm from-0% via-transparent via-50% to-[rgba(255,248,245,0.6)] to-100%" />
 
-            {/* Zwevende kaart — "collectieve deal", hangt over de rechteronderhoek van het beeld */}
-            <div className="absolute -bottom-10 right-16 w-[320px] pointer-events-auto">
-              <div className="bg-white/95 backdrop-blur-[6px] border border-[#f4ece8] flex flex-col gap-2 p-[17px] rounded-2xl shadow-[0px_12px_28px_rgba(92,64,40,0.1)]">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="rounded bg-[#b1f0ce] px-2 py-0.5 font-body font-semibold text-[11px] tracking-[0.275px] uppercase text-[#0e5138]">
-                    {dict.hero.dealTag}
-                  </span>
-                  <Tag size={16} weight="fill" className="text-[#0e5138] shrink-0" />
-                </div>
-                <p className="font-display font-bold text-[18px] text-[#1e1b19]">{dict.hero.dealTitle}</p>
-                <p className="font-body text-[13px] leading-[18px] text-[#594139]">{dict.hero.dealSubtitle}</p>
-                <div className="h-1.5 w-full rounded-full bg-[#f4ece8] overflow-hidden mt-1">
-                  <div className="h-full w-[84%] rounded-full bg-[#2c694e]" />
-                </div>
-              </div>
-            </div>
+            {/* Zwevende "collectieve deal"-kaart verborgen — de cijfers erin zijn puur
+               illustratief (geen backend voor % aangesloten/besparing), zie ook de
+               vergelijkbare kaart in WijkActivatie.tsx. Pas weer aanzetten zodra dit
+               op echte data draait. dict.hero.dealTag/dealTitle/dealSubtitle blijven
+               staan voor als dat zover is. */}
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ export function VakmanBanner() {
 
   return (
     <section className="bg-cream-warm px-6 pt-6 pb-16 lg:px-[72px] lg:pt-6 lg:pb-[72px]">
-      <div className="max-w-[1200px] mx-auto hard-lg bg-[#f4ece8] p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="max-w-[1200px] mx-auto hard-lg bg-[rgba(45,105,70,0.2)] p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center hover:!shadow-[3px_3px_0_0_#1A1A18] hover:!translate-x-0 hover:!translate-y-0">
         <div className="lg:col-span-8">
           <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#385729] mb-1">
             {dict.proCta.eyebrow}

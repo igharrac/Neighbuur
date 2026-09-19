@@ -246,7 +246,7 @@ export default async function PlanPage() {
     <div className="bg-cream-warm min-h-screen">
       <div className="max-w-[1200px] mx-auto px-6 py-10 lg:py-14">
         {/* ── Hero-banner ── */}
-        <div className="bg-white rounded-[24px] p-6 sm:p-8 lg:p-10 shadow-[0px_8px_15px_rgba(92,64,40,0.06)] mb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+        <div className="hard-lg bg-white p-6 sm:p-8 lg:p-10 mb-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           <div className="lg:col-span-8">
             <span className="inline-flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.6px] text-sage mb-2">
               <Sparkle size={14} weight="fill" />
@@ -301,7 +301,7 @@ export default async function PlanPage() {
             </div>
             <div className="flex flex-col gap-3">
               {groepskortingen.map((deal) => (
-                <div key={deal.id} className="bg-white rounded-2xl p-5 flex items-center justify-between gap-4 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                <div key={deal.id} className="card-flat p-5 flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <p className="font-body font-bold text-[15px] text-warmzwart">{deal.titel}</p>
                     {deal.beschrijving && (
@@ -323,7 +323,7 @@ export default async function PlanPage() {
 
         {/* ── Lege staat ── */}
         {leeg && (
-          <div className="bg-white rounded-[24px] p-10 sm:p-16 text-center shadow-[0px_8px_15px_rgba(92,64,40,0.06)]">
+          <div className="hard-lg bg-white p-10 sm:p-16 text-center">
             <div className="w-14 h-14 rounded-full bg-sand-light flex items-center justify-center mx-auto mb-4">
               <Sparkle size={22} className="text-sage" weight="fill" />
             </div>
@@ -351,7 +351,7 @@ export default async function PlanPage() {
                   </div>
                   <div className="flex flex-col gap-3">
                     {inAfwachting.map((b) => (
-                      <div key={b.id} className="bg-white rounded-2xl p-5 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                      <div key={b.id} className="card-flat p-5">
                         <div className="flex items-start justify-between gap-3 mb-1.5">
                           <h3 className="font-body font-bold text-[16px] text-warmzwart">
                             {b.categorieNaam ?? "Klus"}
@@ -373,7 +373,7 @@ export default async function PlanPage() {
                     <CheckCircle size={18} className="text-groen" weight="fill" />
                     <h2 className="font-display font-bold text-[20px] text-warmzwart">Al geregeld &amp; afgestemd</h2>
                   </div>
-                  <div className="bg-white rounded-2xl divide-y divide-lijn overflow-hidden shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                  <div className="card-flat divide-y divide-lijn overflow-hidden">
                     {bevestigd.map((b) => (
                       <div key={b.id} className="p-5 flex items-center justify-between gap-3">
                         <div className="min-w-0">
@@ -407,7 +407,7 @@ export default async function PlanPage() {
                   </div>
                   <div className="flex flex-col gap-2">
                     {afgesloten.map((b) => (
-                      <div key={b.id} className="bg-white rounded-2xl p-4 flex items-center justify-between gap-3 opacity-80">
+                      <div key={b.id} className="card-flat p-4 flex items-center justify-between gap-3 opacity-80">
                         <p className="font-body text-[14px] text-warmgrijs-dark truncate">
                           {b.categorieNaam ?? "Klus"}
                           {b.vakman && ` · ${b.vakman.bedrijfsnaam}`}
@@ -423,7 +423,7 @@ export default async function PlanPage() {
             {/* ── Zijkolom ── */}
             <aside className="lg:col-span-4 flex flex-col gap-5">
               {buurtreviews.length > 0 && (
-                <div className="bg-white rounded-2xl p-5 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                <div className="card-flat p-5">
                   <h3 className="font-body font-bold text-[14px] text-warmzwart mb-3 flex items-center gap-1.5">
                     <Star size={15} className="text-oker" weight="fill" />
                     Buurtreviews
@@ -443,7 +443,7 @@ export default async function PlanPage() {
               )}
 
               {recentGesprek && (
-                <div className="bg-white rounded-2xl p-5 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                <div className="card-flat p-5">
                   <h3 className="font-body font-bold text-[14px] text-warmzwart mb-2 flex items-center gap-1.5">
                     <ChatCircle size={15} className="text-blauw" weight="fill" />
                     Recent contact
@@ -462,7 +462,7 @@ export default async function PlanPage() {
               )}
 
               {community && (
-                <div className="bg-white rounded-2xl p-5 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+                <div className="card-flat p-5">
                   <h3 className="font-body font-bold text-[14px] text-warmzwart mb-2 flex items-center gap-1.5">
                     <Users size={15} className="text-groen" weight="fill" />
                     {community.naam}

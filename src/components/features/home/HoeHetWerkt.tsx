@@ -3,11 +3,32 @@
 import { MagnifyingGlass, UsersThree, CheckCircle, type IconProps } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
 
-const STAP_STIJL: { bg: string; iconColor: string; labelColor: string; Icon: React.ComponentType<IconProps> }[] = [
-  { bg: "#C4DAB9", iconColor: "#385729", labelColor: "#385729", Icon: MagnifyingGlass },
-  { bg: "#b1f0ce", iconColor: "#2c694e", labelColor: "#2c694e", Icon: UsersThree },
-  { bg: "#ffddbb", iconColor: "#7d531f", labelColor: "#7d531f", Icon: CheckCircle },
+const STAP_STIJL: { bg: string; iconColor: string; labelColor: string; blob: string; Icon: React.ComponentType<IconProps> }[] = [
+  { bg: "#C4DAB9", iconColor: "#385729", labelColor: "#385729", blob: "63% 37% 54% 46% / 43% 47% 53% 57%", Icon: MagnifyingGlass },
+  { bg: "#b1f0ce", iconColor: "#2c694e", labelColor: "#2c694e", blob: "42% 58% 68% 32% / 46% 39% 61% 54%", Icon: UsersThree },
+  { bg: "#ffddbb", iconColor: "#7d531f", labelColor: "#7d531f", blob: "55% 45% 40% 60% / 60% 45% 55% 40%", Icon: CheckCircle },
 ];
+
+/* Twee korte accentstreepjes naast het icoon — het "spark"-detail uit het
+   referentiebeeld, geeft de blob net dat neobrutalist-illustratieve gevoel
+   i.p.v. een kale icoon-in-cirkel. Kleur = de blob-kleur zelf, niet het
+   icoon. Drie varianten (hoek/lengte/positie) zodat de drie kaarten niet
+   een 1-op-1 kopie van elkaar ogen. */
+const SPARK_VARIANTEN = [
+  { paths: ["M5 15L11 5", "M13 17.5L17.5 9"], pos: "-top-1.5 -right-1.5" },
+  { paths: ["M6 16L10 4", "M14.5 18L17.5 11"], pos: "-top-1 -right-2" },
+  { paths: ["M4 13L14 6", "M12.5 16.5L18 12"], pos: "-top-2 -right-1" },
+];
+
+function AccentSpark({ color, variant }: { color: string; variant: number }) {
+  const { paths, pos } = SPARK_VARIANTEN[variant];
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className={`absolute ${pos} pointer-events-none`}>
+      <path d={paths[0]} stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+      <path d={paths[1]} stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export function HoeHetWerkt() {
   const { dict } = useLang();
@@ -32,10 +53,11 @@ export function HoeHetWerkt() {
             return (
               <div key={stap.n} className="hard-lg bg-white p-8">
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
-                  style={{ backgroundColor: stijl.bg }}
+                  className="relative w-16 h-16 flex items-center justify-center mb-6"
+                  style={{ backgroundColor: stijl.bg, borderRadius: stijl.blob }}
                 >
-                  <Icon size={22} weight="bold" style={{ color: stijl.iconColor }} />
+                  <Icon size={30} weight="bold" style={{ color: stijl.iconColor }} />
+                  <AccentSpark color={stijl.bg} variant={i} />
                 </div>
                 <p
                   className="font-body font-bold text-[12px] tracking-[0.6px] uppercase mb-1"

@@ -65,7 +65,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
 
   if (props.type === "bestaande") {
     return (
-      <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="card-flat p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="w-10 h-10 rounded-full bg-groen/10 flex items-center justify-center shrink-0">
             <Users size={18} className="text-groen" weight="fill" />
@@ -85,7 +85,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
 
   if (props.type === "drempel") {
     return (
-      <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+      <div className="card-flat p-5 sm:p-6">
         <div className="flex items-center gap-3 mb-3">
           <span className="w-10 h-10 rounded-full bg-sage-50 flex items-center justify-center shrink-0">
             <Users size={18} className="text-sage" weight="fill" />
@@ -114,7 +114,7 @@ export function CommunityDetectieKaart(props: DetectieResultaat) {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-[0px_4px_10px_rgba(92,64,40,0.04)] flex items-start gap-3">
+    <div className="card-flat p-5 sm:p-6 flex items-start gap-3">
       <span className="w-10 h-10 rounded-full bg-sage-50 flex items-center justify-center shrink-0">
         <Sparkle size={18} className="text-sage" weight="fill" />
       </span>

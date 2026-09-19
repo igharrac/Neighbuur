@@ -47,7 +47,7 @@ export function WijkZoeken({ districts, communities }: { districts: DistrictOpti
   return (
     <div>
       <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 max-w-[560px]">
-        <div className="flex-1 min-w-0 flex items-center gap-2 rounded-full bg-white px-4 py-3.5 shadow-[0px_4px_10px_rgba(92,64,40,0.04)]">
+        <div className="flex-1 min-w-0 flex items-center gap-2 rounded-[12px] border border-warmzwart bg-white px-4 py-3.5">
           <MagnifyingGlass size={17} className="text-warmgrijs shrink-0" />
           <input
             type="text"
@@ -60,7 +60,7 @@ export function WijkZoeken({ districts, communities }: { districts: DistrictOpti
             className="flex-1 min-w-0 bg-transparent font-body text-[15px] text-warmzwart placeholder:text-warmgrijs outline-none"
           />
         </div>
-        <button type="submit" className="btn-primary !rounded-full justify-center">
+        <button type="submit" className="btn-primary justify-center">
           Zoeken
           <ArrowRight size={14} weight="bold" />
         </button>
