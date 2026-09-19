@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { PaperPlaneRight, Image as ImageIcon, Spinner } from "@phosphor-icons/react";
 import { useImageUpload } from "@/lib/hooks/useImageUpload";
 
@@ -9,7 +9,12 @@ interface ChatInputProps {
   onSend: (payload: { tekst: string; fotoPath: string | null }) => Promise<boolean>;
 }
 
-export function ChatInput({ conversationId, onSend }: ChatInputProps) {
+export interface ChatInputHandle {
+  /** Opent de bestandskiezer voor een foto — aangeroepen vanuit de "Foto's toevoegen"-snelle-actie. */
+  openPhotoPicker: () => void;
+}
+
+export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(function ChatInput({ conversationId, onSend }, ref) {
   const [tekst, setTekst] = useState("");
   const [sending, setSending] = useState(false);
   const { upload, uploading } = useImageUpload({
@@ -18,6 +23,10 @@ export function ChatInput({ conversationId, onSend }: ChatInputProps) {
     isPrivate: true,
   });
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    openPhotoPicker: () => fileRef.current?.click(),
+  }));
 
   async function handleSend() {
     const waarde = tekst.trim();
@@ -64,17 +73,17 @@ export function ChatInput({ conversationId, onSend }: ChatInputProps) {
         }}
         placeholder="Typ een bericht..."
         rows={1}
-        className="input flex-1 !py-2.5 resize-none max-h-32"
+        className="input !rounded-full !border !border-lijn !shadow-none focus:!shadow-none focus:!translate-x-0 focus:!translate-y-0 flex-1 !py-2.5 resize-none max-h-32"
       />
       <button
         type="button"
         onClick={handleSend}
         disabled={sending || tekst.trim().length === 0}
-        className="min-w-11 min-h-11 flex items-center justify-center bg-sage text-white rounded-sm disabled:opacity-40 disabled:pointer-events-none shrink-0"
+        className="min-w-11 min-h-11 flex items-center justify-center bg-sage text-white rounded-full disabled:opacity-40 disabled:pointer-events-none shrink-0"
         aria-label="Verstuur bericht"
       >
         <PaperPlaneRight size={18} weight="fill" />
       </button>
     </div>
   );
-}
+});
