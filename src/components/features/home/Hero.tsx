@@ -34,10 +34,10 @@ export function Hero() {
               className="absolute inset-0 rounded-tr-[24px] rounded-br-[24px]"
               style={{
                 backgroundImage:
-                  "linear-gradient(121.38deg, #fff8f5 6.273%, #fff8f5 36.117%, rgba(255,248,245,0.769) 52.063%, rgba(255,248,245,0) 71.443%)",
+                  "linear-gradient(121.38deg, #f6f5f2 6.273%, #f6f5f2 36.117%, rgba(246,245,242,0.769) 52.063%, rgba(246,245,242,0) 71.443%)",
               }}
             />
-            <div className="absolute inset-0 rounded-tr-[24px] rounded-br-[24px] bg-gradient-to-t from-cream-warm from-0% via-transparent via-50% to-[rgba(255,248,245,0.6)] to-100%" />
+            <div className="absolute inset-0 rounded-tr-[24px] rounded-br-[24px] bg-gradient-to-t from-cream-warm from-0% via-transparent via-50% to-[rgba(246,245,242,0.6)] to-100%" />
 
             {/* Zwevende "collectieve deal"-kaart verborgen — de cijfers erin zijn puur
                illustratief (geen backend voor % aangesloten/besparing), zie ook de

@@ -10,7 +10,7 @@
  * - groen (#2A8C5A)
  * - blauw (#2A6BE8)
  * - oker (#C4871A)
- * - cream (#FAF7F2) / sand (#F0EAE0)
+ * - cream (#F2F0EA) / sand (#E3DDD0)
  */
 
 import { cn } from "@/lib/utils";
@@ -56,11 +56,11 @@ export function IllusHuis({ className, size = 200 }: IllusProps) {
 export function IllusStucwerk({ className, size = 160 }: IllusProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 160 160" fill="none" className={cn("flex-shrink-0", className)}>
-      <rect x="20" y="30" width="120" height="100" rx="4" fill="#F0EAE0" />
+      <rect x="20" y="30" width="120" height="100" rx="4" fill="#E3DDD0" />
       {/* Wall texture lines */}
-      <line x1="30" y1="50" x2="130" y2="50" stroke="#E5DDD0" strokeWidth="1" />
-      <line x1="30" y1="70" x2="130" y2="70" stroke="#E5DDD0" strokeWidth="1" />
-      <line x1="30" y1="90" x2="130" y2="90" stroke="#E5DDD0" strokeWidth="1" />
+      <line x1="30" y1="50" x2="130" y2="50" stroke="#D8D0BF" strokeWidth="1" />
+      <line x1="30" y1="70" x2="130" y2="70" stroke="#D8D0BF" strokeWidth="1" />
+      <line x1="30" y1="90" x2="130" y2="90" stroke="#D8D0BF" strokeWidth="1" />
       {/* Smooth section */}
       <rect x="20" y="30" width="65" height="100" rx="4" fill="white" stroke="#578042" strokeWidth="1.5" opacity="0.8" />
       {/* Trowel */}

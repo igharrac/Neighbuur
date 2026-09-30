@@ -11,9 +11,11 @@ const config: Config = {
        * ══════════════════════════════════════════
        */
       colors: {
-        /* Achtergronden */
-        cream:       { DEFAULT: "#FAF7F2", dark: "#F3EDE4", warm: "#FFF8F5" },
-        sand:        { DEFAULT: "#F0EAE0", dark: "#E5DDD0", light: "#FAF2EE" },
+        /* Achtergronden — warme neutraal-ladder, lichtst naar donkerst:
+           sand.light > cream.warm > cream.DEFAULT > cream.dark > sand.DEFAULT > sand.dark.
+           Bewust minder roze/warm dan voorheen, meer neutraal warmgrijs. */
+        cream:       { DEFAULT: "#F2F0EA", dark: "#E8E4DA", warm: "#F6F5F2" },
+        sand:        { DEFAULT: "#E3DDD0", dark: "#D8D0BF", light: "#F9F8F5" },
 
         /* Merk — bosgroen/salie i.p.v. terracotta: differentieert van de
            oranje-verzadigde home-services-categorie (Werkspot e.d.) en

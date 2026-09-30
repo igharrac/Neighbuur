@@ -9,7 +9,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://neighbuur.nl";
 
 function layout(lang: Lang, title: string, body: string, ctaLabel: string, ctaUrl: string): string {
   return `
-  <div style="font-family:'DM Sans',Arial,sans-serif;background:#FAF7F2;padding:32px 16px;">
+  <div style="font-family:'DM Sans',Arial,sans-serif;background:#F2F0EA;padding:32px 16px;">
     <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #E5E2DA;">
       <div style="background:#578042;padding:20px 28px;">
         <span style="font-family:Georgia,serif;font-weight:900;font-size:20px;color:#ffffff;">Neigh<span style="color:#1A1A18;">buur</span></span>
