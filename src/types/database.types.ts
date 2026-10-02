@@ -1558,6 +1558,10 @@ export interface Database {
         Args: { p_cluster_id: string };
         Returns: number;
       };
+      community_active_bookings_count: {
+        Args: { p_community_id: string };
+        Returns: number;
+      };
       residential_cluster_city_public: {
         Args: { p_cluster_id: string };
         Returns: string | null;

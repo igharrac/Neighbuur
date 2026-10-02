@@ -3,14 +3,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MagnifyingGlass, ArrowRight, Medal } from "@phosphor-icons/react";
+import { MagnifyingGlass, ArrowRight, Users } from "@phosphor-icons/react";
 import { useLang } from "@/lib/hooks/useLang";
-import type { CommunityOverview } from "@/lib/communities";
+import type { CommunityOverview, CommunityStats } from "@/lib/communities";
 
-export function WijkActivatie({ communities }: { communities: CommunityOverview[] }) {
+interface WijkActivatieProps {
+  communities: CommunityOverview[];
+  /** De community van de ingelogde bewoner zelf, met echte cijfers. Null als die er niet is. */
+  myStats: CommunityStats | null;
+  /** De actiefste community als voorbeeld, voor bezoekers zonder eigen wijk. Null als er geen communities zijn. */
+  featuredStats: CommunityStats | null;
+}
+
+export function WijkActivatie({ communities, myStats, featuredStats }: WijkActivatieProps) {
   const { dict } = useLang();
   const router = useRouter();
   const [query, setQuery] = useState("");
+
+  // Eigen wijk heeft voorrang; anders het voorbeeld. Nooit verzonnen cijfers.
+  const featured = myStats ?? featuredStats;
+  const isOwn = myStats !== null;
+  const percentage =
+    featured && featured.residence_count > 0
+      ? Math.min(100, Math.round((featured.member_count / featured.residence_count) * 100))
+      : null;
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -30,10 +46,14 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
           <div className="hard-lg overflow-hidden bg-[#f4ece8]">
             <img src={dict.community.image} alt={dict.community.imageAlt} className="w-full h-[200px] sm:h-[253px] object-cover block" />
           </div>
-          <div className="hard absolute -bottom-4 -right-4 flex items-center gap-2 bg-[#385729] px-4 py-3">
-            <Medal size={18} weight="fill" className="text-white shrink-0" />
-            <span className="font-body font-bold text-[14px] text-white whitespace-nowrap">{dict.community.activeBadge}</span>
-          </div>
+          {featured && (
+            <div className="hard absolute -bottom-4 -right-4 flex items-center gap-2 bg-[#385729] px-4 py-3">
+              <Users size={18} weight="fill" className="text-white shrink-0" />
+              <span className="font-body font-bold text-[14px] text-white whitespace-nowrap">
+                {featured.member_count} {featured.member_count === 1 ? "buur" : "buren"} aangesloten — {featured.name}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-7">
@@ -67,27 +87,52 @@ export function WijkActivatie({ communities }: { communities: CommunityOverview[
             </button>
           </form>
 
-          {/* Illustratieve voorbeeldkaart — geen live statistiek (geen backend voor "% aangesloten"/"actieve klussen"/"voordeel") */}
-          <div className="bg-sand-light rounded-2xl p-4 flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#2c694e] shrink-0" />
-                <span className="font-body font-bold text-[18px] text-[#1e1b19]">{dict.community.sampleName}</span>
+          {featured ? (
+            <div className="bg-sand-light rounded-2xl p-4 flex flex-col gap-2">
+              <p className="font-body font-bold text-[11px] tracking-[0.6px] uppercase text-[#385729]">
+                {isOwn ? "Jouw wijk" : "Al actief op Neighbuur"}
+              </p>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#2c694e] shrink-0" />
+                  <span className="font-body font-bold text-[18px] text-[#1e1b19] truncate">
+                    {featured.name}
+                    {featured.development_name ? ` (${featured.development_name})` : ""}
+                  </span>
+                </div>
+                {percentage !== null && (
+                  <span className="font-body font-bold text-[12px] tracking-[0.24px] text-[#2c694e] whitespace-nowrap shrink-0">
+                    {percentage}% bewoners aangesloten
+                  </span>
+                )}
               </div>
-              <span className="font-body font-bold text-[12px] tracking-[0.24px] text-[#2c694e] whitespace-nowrap">
-                {dict.community.samplePercentage}
-              </span>
+              {percentage !== null && (
+                <div className="h-2 w-full rounded-full bg-[#e9e1dd] overflow-hidden">
+                  <div className="h-full rounded-full bg-[#2c694e]" style={{ width: `${percentage}%` }} />
+                </div>
+              )}
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-body text-[13px] text-[#594139]">
+                  {featured.active_bookings} actieve {featured.active_bookings === 1 ? "klus" : "klussen"} in onderhandeling
+                </span>
+                {featured.avg_discount_pct !== null && (
+                  <span className="font-body font-semibold text-[13px] text-[#385729] whitespace-nowrap">
+                    Gemiddeld voordeel: -{Math.round(featured.avg_discount_pct)}%
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="h-2 w-full rounded-full bg-[#e9e1dd] overflow-hidden">
-              <div className="h-full w-[84%] rounded-full bg-[#2c694e]" />
+          ) : (
+            <div className="bg-sand-light rounded-2xl p-4">
+              <p className="font-body text-[14px] text-[#594139]">
+                Nog geen wijk actief bij jou in de buurt?{" "}
+                <a href="/wijk" className="font-semibold text-[#385729] underline">
+                  Bekijk alle wijken
+                </a>{" "}
+                of start er zelf een.
+              </p>
             </div>
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-body text-[13px] text-[#594139]">{dict.community.sampleKlussen}</span>
-              <span className="font-body font-semibold text-[13px] text-[#385729] whitespace-nowrap">
-                {dict.community.sampleVoordeel}
-              </span>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

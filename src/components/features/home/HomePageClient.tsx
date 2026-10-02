@@ -9,7 +9,7 @@ import { WhatsappCommunityCta } from "@/components/features/home/WhatsappCommuni
 import { VakmanBanner } from "@/components/features/home/VakmanBanner";
 import { useLang } from "@/lib/hooks/useLang";
 import type { Category } from "@/types";
-import type { CommunityOverview } from "@/lib/communities";
+import type { CommunityOverview, CommunityStats } from "@/lib/communities";
 
 const DEMO_REVIEWS = [
   {
@@ -53,9 +53,11 @@ const DEMO_REVIEWS = [
 interface HomePageClientProps {
   categories: Category[];
   communities: CommunityOverview[];
+  myCommunityStats: CommunityStats | null;
+  featuredCommunityStats: CommunityStats | null;
 }
 
-export function HomePageClient({ categories, communities }: HomePageClientProps) {
+export function HomePageClient({ categories, communities, myCommunityStats, featuredCommunityStats }: HomePageClientProps) {
   const { dict } = useLang();
 
   return (
@@ -83,7 +85,7 @@ export function HomePageClient({ categories, communities }: HomePageClientProps)
       </section>
 
       {/* ── WIJK-ACTIVATIE & LIVE STATUS ── */}
-      <WijkActivatie communities={communities} />
+      <WijkActivatie communities={communities} myStats={myCommunityStats} featuredStats={featuredCommunityStats} />
 
       {/* ── REVIEWS ── */}
       <section className="px-6 py-20 md:py-28 bg-cream-warm" id="reviews">
