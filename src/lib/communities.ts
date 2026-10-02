@@ -61,14 +61,17 @@ async function enrichCommunityStats(base: CommunityOverview): Promise<CommunityS
       .eq("active", true),
   ]);
 
-  const dealsWithBothPrices = (deals ?? []).filter(
+  // Alleen deals die daadwerkelijk goedkoper zijn tellen mee — een
+  // groepsprijs die niet lager is dan de normale prijs is geen "voordeel"
+  // en moet het gemiddelde niet kunnen vertekenen richting 0 of negatief.
+  const dealsWithRealDiscount = (deals ?? []).filter(
     (d): d is { price_normal: number; price_group: number } =>
-      d.price_normal != null && d.price_group != null && d.price_normal > 0
+      d.price_normal != null && d.price_group != null && d.price_normal > 0 && d.price_group < d.price_normal
   );
   const avgDiscountPct =
-    dealsWithBothPrices.length > 0
-      ? (dealsWithBothPrices.reduce((sum, d) => sum + (d.price_normal - d.price_group) / d.price_normal, 0) /
-          dealsWithBothPrices.length) *
+    dealsWithRealDiscount.length > 0
+      ? (dealsWithRealDiscount.reduce((sum, d) => sum + (d.price_normal - d.price_group) / d.price_normal, 0) /
+          dealsWithRealDiscount.length) *
         100
       : null;
 

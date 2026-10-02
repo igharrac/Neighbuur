@@ -36,7 +36,10 @@ export function WijkActivatie({ communities, myStats, featuredStats }: WijkActiv
           (c) => c.name.toLowerCase().includes(trimmed) || (c.development_name ?? "").toLowerCase().includes(trimmed)
         )
       : undefined;
-    router.push(match ? `/wijk/${match.slug}` : "/login");
+    // Leeg zoekveld of geen match → naar de algemene wijken-pagina om te
+    // bladeren/zoeken, niet naar /login (dat stuurde ook ingelogde bewoners
+    // daarheen zodra ze niks hadden getypt).
+    router.push(match ? `/wijk/${match.slug}` : "/wijk");
   }
 
   return (
