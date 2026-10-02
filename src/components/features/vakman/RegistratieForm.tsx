@@ -11,7 +11,6 @@ import { useLang } from "@/lib/hooks/useLang";
 import { useAuthPhoto } from "@/lib/hooks/useAuthPhoto";
 import { AuthSplitScreen } from "@/components/features/auth/AuthSplitScreen";
 import { AuthQuoteCard, AuthRatingBadge } from "@/components/features/auth/AuthQuoteCard";
-import { KvkInput, isValidKvK } from "@/components/features/vakman/KvkInput";
 import { CategoryMultiSelect } from "@/components/features/vakman/CategoryMultiSelect";
 import { slugify } from "@/lib/utils";
 import { track } from "@/lib/analytics";
@@ -28,7 +27,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   const router = useRouter();
   const { user, loading: authLoading, refreshProfile } = useAuth();
   const { showToast } = useToast();
-  const { dict } = useLang();
+  const { dict, lang } = useLang();
   const photoUrl = useAuthPhoto("professional");
 
   const [checking, setChecking] = useState(true);
@@ -44,7 +43,6 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   const [bedrijfsnaam, setBedrijfsnaam] = useState("");
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
-  const [kvkNummer, setKvkNummer] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [specialtyIds, setSpecialtyIds] = useState<string[]>([]);
   const [postcode, setPostcode] = useState("");
@@ -52,6 +50,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
 
   // Step 3 — contact
   const [telefoon, setTelefoon] = useState("");
+  const [telefoonTouched, setTelefoonTouched] = useState(false);
   const [contactVoorkeur, setContactVoorkeur] = useState<"phone" | "whatsapp" | "app">("app");
   const [akkoord, setAkkoord] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -151,7 +150,6 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       bedrijfsnaam.trim().length > 0 &&
       voornaam.trim().length > 0 &&
       achternaam.trim().length > 0 &&
-      isValidKvK(kvkNummer) &&
       specialtyIds.length > 0
     );
   }
@@ -216,7 +214,6 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       contact_first_name: voornaam,
       contact_last_name: achternaam,
       slug,
-      kvk_number: kvkNummer.replace(/\s/g, ""),
       specialties: specialtyIds,
       contact_preference: contactVoorkeur,
       service_area_postcode: postcode || null,
@@ -233,6 +230,14 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     }
 
     track("provider_signup_completed");
+
+    // Fire-and-forget: de welkomstmail mag de redirect nooit blokkeren of breken.
+    fetch("/api/vakman/welkom", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user.email, lang, bedrijfsnaam, voornaam }),
+    }).catch(() => {});
+
     router.push("/registreer/vakman/bevestigd");
   }
 
@@ -383,10 +388,6 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
               </div>
             </div>
 
-            <div className="mb-5">
-              <KvkInput value={kvkNummer} onChange={setKvkNummer} />
-            </div>
-
             <label className="text-body-sm font-semibold block mb-1.5">{dict.registratie.categoryLabel}</label>
             <div className="mb-5">
               <CategoryMultiSelect
@@ -440,13 +441,21 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
             <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.registratie.step3Title}</h1>
             <p className="text-body text-warmgrijs mb-6">{dict.registratie.step3Subtitle}</p>
 
-            <label className="text-body-sm font-semibold block mb-1.5">{dict.providerSignup.phone}</label>
-            <input
-              type="tel"
-              className="input mb-5"
-              value={telefoon}
-              onChange={(e) => setTelefoon(e.target.value)}
-            />
+            <div className="mb-5">
+              <label className="text-body-sm font-semibold block mb-1.5">{dict.providerSignup.phone}</label>
+              <input
+                type="tel"
+                inputMode="numeric"
+                maxLength={15}
+                className={`input ${telefoonTouched && !telefoon.trim() ? "!border-rood" : ""}`}
+                value={telefoon}
+                onChange={(e) => setTelefoon(e.target.value.replace(/\D/g, ""))}
+                onBlur={() => setTelefoonTouched(true)}
+              />
+              {telefoonTouched && !telefoon.trim() && (
+                <p className="text-body-xs text-rood mt-1">{dict.providerSignup.phoneRequired}</p>
+              )}
+            </div>
 
             <div className="flex flex-col gap-2.5 mb-6">
               {(

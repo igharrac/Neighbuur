@@ -56,6 +56,11 @@ const config: Config = {
           DEFAULT: "#C4871A",
           light:   "#FFF8EB",
         },
+        rood:        {
+          DEFAULT: "#C23B22",
+          light:   "#FBEAE7",
+          dark:    "#8F2A18",
+        },
 
         /* Neutraal */
         warmzwart:   "#1A1A18",

@@ -242,6 +242,7 @@ export const dictionaries = {
       microcopy: "Gratis aanmelden · Geen verplichtingen",
       back: "Terug",
       sendLink: "Verstuur inloglink",
+      phoneRequired: "Vul je telefoonnummer in om door te gaan",
       alreadyRegisteredPro: "Dit e-mailadres is al bekend — je wordt doorgestuurd naar je dashboard.",
       alreadyRegisteredOther: "Dit e-mailadres is al in gebruik bij een ander account.",
     },
@@ -250,7 +251,7 @@ export const dictionaries = {
       metaDescription: "Je profiel staat klaar voor de introductie van Neighbuur in jouw regio.",
       title: "Je bent aangemeld.",
       body: "Je profiel staat klaar voor de introductie van Neighbuur in jouw regio.",
-      supporting: "We houden je op de hoogte zodra jouw regio wordt geactiveerd.",
+      supporting: "Check je mail — we hebben je net een bevestiging gestuurd met wat je alvast kunt doen. Zodra jouw regio wordt geactiveerd, hoor je dat ook van ons.",
       cta: "Terug naar home",
     },
     residentHome: {
@@ -532,6 +533,7 @@ export const dictionaries = {
       microcopy: "Free to join · No obligations",
       back: "Back",
       sendLink: "Send login link",
+      phoneRequired: "Enter your phone number to continue",
       alreadyRegisteredPro: "This email is already known to us — redirecting you to your dashboard.",
       alreadyRegisteredOther: "This email is already in use by another account.",
     },
@@ -540,7 +542,7 @@ export const dictionaries = {
       metaDescription: "Your profile is ready for the introduction of Neighbuur in your area.",
       title: "You're signed up.",
       body: "Your profile is ready for the introduction of Neighbuur in your area.",
-      supporting: "We'll keep you updated when your area is activated.",
+      supporting: "Check your inbox — we just sent you a confirmation with a few things you can do now. We'll also let you know as soon as your area is activated.",
       cta: "Back to home",
     },
     residentHome: {

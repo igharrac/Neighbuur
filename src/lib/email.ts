@@ -8,6 +8,7 @@ import {
   premiumLimietEmail,
   accountGedeactiveerdEmail,
   accountVerwijderdEmail,
+  providerWelkomEmail,
 } from "@/lib/emailTemplates";
 
 type Lang = "nl" | "en";
@@ -22,7 +23,8 @@ export type EmailTemplate =
   | { type: "uitnodiging-geaccepteerd"; data: { naam: string; communityNaam: string; link: string } }
   | { type: "premium-limiet"; data: { limiet: number; link: string } }
   | { type: "account-gedeactiveerd"; data: { naam: string; link: string } }
-  | { type: "account-verwijderd"; data: { naam: string } };
+  | { type: "account-verwijderd"; data: { naam: string } }
+  | { type: "provider-welkom"; data: { bedrijfsnaam: string; voornaam: string } };
 
 function render(lang: Lang, template: EmailTemplate) {
   switch (template.type) {
@@ -42,6 +44,8 @@ function render(lang: Lang, template: EmailTemplate) {
       return accountGedeactiveerdEmail(lang, template.data);
     case "account-verwijderd":
       return accountVerwijderdEmail(lang, template.data);
+    case "provider-welkom":
+      return providerWelkomEmail(lang, template.data);
   }
 }
 

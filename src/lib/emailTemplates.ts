@@ -156,6 +156,46 @@ export function uitnodigingGeaccepteerdEmail(lang: Lang, data: { naam: string; c
   };
 }
 
+export function providerWelkomEmail(lang: Lang, data: { bedrijfsnaam: string; voornaam: string }): EmailContent {
+  const url = `${APP_URL}/dashboard`;
+  if (lang === "en") {
+    return {
+      subject: `Welcome to Neighbuur, ${data.bedrijfsnaam}!`,
+      html: layout(
+        "en",
+        "Your profile is ready",
+        `<p>Hi ${data.voornaam}, thanks for joining Neighbuur as a tradesperson. Your profile for ${data.bedrijfsnaam} is set up and ready for the introduction of Neighbuur in your area.</p>
+         <p>A few things that help once you're active:</p>
+         <ul style="padding-left:18px;margin:8px 0;">
+           <li>Add photos of work you've completed nearby</li>
+           <li>Keep your service area up to date</li>
+           <li>Verified companies (KvK) get noticed first by residents</li>
+         </ul>
+         <p>We'll email you as soon as your region is activated.</p>`,
+        "View your profile",
+        url
+      ),
+    };
+  }
+  return {
+    subject: `Welkom bij Neighbuur, ${data.bedrijfsnaam}!`,
+    html: layout(
+      "nl",
+      "Je profiel staat klaar",
+      `<p>Hoi ${data.voornaam}, bedankt dat je je als vakman hebt aangemeld bij Neighbuur. Je profiel voor ${data.bedrijfsnaam} staat klaar voor de introductie van Neighbuur in jouw regio.</p>
+       <p>Een paar dingen die helpen zodra je actief wordt:</p>
+       <ul style="padding-left:18px;margin:8px 0;">
+         <li>Voeg foto's toe van klussen die je in de buurt hebt afgerond</li>
+         <li>Houd je werkgebied up-to-date</li>
+         <li>Geverifieerde bedrijven (KvK) vallen het eerst op bij bewoners</li>
+       </ul>
+       <p>Zodra jouw regio wordt geactiveerd, krijg je daar bericht van.</p>`,
+      "Bekijk je profiel",
+      url
+    ),
+  };
+}
+
 export function accountGedeactiveerdEmail(lang: Lang, data: { naam: string; link: string }): EmailContent {
   const url = `${APP_URL}${data.link}`;
   if (lang === "en") {

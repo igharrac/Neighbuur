@@ -13,6 +13,7 @@ import { WerkFotoGrid } from "@/components/features/vakman/WerkFotoGrid";
 import { BeschikbaarheidEditor } from "@/components/features/vakman/BeschikbaarheidEditor";
 import { AccountActions } from "@/components/features/profiel/AccountActions";
 import { CategoryMultiSelect } from "@/components/features/vakman/CategoryMultiSelect";
+import { KvkInput } from "@/components/features/vakman/KvkInput";
 import type { Category, ProfessionalProfile } from "@/types";
 
 const STRAAL_OPTIES = [5, 10, 15, 25];
@@ -44,6 +45,7 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
   const [savingVerrijking, setSavingVerrijking] = useState(false);
 
   const [bedrijfsnaam, setBedrijfsnaam] = useState(professional.company_name);
+  const [kvkNummer, setKvkNummer] = useState(professional.kvk_number ?? "");
   const [specialtyIds, setSpecialtyIds] = useState<string[]>(professional.specialties ?? []);
   const [postcode, setPostcode] = useState(professional.service_area_postcode ?? "");
   const [straal, setStraal] = useState(professional.service_area_km);
@@ -105,11 +107,17 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
       }
     }
 
+    const kvkGewijzigd = kvkNummer.replace(/\s/g, "") !== (professional.kvk_number ?? "");
+
     const supabase = createClient();
     const { error } = await supabase
       .from("professional_profiles")
       .update({
         company_name: bedrijfsnaam,
+        kvk_number: kvkNummer.replace(/\s/g, "") || null,
+        // Een gewijzigd nummer is niet meer hetzelfde als het geverifieerde —
+        // badge vervalt tot het opnieuw geverifieerd is.
+        ...(kvkGewijzigd ? { kvk_verified: false } : {}),
         specialties: specialtyIds,
         service_area_postcode: postcode || null,
         service_area_km: straal,
@@ -123,7 +131,16 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
       showToast(error.message, "error");
       return;
     }
-    setProfessional((v) => ({ ...v, company_name: bedrijfsnaam, service_area_postcode: postcode, service_area_km: straal, contact_preference: contactVoorkeur }));
+    setProfessional((v) => ({
+      ...v,
+      company_name: bedrijfsnaam,
+      kvk_number: kvkNummer.replace(/\s/g, "") || null,
+      kvk_verified: kvkGewijzigd ? false : v.kvk_verified,
+      service_area_postcode: postcode,
+      service_area_km: straal,
+      contact_preference: contactVoorkeur,
+    }));
+    await recalcSterkte();
     showToast("Basisgegevens opgeslagen", "success");
   }
 
@@ -183,11 +200,12 @@ export function ProfielForm({ professional: initialProfessional, werkFotos, besc
           <Input name="bedrijfsnaam" label="Bedrijfsnaam" value={bedrijfsnaam} onChange={(e) => setBedrijfsnaam(e.target.value)} />
 
           <div>
-            <label className="text-body-sm font-semibold block mb-1.5">KvK-nummer</label>
             <div className="flex items-center gap-2">
-              <input className="input flex-1" value={professional.kvk_number ?? ""} disabled />
-              {professional.kvk_verified && (
-                <span className="flex items-center gap-1 text-body-xs font-semibold text-groen shrink-0">
+              <div className="flex-1">
+                <KvkInput value={kvkNummer} onChange={setKvkNummer} />
+              </div>
+              {professional.kvk_verified && kvkNummer.replace(/\s/g, "") === (professional.kvk_number ?? "") && (
+                <span className="flex items-center gap-1 text-body-xs font-semibold text-groen shrink-0 mt-6">
                   <Check size={14} weight="bold" /> Geverifieerd
                 </span>
               )}
