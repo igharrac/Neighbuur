@@ -9,7 +9,7 @@ export default async function DashboardProfielPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   const { data: professional } = await supabase
     .from("professional_profiles")

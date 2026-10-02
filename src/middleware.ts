@@ -24,7 +24,21 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // Centrale bewaking van alle private app-routes — de bestaande
+  // per-pagina auth.getUser()+redirect()-checks blijven ook staan
+  // (defense-in-depth), maar dit dekt ze allemaal op één plek i.p.v.
+  // per-pagina, en stuurt naar "/" i.p.v. "/login" (de nieuwe
+  // provider-homepage is nu het publieke startpunt).
+  const PRIVATE_PREFIXES = ["/profiel", "/dashboard", "/berichten", "/notificaties", "/plan", "/admin"];
+  const { pathname } = request.nextUrl;
+  const isPrivate = PRIVATE_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  if (isPrivate && !session) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return response;
 }

@@ -9,7 +9,7 @@ export default async function ProfielPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   // Expliciete kolomlijst i.p.v. select("*") — zie useAuth.tsx voor de
   // reden (email/phone zijn sinds 0061/0062 niet meer via een gewone
@@ -22,7 +22,7 @@ export default async function ProfielPage() {
       .maybeSingle(),
     supabase.rpc("get_my_contact_info"),
   ]);
-  if (!profielBasis) redirect("/login");
+  if (!profielBasis) redirect("/");
   const eigenContact = contact?.[0];
   const profiel = { ...profielBasis, email: eigenContact?.email ?? null, phone: eigenContact?.phone ?? null };
 

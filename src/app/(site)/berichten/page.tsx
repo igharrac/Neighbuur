@@ -29,7 +29,7 @@ export default async function BerichtenPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   // Leest bewust via de service-role client i.p.v. de RLS-gebonden
   // client: de bestaande "own_read"-policy op conversation_participants is

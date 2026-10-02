@@ -9,7 +9,7 @@ export default async function AdminCommunityPage({ params }: { params: { slug: s
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   const { data: community } = await supabase
     .from("communities")

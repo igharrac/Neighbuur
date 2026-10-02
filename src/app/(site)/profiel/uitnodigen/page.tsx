@@ -13,7 +13,7 @@ export default async function UitnodigenPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   const { data: bewonerProfiel } = await supabase
     .from("resident_profiles")

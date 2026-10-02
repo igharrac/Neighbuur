@@ -67,6 +67,8 @@ export interface Database {
           service_area_lat: number | null;
           service_area_lng: number | null;
           service_area_city: string | null;
+          contact_first_name: string | null;
+          contact_last_name: string | null;
         };
         Insert: {
           id?: string;
@@ -101,6 +103,8 @@ export interface Database {
           service_area_lat?: number | null;
           service_area_lng?: number | null;
           service_area_city?: string | null;
+          contact_first_name?: string | null;
+          contact_last_name?: string | null;
         };
         Update: {
           id?: string;
@@ -135,6 +139,8 @@ export interface Database {
           service_area_lat?: number | null;
           service_area_lng?: number | null;
           service_area_city?: string | null;
+          contact_first_name?: string | null;
+          contact_last_name?: string | null;
         };
         Relationships: [
           { foreignKeyName: "professional_profiles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
@@ -417,6 +423,90 @@ export interface Database {
           url?: string;
           category?: string;
           active?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      resident_interest_signups: {
+        Row: {
+          id: string;
+          first_name: string;
+          email: string;
+          postcode: string;
+          home_plans: string | null;
+          lang: string;
+          utm_source: string | null;
+          utm_medium: string | null;
+          utm_campaign: string | null;
+          utm_content: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          first_name: string;
+          email: string;
+          postcode: string;
+          home_plans?: string | null;
+          lang?: string;
+          utm_source?: string | null;
+          utm_medium?: string | null;
+          utm_campaign?: string | null;
+          utm_content?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          first_name?: string;
+          email?: string;
+          postcode?: string;
+          home_plans?: string | null;
+          lang?: string;
+          utm_source?: string | null;
+          utm_medium?: string | null;
+          utm_campaign?: string | null;
+          utm_content?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      analytics_events: {
+        Row: {
+          id: string;
+          event_name: string;
+          properties: Json;
+          session_id: string | null;
+          lang: string | null;
+          path: string | null;
+          utm_source: string | null;
+          utm_medium: string | null;
+          utm_campaign: string | null;
+          utm_content: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_name: string;
+          properties?: Json;
+          session_id?: string | null;
+          lang?: string | null;
+          path?: string | null;
+          utm_source?: string | null;
+          utm_medium?: string | null;
+          utm_campaign?: string | null;
+          utm_content?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          event_name?: string;
+          properties?: Json;
+          session_id?: string | null;
+          lang?: string | null;
+          path?: string | null;
+          utm_source?: string | null;
+          utm_medium?: string | null;
+          utm_campaign?: string | null;
+          utm_content?: string | null;
           created_at?: string;
         };
         Relationships: [];

@@ -90,7 +90,7 @@ export default async function AdminGebiedPage({ params }: { params: { city: stri
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   const { data: profiel } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
   if (profiel?.role !== "admin") redirect("/");

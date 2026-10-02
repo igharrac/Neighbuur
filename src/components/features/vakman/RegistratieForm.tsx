@@ -14,6 +14,7 @@ import { AuthQuoteCard, AuthRatingBadge } from "@/components/features/auth/AuthQ
 import { KvkInput, isValidKvK } from "@/components/features/vakman/KvkInput";
 import { CategoryMultiSelect } from "@/components/features/vakman/CategoryMultiSelect";
 import { slugify } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 import type { Category } from "@/types";
 
 type Step = 1 | 2 | 3;
@@ -41,6 +42,8 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
 
   // Step 2 — basisprofiel
   const [bedrijfsnaam, setBedrijfsnaam] = useState("");
+  const [voornaam, setVoornaam] = useState("");
+  const [achternaam, setAchternaam] = useState("");
   const [kvkNummer, setKvkNummer] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [specialtyIds, setSpecialtyIds] = useState<string[]>([]);
@@ -48,6 +51,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   const [straal, setStraal] = useState(15);
 
   // Step 3 — contact
+  const [telefoon, setTelefoon] = useState("");
   const [contactVoorkeur, setContactVoorkeur] = useState<"phone" | "whatsapp" | "app">("app");
   const [akkoord, setAkkoord] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -71,6 +75,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       }
 
       // Ingelogd maar nog geen profiel: door naar stap 2
+      track("provider_signup_started");
       setStep(2);
       setChecking(false);
     }
@@ -136,7 +141,13 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
   }
 
   function canContinueStep2() {
-    return bedrijfsnaam.trim().length > 0 && isValidKvK(kvkNummer) && specialtyIds.length > 0;
+    return (
+      bedrijfsnaam.trim().length > 0 &&
+      voornaam.trim().length > 0 &&
+      achternaam.trim().length > 0 &&
+      isValidKvK(kvkNummer) &&
+      specialtyIds.length > 0
+    );
   }
 
   async function handleFinish() {
@@ -174,7 +185,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       id: user.id,
       name: bedrijfsnaam,
       email: user.email ?? null,
-      phone: user.phone ?? null,
+      phone: telefoon || user.phone || null,
       role: "professional",
       language: "nl",
     });
@@ -196,6 +207,8 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     const { error: vakmanError } = await supabase.from("professional_profiles").insert({
       user_id: user.id,
       company_name: bedrijfsnaam,
+      contact_first_name: voornaam,
+      contact_last_name: achternaam,
       slug,
       kvk_number: kvkNummer.replace(/\s/g, ""),
       specialties: specialtyIds,
@@ -213,7 +226,8 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       return;
     }
 
-    router.push("/dashboard");
+    track("provider_signup_completed");
+    router.push("/registreer/vakman/bevestigd");
   }
 
   if (checking) return <div className="min-h-screen" />;
@@ -268,8 +282,11 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
           >
             {authStep === "start" ? (
               <>
-                <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.registratie.title}</h1>
-                <p className="text-body text-warmgrijs mb-6">{dict.registratie.subtitle}</p>
+                <p className="font-body font-bold text-[12px] tracking-[1.2px] uppercase text-[#385729] mb-2">
+                  {dict.providerSignup.eyebrow}
+                </p>
+                <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.providerSignup.title}</h1>
+                <p className="text-body text-warmgrijs mb-6">{dict.providerSignup.subtitle}</p>
 
                 <label className="text-body-sm font-semibold block mb-1.5">{dict.login.emailLabel}</label>
                 <input
@@ -349,6 +366,17 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
               onChange={(e) => setBedrijfsnaam(e.target.value)}
             />
 
+            <div className="flex gap-3 mb-5">
+              <div className="flex-1">
+                <label className="text-body-sm font-semibold block mb-1.5">{dict.providerSignup.firstName}</label>
+                <input className="input" value={voornaam} onChange={(e) => setVoornaam(e.target.value)} />
+              </div>
+              <div className="flex-1">
+                <label className="text-body-sm font-semibold block mb-1.5">{dict.providerSignup.lastName}</label>
+                <input className="input" value={achternaam} onChange={(e) => setAchternaam(e.target.value)} />
+              </div>
+            </div>
+
             <div className="mb-5">
               <KvkInput value={kvkNummer} onChange={setKvkNummer} />
             </div>
@@ -406,6 +434,14 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
             <h1 className="font-display text-display-sm text-warmzwart mb-1.5">{dict.registratie.step3Title}</h1>
             <p className="text-body text-warmgrijs mb-6">{dict.registratie.step3Subtitle}</p>
 
+            <label className="text-body-sm font-semibold block mb-1.5">{dict.providerSignup.phone}</label>
+            <input
+              type="tel"
+              className="input mb-5"
+              value={telefoon}
+              onChange={(e) => setTelefoon(e.target.value)}
+            />
+
             <div className="flex flex-col gap-2.5 mb-6">
               {(
                 [
@@ -452,9 +488,9 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
             <button
               className="btn-primary w-full"
               onClick={handleFinish}
-              disabled={!akkoord || saving}
+              disabled={!akkoord || !telefoon.trim() || saving}
             >
-              {saving ? dict.registratie.saving : dict.registratie.finish}
+              {saving ? dict.registratie.saving : dict.providerSignup.cta}
             </button>
           </motion.div>
         )}

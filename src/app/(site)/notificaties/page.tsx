@@ -9,7 +9,7 @@ export default async function NotificatiesPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/");
 
   const { data } = await supabase.from("notifications").select("*").order("created_at", { ascending: false }).limit(100);
 
