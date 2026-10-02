@@ -241,6 +241,9 @@ export const dictionaries = {
       cta: "Profiel aanmaken",
       microcopy: "Gratis aanmelden · Geen verplichtingen",
       back: "Terug",
+      sendLink: "Verstuur inloglink",
+      alreadyRegisteredPro: "Dit e-mailadres is al bekend — je wordt doorgestuurd naar je dashboard.",
+      alreadyRegisteredOther: "Dit e-mailadres is al in gebruik bij een ander account.",
     },
     providerConfirmation: {
       metaTitle: "Je bent aangemeld — Neighbuur",
@@ -528,6 +531,9 @@ export const dictionaries = {
       cta: "Create profile",
       microcopy: "Free to join · No obligations",
       back: "Back",
+      sendLink: "Send login link",
+      alreadyRegisteredPro: "This email is already known to us — redirecting you to your dashboard.",
+      alreadyRegisteredOther: "This email is already in use by another account.",
     },
     providerConfirmation: {
       metaTitle: "You're signed up — Neighbuur",

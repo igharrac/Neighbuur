@@ -10,24 +10,8 @@ export function ProviderHero() {
   const { dict } = useLang();
 
   return (
-    <section className="relative overflow-hidden px-6 pt-4 pb-16 lg:px-[72px] lg:pt-4 lg:pb-24">
-      <div className="pointer-events-none absolute inset-0 hidden lg:flex justify-center">
-        <div className="relative w-full max-w-[1200px]">
-          <div className="absolute right-0 top-[40px] h-[460px] w-[42%]">
-            <img
-              src="/images/vakman-hero.jpg"
-              alt={dict.providerHome.imageAlt}
-              className="absolute inset-0 h-full w-full hard-lg object-cover"
-            />
-            <div className="hard absolute -bottom-5 -left-5 bg-white px-4 py-3 max-w-[220px]">
-              <p className="font-body font-bold text-[13px] leading-[18px] text-warmzwart">{dict.providerHome.imageOverlay1}</p>
-              <p className="font-body text-[12px] leading-[16px] text-warmgrijs mt-0.5">{dict.providerHome.imageOverlay2}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <section className="px-6 pt-4 pb-16 lg:px-[72px] lg:pt-4 lg:pb-24">
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
         <div className="lg:col-span-7">
           <div className="pb-4 inline-flex">
             <span className="inline-flex items-center gap-2 rounded-full bg-[#C4DAB9]/95 px-4 py-1">
@@ -56,6 +40,20 @@ export function ProviderHero() {
             <ArrowRight size={14} weight="bold" />
           </Link>
           <p className="font-body text-[13px] text-warmgrijs mt-3">{dict.providerHome.microcopy}</p>
+        </div>
+
+        <div className="lg:col-span-5">
+          <div className="relative">
+            <img
+              src="/images/vakman-hero.jpg"
+              alt={dict.providerHome.imageAlt}
+              className="hard-lg w-full h-[320px] sm:h-[420px] lg:h-[460px] object-cover block"
+            />
+            <div className="hard absolute -bottom-5 -left-5 bg-white px-4 py-3 max-w-[220px]">
+              <p className="font-body font-bold text-[13px] leading-[18px] text-warmzwart">{dict.providerHome.imageOverlay1}</p>
+              <p className="font-body text-[12px] leading-[16px] text-warmgrijs mt-0.5">{dict.providerHome.imageOverlay2}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -70,6 +70,12 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
 
       if (profile) {
+        showToast(
+          profile.role === "professional"
+            ? dict.providerSignup.alreadyRegisteredPro
+            : dict.providerSignup.alreadyRegisteredOther,
+          "info"
+        );
         router.replace(profile.role === "professional" ? "/dashboard" : "/plan");
         return;
       }
@@ -303,7 +309,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
                   onClick={handleSendLink}
                   disabled={authLoadingLocal || !email.includes("@")}
                 >
-                  {dict.login.createAccount}
+                  {dict.providerSignup.sendLink}
                 </button>
 
                 <div className="flex items-center gap-4 my-5 text-body-xs text-warmgrijs">
