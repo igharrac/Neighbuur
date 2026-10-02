@@ -120,7 +120,7 @@ export function WijkActivatie({ communities, myStats, featuredStats }: WijkActiv
                 </span>
                 {featured.avg_discount_pct !== null && (
                   <span className="font-body font-semibold text-[13px] text-[#385729] whitespace-nowrap">
-                    Gemiddeld voordeel: -{Math.round(featured.avg_discount_pct)}%
+                    Gemiddeld {Math.round(featured.avg_discount_pct)}% korting
                   </span>
                 )}
               </div>
