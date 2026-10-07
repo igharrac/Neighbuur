@@ -195,6 +195,11 @@ export const dictionaries = {
       forProfessionals: "Voor vakmensen →",
       langSwitchLabel: "Taal wisselen",
     },
+    diensten: {
+      title: "Wat wil je aan je woning",
+      titleAccent: "doen?",
+      subtitle: "Ontdek ervaringen, vakmensen en plannen uit jouw buurt.",
+    },
     form: {
       required: "Dit veld is verplicht",
       invalidEmail: "Vul een geldig e-mailadres in",
@@ -485,6 +490,11 @@ export const dictionaries = {
       forResidents: "For residents →",
       forProfessionals: "For tradespeople →",
       langSwitchLabel: "Switch language",
+    },
+    diensten: {
+      title: "What do you want to do with your",
+      titleAccent: "home?",
+      subtitle: "Discover experiences, tradespeople and plans from your neighbourhood.",
     },
     form: {
       required: "This field is required",

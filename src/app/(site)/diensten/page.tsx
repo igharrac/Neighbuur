@@ -1,8 +1,10 @@
 import { getCategorieen } from "@/lib/categorieen";
 import { DienstenGrid } from "@/components/features/categories/DienstenGrid";
+import { getDict } from "@/lib/metadata";
 
 export default async function DienstenPage() {
   const alleCategorieen = await getCategorieen();
+  const dict = getDict();
   const categories = alleCategorieen.filter((c) => c.type === "professional" || c.type === "compare");
 
   return (
@@ -12,20 +14,16 @@ export default async function DienstenPage() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C4DAB9] px-4 py-1 mb-4">
             <span className="w-2 h-2 rounded-full bg-[#385729]" />
             <span className="font-body font-semibold text-[12px] tracking-[0.6px] uppercase text-[#390c00]">
-              Diensten
+              {dict.nav.services}
             </span>
           </span>
           <h1 className="font-display font-bold text-[38px] sm:text-[48px] leading-[44px] sm:leading-[54px] text-warmzwart mb-3">
-            Wat wil je{" "}
+            {dict.diensten.title}{" "}
             <span className="italic text-sage [text-decoration-line:underline] [text-decoration-style:wavy] [text-decoration-color:#C4DAB9] [text-underline-position:from-font]">
-              laten doen
+              {dict.diensten.titleAccent}
             </span>
-            ?
           </h1>
-          <p className="font-body text-[16px] leading-[24px] text-warmgrijs-dark">
-            Van stucwerk tot zonnepanelen — kies de dienst die je nodig hebt en vind direct betrouwbare vakmensen uit
-            jouw buurt.
-          </p>
+          <p className="font-body text-[16px] leading-[24px] text-warmgrijs-dark">{dict.diensten.subtitle}</p>
         </div>
 
         <DienstenGrid categories={categories} />
