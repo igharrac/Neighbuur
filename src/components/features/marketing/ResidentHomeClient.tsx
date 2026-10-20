@@ -54,7 +54,7 @@ export function ResidentHomeClient() {
 
           <div className="lg:col-span-5">
             <img
-              src="/images/wijk-actief.png"
+              src="/images/bewoners-hero.png"
               alt={dict.residentHome.imageAlt}
               className="hard-lg w-full h-[260px] sm:h-[340px] object-cover"
             />
