@@ -272,12 +272,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       bottomCard={
         <AuthQuoteCard
           quote="“Via Neighbuur vullen we complete nieuwbouwstraten in één week. Geen tussenpersonen, direct contact met bewoners.”"
-          meta={
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-warmzwart">Dennis van der Meer</span>
-              <span>Afbouwpartner Amersfoort</span>
-            </div>
-          }
+          meta={<span>Afbouwpartner Amersfoort</span>}
         />
       }
     >
