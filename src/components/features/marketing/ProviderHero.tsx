@@ -10,9 +10,9 @@ export function ProviderHero() {
   const { dict } = useLang();
 
   return (
-    <section className="px-6 pt-4 pb-16 lg:px-[72px] lg:pt-4 lg:pb-24">
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-        <div className="lg:col-span-7">
+    <section className="px-6 pt-4 pb-16 lg:px-[72px] lg:pt-4 lg:pb-10">
+      <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-x-10 lg:gap-x-12 gap-y-10 lg:items-start">
+        <div className="lg:col-span-6">
           <div className="pb-4 inline-flex">
             <span className="inline-flex items-center gap-2 rounded-full bg-[#C4DAB9]/95 px-4 py-1">
               <span className="w-2 h-2 rounded-full bg-[#385729]" />
@@ -22,7 +22,7 @@ export function ProviderHero() {
             </span>
           </div>
 
-          <h1 className="font-display font-bold text-[40px] leading-[48px] sm:text-[64px] sm:leading-[70px] tracking-[-1.12px] text-warmzwart pb-6">
+          <h1 className="font-display font-bold text-[38px] leading-[45px] sm:text-[54px] sm:leading-[60px] tracking-[-1px] text-warmzwart pb-5">
             <span className="block">{dict.providerHome.title}</span>
             <span className="block font-display italic font-normal text-[#385729]">{dict.providerHome.titleAccent}</span>
           </h1>
@@ -42,18 +42,12 @@ export function ProviderHero() {
           <p className="font-body text-[13px] text-warmgrijs mt-3">{dict.providerHome.microcopy}</p>
         </div>
 
-        <div className="lg:col-span-5">
-          <div className="relative">
-            <img
-              src="/images/vakman-hero.jpg"
-              alt={dict.providerHome.imageAlt}
-              className="hard-lg w-full h-[320px] sm:h-[420px] lg:h-[460px] object-cover block"
-            />
-            <div className="hard absolute -bottom-5 -left-5 bg-white px-4 py-3 max-w-[220px]">
-              <p className="font-body font-bold text-[13px] leading-[18px] text-warmzwart">{dict.providerHome.imageOverlay1}</p>
-              <p className="font-body text-[12px] leading-[16px] text-warmgrijs mt-0.5">{dict.providerHome.imageOverlay2}</p>
-            </div>
-          </div>
+        <div className="lg:col-span-6">
+          <img
+            src="/images/vakman-regio-hero.png"
+            alt={dict.providerHome.imageAlt}
+            className="w-full aspect-[3/2] object-cover rounded block"
+          />
         </div>
       </div>
     </section>

@@ -25,7 +25,7 @@ export function ProviderHomeClient() {
       <ProviderSteps />
 
       {/* Why join now — bewust geen cijfers, zie plan §7 */}
-      <section className="px-6 py-16 lg:px-[72px] lg:py-20">
+      <section className="px-6 py-16 lg:px-[72px] lg:py-20 bg-sand-light">
         <div className="max-w-[720px] mx-auto text-center">
           <h2 className="font-display font-bold text-[28px] sm:text-[32px] leading-[36px] sm:leading-[40px] tracking-[-0.38px] text-warmzwart mb-3">
             {dict.providerHome.whyNowTitle}
