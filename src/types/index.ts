@@ -1,6 +1,25 @@
 export type UserRole = "resident" | "professional" | "community_admin" | "admin";
 export type CategoryType = "professional" | "compare";
 
+export type BlogPostStatus = "draft" | "approved" | "published";
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  body_html: string;
+  cover_image_url: string | null;
+  status: BlogPostStatus;
+  seo_title: string | null;
+  seo_description: string | null;
+  source: "hermes" | "manual";
+  created_at: string;
+  approved_at: string | null;
+  scheduled_at: string | null;
+  published_at: string | null;
+}
+
 export type ContentBlockType =
   | "hero_banner"
   | "text"

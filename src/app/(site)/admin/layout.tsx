@@ -47,6 +47,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/auth-fotos" className="text-body-sm font-medium text-warmzwart hover:text-sage">
             Login-foto's
           </Link>
+          <Link href="/admin/content" className="text-body-sm font-medium text-warmzwart hover:text-sage">
+            Content
+          </Link>
         </nav>
       )}
       {children}
