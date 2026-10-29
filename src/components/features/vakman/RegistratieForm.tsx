@@ -10,7 +10,6 @@ import { useToast } from "@/components/ui/Toast";
 import { useLang } from "@/lib/hooks/useLang";
 import { useAuthPhoto } from "@/lib/hooks/useAuthPhoto";
 import { AuthSplitScreen } from "@/components/features/auth/AuthSplitScreen";
-import { AuthQuoteCard, AuthRatingBadge } from "@/components/features/auth/AuthQuoteCard";
 import { CategoryMultiSelect } from "@/components/features/vakman/CategoryMultiSelect";
 import { slugify } from "@/lib/utils";
 import { track } from "@/lib/analytics";
@@ -268,13 +267,6 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
     <AuthSplitScreen
       photoUrl={photoUrl}
       photoAlt="Vakman in een nieuwbouwwoning met tablet"
-      topBadge={<AuthRatingBadge score="4.9" label="(180+ vakmensen)" />}
-      bottomCard={
-        <AuthQuoteCard
-          quote="“Via Neighbuur vullen we complete nieuwbouwstraten in één week. Geen tussenpersonen, direct contact met bewoners.”"
-          meta={<span>Afbouwpartner Amersfoort</span>}
-        />
-      }
     >
       {stepIndicator}
       <AnimatePresence mode="wait" initial={false}>

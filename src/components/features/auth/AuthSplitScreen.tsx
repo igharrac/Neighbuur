@@ -48,7 +48,12 @@ export function AuthSplitScreen({ photoUrl, photoAlt, topBadge, bottomCard, back
 
           <div className="hidden md:flex relative flex-col justify-between p-6">
             <img src={photoUrl} alt={photoAlt} className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/35" />
+            {/* Lichte onderrand-schaduw voor diepte — geen donkere waas meer
+               over de hele foto. Die was specifiek bedoeld om het witte
+               topBadge/bottomCard leesbaar te houden (nu verwijderd, zie
+               RegistratieForm.tsx); hij werkte juist tegen de leesbaarheid
+               van tekst die al in de foto zelf gebakken zit. */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
 
             {topBadge && <div className="relative">{topBadge}</div>}
             {bottomCard && <div className="relative mt-auto">{bottomCard}</div>}
