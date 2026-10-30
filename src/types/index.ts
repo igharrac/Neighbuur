@@ -18,6 +18,7 @@ export interface BlogPost {
   approved_at: string | null;
   scheduled_at: string | null;
   published_at: string | null;
+  quality_flags: { broken_links?: string[] } | Record<string, never>;
 }
 
 export type ContentBlockType =

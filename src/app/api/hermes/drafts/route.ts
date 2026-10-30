@@ -4,6 +4,32 @@ import { verifyHermesAuth } from "@/lib/hermes-auth";
 import { createAdminSupabase } from "@/lib/supabase-admin";
 import { slugify } from "@/lib/utils";
 
+// Publieke routes die daadwerkelijk bestaan — zie src/app/(site)/*. Een
+// interne link die hier niet onder valt, verwijst naar een pagina die
+// niet bestaat (zoals /keuken deed) en wordt als quality_flag opgeslagen.
+const ALLOWED_INTERNAL_PREFIXES = [
+  "/bewoners",
+  "/diensten",
+  "/wijk",
+  "/blog",
+  "/privacy",
+  "/voorwaarden",
+  "/vakman",
+  "/community",
+  "/zoeken",
+  "/registreer",
+  "/login",
+];
+
+function findBrokenInternalLinks(html: string): string[] {
+  const hrefs = [...html.matchAll(/<a\s+[^>]*href="([^"]+)"/gi)].map((m) => m[1]);
+  const broken = hrefs.filter((href) => {
+    if (!href.startsWith("/") || href === "/") return false;
+    return !ALLOWED_INTERNAL_PREFIXES.some((prefix) => href.startsWith(prefix));
+  });
+  return [...new Set(broken)];
+}
+
 /**
  * Enige manier waarop Hermes content in Neighbuur krijgt. Komt altijd
  * binnen als status='draft' — nooit direct 'approved'/'published', dat
@@ -26,6 +52,9 @@ export async function POST(request: Request) {
     allowedTags: ["p", "h2", "h3", "strong", "em", "a", "ul", "ol", "li", "blockquote", "br", "img"],
     allowedAttributes: { a: ["href", "rel", "target"], img: ["src", "alt"] },
   });
+
+  const brokenLinks = findBrokenInternalLinks(bodyHtml);
+  const qualityFlags = brokenLinks.length > 0 ? { broken_links: brokenLinks } : {};
 
   const admin = createAdminSupabase();
 
@@ -50,6 +79,7 @@ export async function POST(request: Request) {
       scheduled_at: body.scheduled_at ? String(body.scheduled_at) : null,
       status: "draft",
       source: "hermes",
+      quality_flags: qualityFlags,
     })
     .select("id, slug, status")
     .single();
@@ -58,5 +88,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, post: data }, { status: 201 });
+  return NextResponse.json({ ok: true, post: data, quality_flags: qualityFlags }, { status: 201 });
 }

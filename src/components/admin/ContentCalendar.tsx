@@ -154,6 +154,13 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
               Bron: {selected.source === "hermes" ? "Hermes" : "Handmatig"}
             </p>
 
+            {Boolean(selected.quality_flags?.broken_links?.length) && (
+              <div className="mb-4 p-3 rounded-sm bg-rood-light border border-rood text-body-xs text-rood-dark">
+                <strong>Let op — mogelijk kapotte link(s):</strong>{" "}
+                {selected.quality_flags.broken_links!.join(", ")} — deze pagina{selected.quality_flags.broken_links!.length > 1 ? "'s bestaan" : " bestaat"} niet in Neighbuur. Controleer vóór goedkeuring.
+              </div>
+            )}
+
             {/* Volledige inhoud, niet alleen de excerpt — goedkeuren zonder dit gezien te hebben mag niet kunnen. */}
             <div className="mb-4 max-h-[400px] overflow-y-auto border border-lijn rounded-sm p-3 bg-sand-light">
               {/* eslint-disable-next-line react/no-danger */}

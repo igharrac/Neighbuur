@@ -443,6 +443,7 @@ export interface Database {
           approved_at: string | null;
           scheduled_at: string | null;
           published_at: string | null;
+          quality_flags: Json;
         };
         Insert: {
           id?: string;
@@ -459,6 +460,7 @@ export interface Database {
           approved_at?: string | null;
           scheduled_at?: string | null;
           published_at?: string | null;
+          quality_flags?: Json;
         };
         Update: {
           id?: string;
@@ -475,6 +477,7 @@ export interface Database {
           approved_at?: string | null;
           scheduled_at?: string | null;
           published_at?: string | null;
+          quality_flags?: Json;
         };
         Relationships: [];
       };
