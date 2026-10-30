@@ -154,6 +154,15 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
               Bron: {selected.source === "hermes" ? "Hermes" : "Handmatig"}
             </p>
 
+            {/* Volledige inhoud, niet alleen de excerpt — goedkeuren zonder dit gezien te hebben mag niet kunnen. */}
+            <div className="mb-4 max-h-[400px] overflow-y-auto border border-lijn rounded-sm p-3 bg-sand-light">
+              {/* eslint-disable-next-line react/no-danger */}
+              <div
+                className="font-body text-body-sm leading-[22px] text-warmgrijs-dark [&>h2]:font-display [&>h2]:font-bold [&>h2]:text-[16px] [&>h2]:text-warmzwart [&>h2]:mt-4 [&>h2]:mb-2 [&>p]:mb-3 [&>a]:text-sage [&>a]:underline"
+                dangerouslySetInnerHTML={{ __html: selected.body_html }}
+              />
+            </div>
+
             <div className="flex flex-col gap-2">
               {selected.status === "draft" && (
                 <button
