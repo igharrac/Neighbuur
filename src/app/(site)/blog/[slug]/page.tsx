@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { format } from "date-fns";
+import { nl } from "date-fns/locale";
 import { getPublishedPostBySlug } from "@/lib/blog";
 import { BlogPostViewTracker } from "@/components/features/blog/BlogPostViewTracker";
 
@@ -36,7 +38,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     description: post.excerpt ?? undefined,
     image: post.cover_image_url ?? undefined,
     datePublished: post.published_at,
-    author: { "@type": "Organization", name: "Neighbuur" },
+    author: { "@type": "Organization", name: "Team Neighbuur" },
     publisher: { "@type": "Organization", name: "Neighbuur" },
     mainEntityOfPage: `${APP_URL}/blog/${post.slug}`,
   };
@@ -48,9 +50,12 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <article className="max-w-[760px] mx-auto px-6 py-14">
-        <h1 className="font-display font-bold text-[32px] sm:text-[42px] leading-[38px] sm:leading-[48px] text-warmzwart mb-6">
+        <h1 className="font-display font-bold text-[32px] sm:text-[42px] leading-[38px] sm:leading-[48px] text-warmzwart mb-3">
           {post.title}
         </h1>
+        <p className="text-body-sm text-warmgrijs mb-6">
+          Team Neighbuur{post.published_at ? ` · ${format(new Date(post.published_at), "d MMMM yyyy", { locale: nl })}` : ""}
+        </p>
         {post.cover_image_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={post.cover_image_url} alt={post.title} className="hard-lg w-full h-[280px] sm:h-[360px] object-cover mb-8" />
