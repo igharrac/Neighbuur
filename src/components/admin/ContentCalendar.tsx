@@ -61,7 +61,7 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
         ? { status: "approved", approved_at: new Date().toISOString() }
         : next === "published"
           ? { status: "published", published_at: new Date().toISOString() }
-          : { status: "draft" };
+          : { status: "draft", approved_at: null, published_at: null };
 
     const { error } = await supabase.from("blog_posts").update(patch).eq("id", post.id);
     setSaving(false);
