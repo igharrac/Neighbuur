@@ -444,6 +444,7 @@ export interface Database {
           scheduled_at: string | null;
           published_at: string | null;
           quality_flags: Json;
+          social_caption: string | null;
         };
         Insert: {
           id?: string;
@@ -461,6 +462,7 @@ export interface Database {
           scheduled_at?: string | null;
           published_at?: string | null;
           quality_flags?: Json;
+          social_caption?: string | null;
         };
         Update: {
           id?: string;
@@ -478,6 +480,7 @@ export interface Database {
           scheduled_at?: string | null;
           published_at?: string | null;
           quality_flags?: Json;
+          social_caption?: string | null;
         };
         Relationships: [];
       };

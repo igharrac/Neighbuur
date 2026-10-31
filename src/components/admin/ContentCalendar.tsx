@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   startOfMonth,
   endOfMonth,
@@ -37,6 +37,7 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
   const [month, setMonth] = useState(() => startOfMonth(new Date()));
   const [selected, setSelected] = useState<BlogPost | null>(null);
   const [saving, setSaving] = useState(false);
+  const scheduledInputRef = useRef<HTMLInputElement>(null);
 
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(month), { weekStartsOn: 1 });
@@ -76,6 +77,22 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
       next === "approved" ? "Post goedgekeurd" : next === "published" ? "Post gepubliceerd" : "Terug naar concept",
       "success"
     );
+  }
+
+  async function updateScheduledAt(post: BlogPost, value: string) {
+    setSaving(true);
+    const supabase = createClient();
+    const patch = { scheduled_at: value || null };
+    const { error } = await supabase.from("blog_posts").update(patch).eq("id", post.id);
+    setSaving(false);
+    if (error) {
+      showToast(error.message, "error");
+      return;
+    }
+    const updated = { ...post, ...patch } as BlogPost;
+    setPosts((prev) => prev.map((p) => (p.id === post.id ? updated : p)));
+    setSelected(updated);
+    showToast(value ? "Planning bijgewerkt" : "Planning verwijderd", "success");
   }
 
   return (
@@ -162,6 +179,29 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
               Bron: {selected.source === "hermes" ? "Hermes" : selected.source === "claude" ? "Claude" : "Handmatig"}
             </p>
 
+            <div className="mb-4">
+              <label htmlFor="scheduled-at-input" className="text-body-xs font-semibold text-warmgrijs-dark block mb-1">
+                Geplande dag (kalenderpositie)
+              </label>
+              <div className="flex gap-2">
+                <input
+                  id="scheduled-at-input"
+                  key={selected.id}
+                  ref={scheduledInputRef}
+                  type="date"
+                  defaultValue={selected.scheduled_at ? format(parseISO(selected.scheduled_at), "yyyy-MM-dd") : ""}
+                  className="input !py-1.5 !text-body-sm flex-1"
+                />
+                <button
+                  disabled={saving}
+                  onClick={() => updateScheduledAt(selected, scheduledInputRef.current?.value ?? "")}
+                  className="btn-secondary !px-3 !py-1.5 !text-body-sm disabled:opacity-60"
+                >
+                  Zet
+                </button>
+              </div>
+            </div>
+
             {Boolean(selected.quality_flags?.broken_links?.length) && (
               <div className="mb-4 p-3 rounded-sm bg-rood-light border border-rood text-body-xs text-rood-dark">
                 <strong>Let op — mogelijk kapotte link(s):</strong>{" "}
@@ -176,6 +216,17 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
                 className="font-body text-body-sm leading-[22px] text-warmgrijs-dark [&>h2]:font-display [&>h2]:font-bold [&>h2]:text-[16px] [&>h2]:text-warmzwart [&>h2]:mt-4 [&>h2]:mb-2 [&>p]:mb-3 [&>a]:text-sage [&>a]:underline"
                 dangerouslySetInnerHTML={{ __html: selected.body_html }}
               />
+            </div>
+
+            <div className="mb-4">
+              <span className="text-body-xs font-semibold text-warmgrijs-dark block mb-1">Social-post-tekst</span>
+              {selected.social_caption ? (
+                <p className="text-body-sm text-warmgrijs-dark p-3 rounded-sm bg-sand-light border border-lijn whitespace-pre-wrap">
+                  {selected.social_caption}
+                </p>
+              ) : (
+                <p className="text-body-xs text-warmgrijs italic">Nog geen social-tekst voor dit artikel.</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
