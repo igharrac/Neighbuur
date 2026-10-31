@@ -13,6 +13,8 @@ Een platform dat bewoners van nieuwbouwwijken koppelt aan geverifieerde vakmense
 - **Kernwoorden die steeds terugkomen**: buurt, buren, samen, thuis, echt, geverifieerd.
 - **Vertrouwen wordt altijd onderbouwd met verificatie, nooit met superlatieven.** Niet "de beste vakmensen", wel "100% geverifieerde vakmensen". Niet "geweldige ervaringen", wel "echte reviews, echte foto's — van mensen uit jouw wijk."
 - **Vakmensen zijn partners in de buurt, geen leveranciers.** Verkooptaal ("boek nu!") past niet; het gaat om efficiëntie, lokale aanwezigheid en minder reistijd.
+- **Geen gedachtestreepjes ("—").** Dit is een herkenbaar AI-schrijfkenmerk, geen onderdeel van de Neighbuur-stem. Gebruik een punt, komma of dubbele punt in plaats daarvan.
+- **Auteur is altijd "Team Neighbuur"**, nooit een individuele naam (zie ook de harde regel hieronder over verzonnen namen).
 - Representatieve voorbeelden uit de bestaande site-copy:
   - "Van nieuw huis naar thuis."
   - "Echte reviews, echte foto's. Geen anonieme sterretjes — reviews van mensen uit jouw wijk."
