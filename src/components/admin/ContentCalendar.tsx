@@ -148,6 +148,14 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
             <span className={`badge ${STATUS_STYLE[selected.status].badge} mb-3 inline-block`}>
               {STATUS_STYLE[selected.status].label}
             </span>
+            {selected.cover_image_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={selected.cover_image_url}
+                alt={selected.title}
+                className="w-full h-[140px] object-cover rounded-sm mb-3"
+              />
+            )}
             <h2 className="font-display font-bold text-[18px] text-warmzwart mb-1.5">{selected.title}</h2>
             {selected.excerpt && <p className="text-body-sm text-warmgrijs mb-3">{selected.excerpt}</p>}
             <p className="text-body-xs text-warmgrijs mb-4">
