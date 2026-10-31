@@ -151,7 +151,7 @@ export function ContentCalendar({ initialPosts }: { initialPosts: BlogPost[] }) 
             <h2 className="font-display font-bold text-[18px] text-warmzwart mb-1.5">{selected.title}</h2>
             {selected.excerpt && <p className="text-body-sm text-warmgrijs mb-3">{selected.excerpt}</p>}
             <p className="text-body-xs text-warmgrijs mb-4">
-              Bron: {selected.source === "hermes" ? "Hermes" : "Handmatig"}
+              Bron: {selected.source === "hermes" ? "Hermes" : selected.source === "claude" ? "Claude" : "Handmatig"}
             </p>
 
             {Boolean(selected.quality_flags?.broken_links?.length) && (

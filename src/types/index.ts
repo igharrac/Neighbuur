@@ -13,7 +13,7 @@ export interface BlogPost {
   status: BlogPostStatus;
   seo_title: string | null;
   seo_description: string | null;
-  source: "hermes" | "manual";
+  source: "hermes" | "manual" | "claude";
   created_at: string;
   approved_at: string | null;
   scheduled_at: string | null;
