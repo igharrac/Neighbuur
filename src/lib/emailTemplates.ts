@@ -165,7 +165,8 @@ export function providerWelkomEmail(lang: Lang, data: { bedrijfsnaam: string; vo
         "en",
         "Your profile is ready",
         `<p>Hi ${data.voornaam}, thanks for joining Neighbuur as a tradesperson. Your profile for ${data.bedrijfsnaam} is set up and already visible to residents in your area.</p>
-         <p>A few things that help your profile stand out:</p>
+         <p>Right now we're mainly focused on signing up tradespeople — residents follow in a later phase, so don't expect requests right away.</p>
+         <p>A few things that help your profile stand out in the meantime:</p>
          <ul style="padding-left:18px;margin:8px 0;">
            <li>Add photos of work you've completed nearby</li>
            <li>Keep your service area up to date</li>
@@ -182,7 +183,8 @@ export function providerWelkomEmail(lang: Lang, data: { bedrijfsnaam: string; vo
       "nl",
       "Je profiel staat klaar",
       `<p>Hoi ${data.voornaam}, bedankt dat je je als vakman hebt aangemeld bij Neighbuur. Je profiel voor ${data.bedrijfsnaam} staat klaar en is al zichtbaar voor bewoners in jouw buurt.</p>
-       <p>Een paar dingen die je profiel sterker maken:</p>
+       <p>We zijn nu vooral bezig vakmensen te werven — bewoners volgen in een volgende fase, dus verwacht niet meteen aanvragen.</p>
+       <p>Een paar dingen die je profiel in de tussentijd sterker maken:</p>
        <ul style="padding-left:18px;margin:8px 0;">
          <li>Voeg foto's toe van klussen die je in de buurt hebt afgerond</li>
          <li>Houd je werkgebied up-to-date</li>
