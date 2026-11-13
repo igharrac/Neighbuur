@@ -256,7 +256,7 @@ export const dictionaries = {
       metaDescription: "Je profiel staat klaar en is zichtbaar voor bewoners in jouw buurt.",
       title: "Je bent aangemeld.",
       body: "Je profiel staat klaar en is zichtbaar voor bewoners in jouw buurt.",
-      supporting: "We zijn nu vooral bezig vakmensen te werven — bewoners volgen in een volgende fase. Verwacht dus niet meteen aanvragen. Check je mail voor wat je in de tussentijd kunt doen om je profiel sterker te maken.",
+      supporting: "Neighbuur is klaar om bewoners en vakmensen in jouw buurt te verbinden. Vakmensen zoals jij maken dat compleet. Check je mail voor wat je nu alvast kunt doen om je profiel optimaal voor te bereiden.",
       cta: "Terug naar home",
     },
     residentHome: {
@@ -552,7 +552,7 @@ export const dictionaries = {
       metaDescription: "Your profile is ready and visible to residents in your neighbourhood.",
       title: "You're signed up.",
       body: "Your profile is ready and visible to residents in your neighbourhood.",
-      supporting: "We're currently focused on signing up tradespeople — residents follow in a later phase. So don't expect requests right away. Check your inbox for what you can do in the meantime to strengthen your profile.",
+      supporting: "Neighbuur is ready to connect residents and tradespeople in your area. Tradespeople like you complete the picture. Check your inbox for what you can do now to get your profile ready.",
       cta: "Back to home",
     },
     residentHome: {
