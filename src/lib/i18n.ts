@@ -136,7 +136,7 @@ export const dictionaries = {
     },
     registratie: {
       title: "Word vakman-partner",
-      subtitle: "Registreer in 60 seconden en ontvang aanvragen bij jou in de buurt",
+      subtitle: "Registreer in 60 seconden en wordt vindbaar voor bewoners in jouw buurt",
       step2Title: "Maak je bedrijf vindbaar.",
       step2Subtitle: "Vul je bedrijfsgegevens in zodat nieuwbouwbewoners uit jouw regio je direct kunnen vinden en boeken.",
       companyLabel: "Bedrijfsnaam",
@@ -432,7 +432,7 @@ export const dictionaries = {
     },
     registratie: {
       title: "Become a professional partner",
-      subtitle: "Register in 60 seconds and receive requests from your neighbourhood",
+      subtitle: "Register in 60 seconds and become visible to residents in your neighbourhood",
       step2Title: "Make your business findable.",
       step2Subtitle: "Fill in your business details so new-build residents in your area can find and book you directly.",
       companyLabel: "Company name",
