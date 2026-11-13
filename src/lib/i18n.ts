@@ -253,10 +253,10 @@ export const dictionaries = {
     },
     providerConfirmation: {
       metaTitle: "Je bent aangemeld — Neighbuur",
-      metaDescription: "Je profiel staat klaar voor de introductie van Neighbuur in jouw regio.",
+      metaDescription: "Je profiel staat klaar en is zichtbaar voor bewoners in jouw buurt.",
       title: "Je bent aangemeld.",
-      body: "Je profiel staat klaar voor de introductie van Neighbuur in jouw regio.",
-      supporting: "Check je mail — we hebben je net een bevestiging gestuurd met wat je alvast kunt doen. Zodra jouw regio wordt geactiveerd, hoor je dat ook van ons.",
+      body: "Je profiel staat klaar en is zichtbaar voor bewoners in jouw buurt.",
+      supporting: "Check je mail — we hebben je net een bevestiging gestuurd met wat je nu alvast kunt doen om je profiel sterker te maken.",
       cta: "Terug naar home",
     },
     residentHome: {
@@ -549,10 +549,10 @@ export const dictionaries = {
     },
     providerConfirmation: {
       metaTitle: "You're signed up — Neighbuur",
-      metaDescription: "Your profile is ready for the introduction of Neighbuur in your area.",
+      metaDescription: "Your profile is ready and visible to residents in your neighbourhood.",
       title: "You're signed up.",
-      body: "Your profile is ready for the introduction of Neighbuur in your area.",
-      supporting: "Check your inbox — we just sent you a confirmation with a few things you can do now. We'll also let you know as soon as your area is activated.",
+      body: "Your profile is ready and visible to residents in your neighbourhood.",
+      supporting: "Check your inbox — we just sent you a confirmation with a few things you can do now to strengthen your profile.",
       cta: "Back to home",
     },
     residentHome: {

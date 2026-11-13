@@ -164,14 +164,13 @@ export function providerWelkomEmail(lang: Lang, data: { bedrijfsnaam: string; vo
       html: layout(
         "en",
         "Your profile is ready",
-        `<p>Hi ${data.voornaam}, thanks for joining Neighbuur as a tradesperson. Your profile for ${data.bedrijfsnaam} is set up and ready for the introduction of Neighbuur in your area.</p>
-         <p>A few things that help once you're active:</p>
+        `<p>Hi ${data.voornaam}, thanks for joining Neighbuur as a tradesperson. Your profile for ${data.bedrijfsnaam} is set up and already visible to residents in your area.</p>
+         <p>A few things that help your profile stand out:</p>
          <ul style="padding-left:18px;margin:8px 0;">
            <li>Add photos of work you've completed nearby</li>
            <li>Keep your service area up to date</li>
            <li>Verified companies (KvK) get noticed first by residents</li>
-         </ul>
-         <p>We'll email you as soon as your region is activated.</p>`,
+         </ul>`,
         "View your profile",
         url
       ),
@@ -182,14 +181,13 @@ export function providerWelkomEmail(lang: Lang, data: { bedrijfsnaam: string; vo
     html: layout(
       "nl",
       "Je profiel staat klaar",
-      `<p>Hoi ${data.voornaam}, bedankt dat je je als vakman hebt aangemeld bij Neighbuur. Je profiel voor ${data.bedrijfsnaam} staat klaar voor de introductie van Neighbuur in jouw regio.</p>
-       <p>Een paar dingen die helpen zodra je actief wordt:</p>
+      `<p>Hoi ${data.voornaam}, bedankt dat je je als vakman hebt aangemeld bij Neighbuur. Je profiel voor ${data.bedrijfsnaam} staat klaar en is al zichtbaar voor bewoners in jouw buurt.</p>
+       <p>Een paar dingen die je profiel sterker maken:</p>
        <ul style="padding-left:18px;margin:8px 0;">
          <li>Voeg foto's toe van klussen die je in de buurt hebt afgerond</li>
          <li>Houd je werkgebied up-to-date</li>
          <li>Geverifieerde bedrijven (KvK) vallen het eerst op bij bewoners</li>
-       </ul>
-       <p>Zodra jouw regio wordt geactiveerd, krijg je daar bericht van.</p>`,
+       </ul>`,
       "Bekijk je profiel",
       url
     ),
