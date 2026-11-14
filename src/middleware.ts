@@ -40,6 +40,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  // Tijdelijke schakelaar: /diensten en /zoeken zijn nog niet publiek
+  // bedoeld zolang het platform nog onvoldoende gevuld is met
+  // vakmensen. Standaard uit (geen env-var gezet) — zet SEARCH_LIVE=true
+  // zodra dat wel zo is. Geldt voor iedereen, ook admins, bewust geen
+  // bypass — het is geen beveiligingsmaatregel maar een launch-fase.
+  const SEARCH_PREFIXES = ["/diensten", "/zoeken"];
+  const isSearchRoute = SEARCH_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  if (isSearchRoute && process.env.SEARCH_LIVE !== "true") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   return response;
 }
 
