@@ -5,6 +5,7 @@ interface SuccessStateProps {
   title: string;
   body: string;
   supporting?: string;
+  notice?: string;
   cta: { href: string; label: string };
 }
 
@@ -14,7 +15,7 @@ interface SuccessStateProps {
  * RegistratieForm.tsx stond (cirkel + CheckCircle/EnvelopeSimple-icon),
  * nu als volwaardige pagina i.p.v. alleen binnen een modal/stap.
  */
-export function SuccessState({ icon: IconComponent = CheckCircle, title, body, supporting, cta }: SuccessStateProps) {
+export function SuccessState({ icon: IconComponent = CheckCircle, title, body, supporting, notice, cta }: SuccessStateProps) {
   return (
     <div className="text-center max-w-[440px] mx-auto py-16 px-6">
       <div className="w-16 h-16 rounded-full bg-sage-50 text-sage flex items-center justify-center mx-auto mb-6">
@@ -23,6 +24,11 @@ export function SuccessState({ icon: IconComponent = CheckCircle, title, body, s
       <h1 className="font-display text-display-md text-warmzwart mb-3">{title}</h1>
       <p className="text-body text-warmgrijs-dark mb-2">{body}</p>
       {supporting && <p className="text-body-sm text-warmgrijs">{supporting}</p>}
+      {notice && (
+        <p className="text-body-sm text-oker bg-oker-light border border-oker rounded-sm p-3 mt-4 text-left">
+          {notice}
+        </p>
+      )}
       <a href={cta.href} className="btn-primary justify-center mt-8 inline-flex">
         {cta.label}
       </a>

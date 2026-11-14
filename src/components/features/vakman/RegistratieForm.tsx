@@ -166,6 +166,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       service_area_lng: null,
       service_area_city: null,
     };
+    let werkgebiedOnbekend = false;
     if (postcode) {
       try {
         const res = await fetch("/api/vakman/werkgebied", {
@@ -176,9 +177,15 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
         const data = await res.json();
         if (data.found) {
           geoFields = { service_area_lat: data.lat, service_area_lng: data.lng, service_area_city: data.city };
+        } else {
+          werkgebiedOnbekend = true;
         }
       } catch {
-        // Stil falen — postcode zelf is al opgeslagen, de coördinaten zijn een verrijking.
+        // Postcode zelf is al opgeslagen, de coördinaten zijn een verrijking —
+        // registratie niet blokkeren, maar de vakman moet dit wel weten
+        // (zie werkgebiedOnbekend hieronder), anders denkt die ten onrechte
+        // dat het werkgebied goed staat.
+        werkgebiedOnbekend = true;
       }
     }
 
@@ -237,7 +244,7 @@ export function RegistratieForm({ refBron }: { refBron?: string }) {
       body: JSON.stringify({ email: user.email, lang, bedrijfsnaam, voornaam }),
     }).catch(() => {});
 
-    router.push("/registreer/vakman/bevestigd");
+    router.push(werkgebiedOnbekend ? "/registreer/vakman/bevestigd?werkgebied=onbekend" : "/registreer/vakman/bevestigd");
   }
 
   if (checking) return <div className="min-h-screen" />;

@@ -257,6 +257,7 @@ export const dictionaries = {
       title: "Je bent aangemeld.",
       body: "Je profiel staat klaar en is zichtbaar voor bewoners in jouw buurt.",
       supporting: "Neighbuur is klaar om bewoners en vakmensen in jouw buurt te verbinden. Vakmensen zoals jij maken dat compleet. Check je mail voor wat je nu alvast kunt doen om je profiel optimaal voor te bereiden.",
+      werkgebiedOnbekend: "We konden je postcode niet automatisch herkennen. Controleer je werkgebied in je profiel, zodat bewoners in jouw regio je goed kunnen vinden.",
       cta: "Terug naar home",
     },
     residentHome: {
@@ -553,6 +554,7 @@ export const dictionaries = {
       title: "You're signed up.",
       body: "Your profile is ready and visible to residents in your neighbourhood.",
       supporting: "Neighbuur is ready to connect residents and tradespeople in your area. Tradespeople like you complete the picture. Check your inbox for what you can do now to get your profile ready.",
+      werkgebiedOnbekend: "We couldn't automatically recognize your postcode. Check your service area in your profile, so residents in your region can find you properly.",
       cta: "Back to home",
     },
     residentHome: {
