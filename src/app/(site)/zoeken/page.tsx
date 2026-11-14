@@ -100,13 +100,17 @@ export default async function ZoekenPage({ searchParams }: { searchParams: Zoeke
       .filter((p) => (searchParams.afstand ? p.distance_km! <= Number(searchParams.afstand) : true))
       .sort((a, b) => {
         if (a.is_premium !== b.is_premium) return a.is_premium ? -1 : 1;
+        if (a.verified !== b.verified) return a.verified ? -1 : 1;
         return a.distance_km! - b.distance_km!;
       });
 
     totaalAantal = alle.length;
     professionals = alle.slice((huidigePagina - 1) * PAGINA_GROOTTE, huidigePagina * PAGINA_GROOTTE);
   } else {
-    query = query.order("is_premium", { ascending: false }).order("avg_score", { ascending: false });
+    query = query
+      .order("is_premium", { ascending: false })
+      .order("verified", { ascending: false })
+      .order("avg_score", { ascending: false });
     const from = (huidigePagina - 1) * PAGINA_GROOTTE;
     query = query.range(from, from + PAGINA_GROOTTE - 1);
     const { data, count } = await query;
