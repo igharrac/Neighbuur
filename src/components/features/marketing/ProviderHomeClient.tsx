@@ -10,7 +10,7 @@ import { MarketingFooter } from "@/components/layout/MarketingFooter";
 import { ProviderHero } from "@/components/features/marketing/ProviderHero";
 import { ProviderSteps } from "@/components/features/marketing/ProviderSteps";
 
-export function ProviderHomeClient() {
+export function ProviderHomeClient({ showResidentLink }: { showResidentLink: boolean }) {
   const { dict } = useLang();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export function ProviderHomeClient() {
 
   return (
     <>
-      <MarketingHeader cross={{ href: "/bewoners", label: dict.marketing.forResidents }} />
+      <MarketingHeader cross={showResidentLink ? { href: "/bewoners", label: dict.marketing.forResidents } : undefined} />
 
       <ProviderHero />
       <ProviderSteps />
@@ -42,18 +42,21 @@ export function ProviderHomeClient() {
         </div>
       </section>
 
-      {/* Onopvallende route naar de bewoners-pagina */}
-      <section className="px-6 pb-16 lg:px-[72px] lg:pb-20">
-        <div className="max-w-[720px] mx-auto text-center border-t border-lijn pt-10">
-          <p className="font-body text-[15px] text-warmgrijs-dark">
-            <span className="font-semibold text-warmzwart">{dict.providerHome.residentPrompt}</span>{" "}
-            {dict.providerHome.residentBody}{" "}
-            <Link href="/bewoners" className="text-sage font-semibold hover:underline whitespace-nowrap">
-              {dict.providerHome.residentLink}
-            </Link>
-          </p>
-        </div>
-      </section>
+      {/* Onopvallende route naar de bewoners-pagina — pas tonen zodra er
+          voldoende vakmensen zijn aangemeld, zie SEARCH_LIVE. */}
+      {showResidentLink && (
+        <section className="px-6 pb-16 lg:px-[72px] lg:pb-20">
+          <div className="max-w-[720px] mx-auto text-center border-t border-lijn pt-10">
+            <p className="font-body text-[15px] text-warmgrijs-dark">
+              <span className="font-semibold text-warmzwart">{dict.providerHome.residentPrompt}</span>{" "}
+              {dict.providerHome.residentBody}{" "}
+              <Link href="/bewoners" className="text-sage font-semibold hover:underline whitespace-nowrap">
+                {dict.providerHome.residentLink}
+              </Link>
+            </p>
+          </div>
+        </section>
+      )}
 
       <MarketingFooter />
     </>

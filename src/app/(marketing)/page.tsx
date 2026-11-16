@@ -8,5 +8,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function ProviderHomePage() {
-  return <ProviderHomeClient />;
+  return <ProviderHomeClient showResidentLink={process.env.SEARCH_LIVE === "true"} />;
 }
